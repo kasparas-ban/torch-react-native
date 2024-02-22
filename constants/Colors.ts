@@ -16,4 +16,8 @@ export default {
     tabIconDefault: "#ccc",
     tabIconSelected: tintColorDark,
   },
+  slate: {
+    600: "rgb(71 85 105)",
+    700: "rgb(51 65 85)",
+  },
 }
