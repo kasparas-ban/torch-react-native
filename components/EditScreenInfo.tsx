@@ -7,7 +7,7 @@ import { Text, View } from "./Themed"
 
 export default function EditScreenInfo({ path }: { path: string }) {
   return (
-    <View>
+    <View style={{ backgroundColor: "transparent" }}>
       <View style={styles.getStartedContainer}>
         <Text
           style={styles.getStartedText}
@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
   getStartedContainer: {
     alignItems: "center",
     marginHorizontal: 50,
+    backgroundColor: "transparent",
   },
   homeScreenFilename: {
     marginVertical: 7,
@@ -71,6 +72,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginHorizontal: 20,
     alignItems: "center",
+    backgroundColor: "transparent",
   },
   helpLink: {
     paddingVertical: 15,

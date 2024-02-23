@@ -6,9 +6,9 @@ import {
   BottomTabHeaderProps,
 } from "@react-navigation/bottom-tabs"
 import { BlurView } from "expo-blur"
-import { Image } from "expo-image"
+import { Image, ImageBackground } from "expo-image"
 import { Tabs } from "expo-router"
-import { TouchableOpacity } from "react-native"
+import { Pressable } from "react-native"
 import Animated from "react-native-reanimated"
 import { Text, View } from "@/components/Themed"
 import { useClientOnlyValue } from "@/components/useClientOnlyValue"
@@ -28,40 +28,41 @@ type TabParams =
 
 const NAVBAR_ICONS = [GoalsIcon, StatsIcon, TimerIcon, WorldIcon, AccountIcon]
 
-const AnimatedImage = Animated.createAnimatedComponent(Image)
-
 export default function TabLayout() {
-  const colorScheme = useColorScheme()
-
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        tabBarBackground: () => <BlurView />,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-        headerTransparent: true,
-        header: Header,
-      }}
-      tabBar={props => <BottomTabBar tabBarProps={props} />}
+    <ImageBackground
+      source={require("@/assets/images/background_gradient.png")}
+      style={{ flex: 1 }}
     >
-      <Tabs.Screen
-        name="goals"
-        options={{
-          title: "Goals",
+      <Tabs
+        screenOptions={{
+          tabBarBackground: () => <BlurView />,
+          // Disable the static render of the header on web
+          // to prevent a hydration error in React Navigation v6.
+          headerShown: useClientOnlyValue(false, true),
+          headerTransparent: true,
+          header: Header,
         }}
-      />
-      <Tabs.Screen name="stats" options={{ title: "Stats" }} />
-      <Tabs.Screen
-        name="timer"
-        options={{ title: "Timer" }}
-        initialParams={{ isHighlighted: true }}
-      />
-      <Tabs.Screen name="world" options={{ title: "World" }} />
-      <Tabs.Screen name="account" options={{ title: "Account" }} />
-      <Tabs.Screen name="index" options={{ href: null }} />
-    </Tabs>
+        tabBar={props => <BottomTabBar tabBarProps={props} />}
+        sceneContainerStyle={{ backgroundColor: "transparent" }}
+      >
+        <Tabs.Screen
+          name="goals"
+          options={{
+            title: "Goals",
+          }}
+        />
+        <Tabs.Screen name="stats" options={{ title: "Stats" }} />
+        <Tabs.Screen
+          name="timer"
+          options={{ title: "Timer" }}
+          initialParams={{ isHighlighted: true }}
+        />
+        <Tabs.Screen name="world" options={{ title: "World" }} />
+        <Tabs.Screen name="account" options={{ title: "Account" }} />
+        <Tabs.Screen name="index" options={{ href: null }} />
+      </Tabs>
+    </ImageBackground>
   )
 }
 
@@ -71,14 +72,36 @@ function Header(props: BottomTabHeaderProps) {
   return (
     <View
       style={{
-        height: 92,
+        height: 112,
         paddingHorizontal: 24,
         justifyContent: "flex-end",
+        backgroundColor: "transparent",
       }}
     >
+      <View
+        style={{
+          position: "absolute",
+          right: 0,
+          left: 0,
+          top: 0,
+        }}
+      >
+        <Image
+          source={require("@/assets/images/header_background.png")}
+          style={{
+            position: "absolute",
+            top: -30,
+            right: 0,
+            left: 0,
+            height: 600,
+            maxWidth: 500,
+            marginHorizontal: "auto",
+          }}
+        />
+      </View>
       <Text
         style={{
-          fontSize: 32,
+          fontSize: 46,
           fontWeight: "700",
           fontFamily: "Gabarito",
           color: Colors.gray[400],
@@ -92,6 +115,8 @@ function Header(props: BottomTabHeaderProps) {
 
 function BottomTabBar({ tabBarProps }: { tabBarProps: BottomTabBarProps }) {
   const { state, descriptors, navigation } = tabBarProps
+  const colorScheme = useColorScheme()
+  const isDark = colorScheme === "dark"
 
   return (
     <View
@@ -100,16 +125,42 @@ function BottomTabBar({ tabBarProps }: { tabBarProps: BottomTabBarProps }) {
         bottom: 20,
         height: 64,
         width: "100%",
+        backgroundColor: "transparent",
       }}
     >
       <View
         style={{
+          position: "absolute",
+          right: 0,
+          left: 0,
+          bottom: 0,
+        }}
+      >
+        <Image
+          source={require("@/assets/images/header_background.png")}
+          style={{
+            position: "absolute",
+            bottom: -20,
+            right: 0,
+            left: 0,
+            height: 600,
+            transform: "rotate(180deg)",
+            maxWidth: 500,
+            marginHorizontal: "auto",
+            opacity: 0.7,
+          }}
+        />
+      </View>
+      <View
+        style={{
           display: "flex",
           flexDirection: "row",
-          backgroundColor: "rgba(156, 163, 175, 0.3)",
+          backgroundColor: isDark
+            ? "rgba(80, 80, 80, 0.5)"
+            : "rgba(156, 163, 175, 0.3)",
           marginHorizontal: 20,
           borderRadius: 16,
-          height: 58,
+          height: 62,
           minWidth: 380,
           maxWidth: 600,
           alignSelf: "center",
@@ -129,6 +180,22 @@ function BottomTabBar({ tabBarProps }: { tabBarProps: BottomTabBarProps }) {
           const Icon = NAVBAR_ICONS[index]
           const isFocused = state.index === index
           const isHighlighted = (route?.params as TabParams)?.isHighlighted
+          const iconColor =
+            colorScheme === "dark"
+              ? isFocused
+                ? Colors.slate[100]
+                : Colors.gray[400]
+              : isFocused
+                ? Colors.slate[700]
+                : Colors.slate[600]
+          const highlightedIconColor =
+            colorScheme === "dark"
+              ? isFocused
+                ? Colors.slate[700]
+                : Colors.gray[700]
+              : isFocused
+                ? Colors.slate[700]
+                : Colors.slate[600]
 
           const onPress = () => {
             const event = navigation.emit({
@@ -144,9 +211,9 @@ function BottomTabBar({ tabBarProps }: { tabBarProps: BottomTabBarProps }) {
 
           if (isHighlighted) {
             return (
-              <TouchableOpacity
+              <Pressable
                 key={index}
-                accessibilityRole="button"
+                role="button"
                 testID={options.tabBarTestID}
                 accessibilityLabel={options.tabBarAccessibilityLabel}
                 accessibilityState={isFocused ? { selected: true } : {}}
@@ -160,8 +227,8 @@ function BottomTabBar({ tabBarProps }: { tabBarProps: BottomTabBarProps }) {
               >
                 <View
                   style={{
-                    width: 44,
-                    height: 44,
+                    width: 48,
+                    height: 48,
                     justifyContent: "center",
                     alignItems: "center",
                     backgroundColor: "transparent",
@@ -170,28 +237,42 @@ function BottomTabBar({ tabBarProps }: { tabBarProps: BottomTabBarProps }) {
                   <Image
                     style={{
                       flex: 1,
-                      width: 44,
-                      height: 44,
+                      width: 48,
+                      height: 48,
                       borderRadius: 100,
                       position: "absolute",
                     }}
-                    source={require("@/assets/gradient.webm")}
+                    source={require("@/assets/images/gradient_animation.gif")}
                   />
+                  {!isFocused && (
+                    <View
+                      style={{
+                        flex: 1,
+                        width: 48,
+                        height: 48,
+                        borderRadius: 100,
+                        position: "absolute",
+                        backgroundColor: isDark ? "black" : "white",
+                        opacity: 0.3,
+                      }}
+                    />
+                  )}
                   <Icon
-                    color={isFocused ? Colors.slate[700] : Colors.slate[600]}
-                    width={30}
-                    height={30}
+                    color={highlightedIconColor}
+                    width={36}
+                    height={36}
                     strokeWidth={2}
+                    style={{ zIndex: 1 }}
                   />
                 </View>
-              </TouchableOpacity>
+              </Pressable>
             )
           }
 
           return (
-            <TouchableOpacity
+            <Pressable
               key={index}
-              accessibilityRole="button"
+              role="button"
               testID={options.tabBarTestID}
               accessibilityLabel={options.tabBarAccessibilityLabel}
               accessibilityState={isFocused ? { selected: true } : {}}
@@ -204,12 +285,16 @@ function BottomTabBar({ tabBarProps }: { tabBarProps: BottomTabBarProps }) {
               }}
             >
               {isFocused && (
-                <AnimatedImage
-                  source={require("@/assets/images/highlight.png")}
+                <Animated.View
                   style={{ position: "absolute", width: 60, height: 60 }}
                   entering={FadeIn}
                   exiting={FadeOut}
-                />
+                >
+                  <Image
+                    source={require("@/assets/images/highlight.png")}
+                    style={{ flex: 1, opacity: 0.6 }}
+                  />
+                </Animated.View>
               )}
               <View
                 style={{
@@ -219,14 +304,14 @@ function BottomTabBar({ tabBarProps }: { tabBarProps: BottomTabBarProps }) {
                 }}
               >
                 <Icon
-                  color={isFocused ? Colors.slate[700] : Colors.slate[600]}
+                  color={iconColor}
                   width={26}
                   height={26}
                   strokeWidth={2}
                 />
                 <Text
                   style={{
-                    color: isFocused ? Colors.slate[700] : Colors.slate[600],
+                    color: iconColor,
                     fontSize: 11,
                     fontWeight: isFocused ? "700" : "400",
                   }}
@@ -234,7 +319,7 @@ function BottomTabBar({ tabBarProps }: { tabBarProps: BottomTabBarProps }) {
                   {label}
                 </Text>
               </View>
-            </TouchableOpacity>
+            </Pressable>
           )
         })}
       </View>
