@@ -1,7 +1,10 @@
 import React from "react"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
-import { BottomTabBarProps } from "@react-navigation/bottom-tabs"
+import {
+  BottomTabBarProps,
+  BottomTabHeaderProps,
+} from "@react-navigation/bottom-tabs"
 import { BlurView } from "expo-blur"
 import { Image } from "expo-image"
 import { Tabs } from "expo-router"
@@ -39,6 +42,7 @@ export default function TabLayout() {
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
         headerTransparent: true,
+        header: Header,
       }}
       tabBar={props => <BottomTabBar tabBarProps={props} />}
     >
@@ -46,21 +50,6 @@ export default function TabLayout() {
         name="goals"
         options={{
           title: "Goals",
-          // tabBarIcon: ({ color }) => <Text>TEST</Text>,
-          // headerRight: () => (
-          //   <Link href="/modal" asChild>
-          //     <Pressable>
-          //       {({ pressed }) => (
-          //         <FontAwesome
-          //           name="info-circle"
-          //           size={25}
-          //           color={Colors[colorScheme ?? "light"].text}
-          //           style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-          //         />
-          //       )}
-          //     </Pressable>
-          //   </Link>
-          // ),
         }}
       />
       <Tabs.Screen name="stats" options={{ title: "Stats" }} />
@@ -73,6 +62,31 @@ export default function TabLayout() {
       <Tabs.Screen name="account" options={{ title: "Account" }} />
       <Tabs.Screen name="index" options={{ href: null }} />
     </Tabs>
+  )
+}
+
+function Header(props: BottomTabHeaderProps) {
+  const { options } = props
+
+  return (
+    <View
+      style={{
+        height: 92,
+        paddingHorizontal: 24,
+        justifyContent: "flex-end",
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 32,
+          fontWeight: "700",
+          fontFamily: "Gabarito",
+          color: Colors.gray[400],
+        }}
+      >
+        {options.title}
+      </Text>
+    </View>
   )
 }
 
@@ -131,6 +145,7 @@ function BottomTabBar({ tabBarProps }: { tabBarProps: BottomTabBarProps }) {
           if (isHighlighted) {
             return (
               <TouchableOpacity
+                key={index}
                 accessibilityRole="button"
                 testID={options.tabBarTestID}
                 accessibilityLabel={options.tabBarAccessibilityLabel}
@@ -144,7 +159,6 @@ function BottomTabBar({ tabBarProps }: { tabBarProps: BottomTabBarProps }) {
                 }}
               >
                 <View
-                  key={index}
                   style={{
                     width: 44,
                     height: 44,
