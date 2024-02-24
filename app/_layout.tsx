@@ -22,6 +22,8 @@ SplashScreen.preventAutoHideAsync()
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     Gabarito: require("../assets/fonts/Gabarito-VariableFont_wght.ttf"),
+    GabaritoSemibold: require("../assets/fonts/Gabarito-SemiBold.ttf"),
+    GabaritoBold: require("../assets/fonts/Gabarito-Bold.ttf"),
   })
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.

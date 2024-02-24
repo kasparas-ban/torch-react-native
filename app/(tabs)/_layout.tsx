@@ -102,8 +102,7 @@ function Header(props: BottomTabHeaderProps) {
       <Text
         style={{
           fontSize: 46,
-          fontWeight: "700",
-          fontFamily: "Gabarito",
+          fontFamily: "GabaritoSemibold",
           color: Colors.gray[400],
         }}
       >
