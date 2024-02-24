@@ -85,6 +85,7 @@ function Header(props: BottomTabHeaderProps) {
           left: 0,
           top: 0,
         }}
+        pointerEvents="none"
       >
         <Image
           source={require("@/assets/images/header_background.png")}
@@ -134,6 +135,7 @@ function BottomTabBar({ tabBarProps }: { tabBarProps: BottomTabBarProps }) {
           left: 0,
           bottom: 0,
         }}
+        pointerEvents="none"
       >
         <Image
           source={require("@/assets/images/header_background.png")}
