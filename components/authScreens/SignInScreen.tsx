@@ -4,7 +4,7 @@ import { useSignIn } from "@clerk/clerk-expo"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { StyleSheet, Text, TextInput, useColorScheme, View } from "react-native"
-import { Button, Input } from "tamagui"
+// import { Button, Input } from "tamagui"
 import { z } from "zod"
 
 const SignInSchema = z.object({
@@ -57,13 +57,13 @@ export default function SignInScreen() {
           required: true,
         }}
         render={({ field: { onChange, onBlur, value } }) => (
-          <Input
+          <TextInput
             placeholder="Email"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
             style={{ maxWidth: 330, width: "80%", marginBottom: 12 }}
-            size="$5"
+            // size="$5"
           />
         )}
       />
@@ -76,21 +76,21 @@ export default function SignInScreen() {
           required: true,
         }}
         render={({ field: { onChange, onBlur, value } }) => (
-          <Input
+          <TextInput
             placeholder="Password"
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
             style={{ maxWidth: 330, width: "80%", marginBottom: 12 }}
-            size="$5"
+            // size="$5"
           />
         )}
       />
       {form.formState.errors.password && <Text>This is required.</Text>}
 
-      <Button size="$5" style={styles.button}>
+      {/* <Button size="$5" style={styles.button}>
         Login
-      </Button>
+      </Button> */}
     </View>
   )
 }
