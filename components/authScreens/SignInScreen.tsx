@@ -3,9 +3,11 @@ import Colors from "@/constants/Colors"
 import { useSignIn } from "@clerk/clerk-expo"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
-import { StyleSheet, Text, TextInput, useColorScheme, View } from "react-native"
-// import { Button, Input } from "tamagui"
+import { Pressable, StyleSheet, Text, useColorScheme, View } from "react-native"
 import { z } from "zod"
+
+import Button from "../UI/Button"
+import TextInput from "../UI/TextInput"
 
 const SignInSchema = z.object({
   email: z.string().email(),
@@ -42,14 +44,6 @@ export default function SignInScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={{ maxWidth: 330, width: "80%" }}>
-        <Text
-          style={[styles.title, isDark ? styles.titleDark : styles.titleLight]}
-        >
-          Sign In
-        </Text>
-      </View>
-
       <Controller
         name="email"
         control={form.control}
@@ -62,12 +56,14 @@ export default function SignInScreen() {
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
-            style={{ maxWidth: 330, width: "80%", marginBottom: 12 }}
-            // size="$5"
+            errorProps={{
+              children:
+                form.formState.errors.email && "Please enter your email",
+            }}
+            style={{ marginBottom: 12 }}
           />
         )}
       />
-      {form.formState.errors.email && <Text>This is required.</Text>}
 
       <Controller
         name="password"
@@ -81,47 +77,37 @@ export default function SignInScreen() {
             onBlur={onBlur}
             onChangeText={onChange}
             value={value}
-            style={{ maxWidth: 330, width: "80%", marginBottom: 12 }}
-            // size="$5"
+            errorProps={{
+              children:
+                form.formState.errors.email && "Please enter your password",
+            }}
+            style={{ marginBottom: 16 }}
           />
         )}
       />
-      {form.formState.errors.password && <Text>This is required.</Text>}
 
-      {/* <Button size="$5" style={styles.button}>
-        Login
-      </Button> */}
+      <Pressable style={{ marginBottom: 16 }}>
+        <Text style={{ color: Colors.gray[700] }}>Forgot password?</Text>
+      </Pressable>
+
+      <Button>Login</Button>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center" },
-  title: {
-    fontSize: 42,
-    fontWeight: "900",
-    marginBottom: 16,
-    marginRight: "auto",
-  },
-  titleLight: {
-    color: Colors.gray[700],
-  },
-  titleDark: {
-    color: Colors.gray[300],
-  },
-  textInput: {
-    width: "80%",
-    height: 48,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    backgroundColor: "gray",
+  container: {
+    flex: 1,
+    marginTop: 160,
+    justifyContent: "flex-start",
+    alignItems: "center",
   },
   button: {
-    width: "80%",
-    fontWeight: "700",
-    maxWidth: 330,
+    backgroundColor: "red",
+    width: "100%",
+    paddingVertical: 14,
   },
   buttonFont: {
-    fontSize: 20,
+    height: 48,
   },
 })

@@ -117,5 +117,6 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     fontSize: 20,
     color: Colors.gray[50],
+    userSelect: "none",
   },
 })

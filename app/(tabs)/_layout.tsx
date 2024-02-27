@@ -59,7 +59,7 @@ export default function TabLayout() {
           initialParams={{ isHighlighted: true }}
         />
         <Tabs.Screen name="world" options={{ title: "World" }} />
-        <Tabs.Screen name="account" options={{ title: "Account" }} />
+        <Tabs.Screen name="account" options={{ title: "Sign In" }} />
         <Tabs.Screen name="index" options={{ href: null }} />
       </Tabs>
     </ImageBackground>
