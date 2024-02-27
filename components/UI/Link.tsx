@@ -1,12 +1,8 @@
 import React from "react"
 import Colors from "@/constants/Colors"
-import {
-  Pressable,
-  PressableProps,
-  StyleSheet,
-  Text,
-  TextProps,
-} from "react-native"
+import { PressableProps, StyleSheet, Text, TextProps } from "react-native"
+
+import { AnimatedButton } from "../AnimatedButton"
 
 type Props = Omit<PressableProps, "children"> & {
   children: string
@@ -17,9 +13,9 @@ export default function Link(props: Props) {
   const { textProps, children, ...pressableProps } = props
 
   return (
-    <Pressable style={[pressableProps.style as any]}>
+    <AnimatedButton scale={0.98} style={[pressableProps.style as any]}>
       <Text style={[styles.text, textProps?.style]}>{children}</Text>
-    </Pressable>
+    </AnimatedButton>
   )
 }
 
@@ -32,5 +28,6 @@ const styles = StyleSheet.create({
   },
   text: {
     color: Colors.rose[500],
+    fontWeight: "600",
   },
 })

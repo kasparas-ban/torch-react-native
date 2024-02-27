@@ -46,7 +46,15 @@ export default function SignInScreen() {
   return (
     <View style={styles.wrapper}>
       <View style={styles.container}>
-        <Text style={styles.title}>Sign In</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            width: "100%",
+            marginBottom: 12,
+          }}
+        >
+          <Text style={styles.title}>Sign In</Text>
+        </View>
 
         <Controller
           name="email"
@@ -80,6 +88,8 @@ export default function SignInScreen() {
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               placeholder="Password"
+              textContentType="password"
+              secureTextEntry
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
@@ -88,17 +98,30 @@ export default function SignInScreen() {
                   form.formState.errors.email && "Please enter your password",
               }}
               wrapperProps={{
-                style: { marginBottom: 24 },
+                style: { marginBottom: 12 },
               }}
             />
           )}
         />
 
-        <Link>Forgot password?</Link>
+        <Link style={styles.link}>Forgot password?</Link>
 
-        <Button scale={0.97} style={styles.button}>
-          Login
-        </Button>
+        <View style={{ position: "absolute", bottom: 48, width: "100%" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              gap: 6,
+              marginTop: 18,
+              marginBottom: 18,
+              justifyContent: "center",
+            }}
+          >
+            <Text>No account?</Text>
+            <Link>Sign Up</Link>
+          </View>
+
+          <Button scale={0.97}>Login</Button>
+        </View>
       </View>
     </View>
   )
@@ -122,11 +145,9 @@ const styles = StyleSheet.create({
     color: Colors.gray[400],
     fontFamily: "GabaritoSemibold",
     fontSize: 46,
-    width: "100%",
-    marginBottom: 18,
   },
-  button: {
-    position: "absolute",
-    bottom: 48,
+  link: {
+    marginLeft: "auto",
+    marginRight: 4,
   },
 })

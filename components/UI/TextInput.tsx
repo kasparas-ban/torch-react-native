@@ -1,6 +1,5 @@
 import React from "react"
 import Colors from "@/constants/Colors"
-import { BlurView } from "expo-blur"
 import {
   TextInput as BaseInput,
   StyleSheet,
@@ -26,17 +25,11 @@ export default function TextInput(props: Props) {
       {labelProps?.children && (
         <Text {...labelProps} style={[styles.label, labelProps?.style]} />
       )}
-      <BlurView
-        style={styles.blur}
-        intensity={30}
-        experimentalBlurMethod="none"
-      >
-        <BaseInput
-          {...inputProps}
-          placeholderTextColor={Colors.gray[500]}
-          style={[styles.input, inputProps.style, isError && styles.errorInput]}
-        />
-      </BlurView>
+      <BaseInput
+        {...inputProps}
+        placeholderTextColor={Colors.gray[500]}
+        style={[styles.input, inputProps.style, isError && styles.errorInput]}
+      />
       {errorProps?.children && (
         <Text {...errorProps} style={[styles.errorlabel, errorProps?.style]} />
       )}
@@ -48,14 +41,12 @@ const styles = StyleSheet.create({
   wrapper: {
     width: "100%",
   },
-  blur: {
-    borderRadius: 12,
-  },
   input: {
     paddingHorizontal: 16,
     height: 48,
     width: "100%",
     backgroundColor: "rgba(20, 15, 38, 0.15)",
+    // backgroundColor: "rgba(80, 80, 80, 0.4)",
     borderRadius: 12,
   },
   errorInput: {
