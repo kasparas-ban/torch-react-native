@@ -8,15 +8,23 @@ import Animated, {
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
-export function AnimatedButton(props: PressableProps) {
+const DEFAULT_SCALE = 0.92
+const DEFAULT_OPACITY = 0.7
+
+type Props = PressableProps & {
+  scale?: number
+  opacity?: number
+}
+
+export function AnimatedButton(props: Props) {
   const scale = useSharedValue(1)
   const opacity = useSharedValue(1)
 
   const handlePressIn = () => {
-    scale.value = withTiming(0.92, {
+    scale.value = withTiming(props.scale || DEFAULT_SCALE, {
       duration: 100,
     })
-    opacity.value = withTiming(0.7, {
+    opacity.value = withTiming(props.opacity || DEFAULT_OPACITY, {
       duration: 100,
     })
   }

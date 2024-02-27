@@ -3,10 +3,11 @@ import Colors from "@/constants/Colors"
 import { useSignIn } from "@clerk/clerk-expo"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
-import { Pressable, StyleSheet, Text, useColorScheme, View } from "react-native"
+import { StyleSheet, Text, useColorScheme, View } from "react-native"
 import { z } from "zod"
 
 import Button from "../UI/Button"
+import Link from "../UI/Link"
 import TextInput from "../UI/TextInput"
 
 const SignInSchema = z.object({
@@ -87,17 +88,17 @@ export default function SignInScreen() {
                   form.formState.errors.email && "Please enter your password",
               }}
               wrapperProps={{
-                style: { marginBottom: 16 },
+                style: { marginBottom: 24 },
               }}
             />
           )}
         />
 
-        <Pressable style={{ marginBottom: 18 }}>
-          <Text style={{ color: Colors.gray[700] }}>Forgot password?</Text>
-        </Pressable>
+        <Link>Forgot password?</Link>
 
-        <Button style={styles.button}>Login</Button>
+        <Button scale={0.97} style={styles.button}>
+          Login
+        </Button>
       </View>
     </View>
   )

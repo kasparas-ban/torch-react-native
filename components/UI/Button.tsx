@@ -1,14 +1,10 @@
-import React from "react"
+import React, { ComponentProps } from "react"
 import Colors from "@/constants/Colors"
-import {
-  Pressable,
-  PressableProps,
-  StyleSheet,
-  Text,
-  TextProps,
-} from "react-native"
+import { StyleSheet, Text, TextProps } from "react-native"
 
-type Props = Omit<PressableProps, "children"> & {
+import { AnimatedButton } from "../AnimatedButton"
+
+type Props = Omit<ComponentProps<typeof AnimatedButton>, "children"> & {
   children: string
   type?: "primary"
   textProps?: TextProps
@@ -19,12 +15,12 @@ export default function Button(props: Props) {
   const buttonStyle = buttonStyles[props.type || "primary"]
 
   return (
-    <Pressable
+    <AnimatedButton
       {...props}
       style={[styles.button, buttonStyle, buttonProps.style as any]}
     >
       <Text style={[styles.label, textProps?.style]}>{props.children}</Text>
-    </Pressable>
+    </AnimatedButton>
   )
 }
 

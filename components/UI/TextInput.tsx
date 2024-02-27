@@ -33,6 +33,7 @@ export default function TextInput(props: Props) {
       >
         <BaseInput
           {...inputProps}
+          placeholderTextColor={Colors.gray[500]}
           style={[styles.input, inputProps.style, isError && styles.errorInput]}
         />
       </BlurView>
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     height: 48,
     width: "100%",
-    backgroundColor: "rgba(20, 15, 38, 0.2)",
+    backgroundColor: "rgba(20, 15, 38, 0.15)",
     borderRadius: 12,
   },
   errorInput: {
