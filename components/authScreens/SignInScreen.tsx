@@ -43,71 +43,89 @@ export default function SignInScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Controller
-        name="email"
-        control={form.control}
-        rules={{
-          required: true,
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            placeholder="Email"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            errorProps={{
-              children:
-                form.formState.errors.email && "Please enter your email",
-            }}
-            style={{ marginBottom: 12 }}
-          />
-        )}
-      />
+    <View style={styles.wrapper}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Sign In</Text>
 
-      <Controller
-        name="password"
-        control={form.control}
-        rules={{
-          required: true,
-        }}
-        render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput
-            placeholder="Password"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            errorProps={{
-              children:
-                form.formState.errors.email && "Please enter your password",
-            }}
-            style={{ marginBottom: 16 }}
-          />
-        )}
-      />
+        <Controller
+          name="email"
+          control={form.control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              placeholder="Email"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              errorProps={{
+                children:
+                  form.formState.errors.email && "Please enter your email",
+              }}
+              wrapperProps={{
+                style: { marginBottom: 12 },
+              }}
+            />
+          )}
+        />
 
-      <Pressable style={{ marginBottom: 16 }}>
-        <Text style={{ color: Colors.gray[700] }}>Forgot password?</Text>
-      </Pressable>
+        <Controller
+          name="password"
+          control={form.control}
+          rules={{
+            required: true,
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              placeholder="Password"
+              onBlur={onBlur}
+              onChangeText={onChange}
+              value={value}
+              errorProps={{
+                children:
+                  form.formState.errors.email && "Please enter your password",
+              }}
+              wrapperProps={{
+                style: { marginBottom: 16 },
+              }}
+            />
+          )}
+        />
 
-      <Button>Login</Button>
+        <Pressable style={{ marginBottom: 18 }}>
+          <Text style={{ color: Colors.gray[700] }}>Forgot password?</Text>
+        </Pressable>
+
+        <Button style={styles.button}>Login</Button>
+      </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
+  wrapper: {
     flex: 1,
-    marginTop: 160,
-    justifyContent: "flex-start",
     alignItems: "center",
   },
-  button: {
-    backgroundColor: "red",
+  container: {
+    flex: 1,
+    marginTop: 100,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    paddingHorizontal: 24,
+    maxWidth: 400,
     width: "100%",
-    paddingVertical: 14,
   },
-  buttonFont: {
-    height: 48,
+  title: {
+    color: Colors.gray[400],
+    fontFamily: "GabaritoSemibold",
+    fontSize: 46,
+    width: "100%",
+    marginBottom: 18,
+  },
+  button: {
+    position: "absolute",
+    bottom: 48,
   },
 })

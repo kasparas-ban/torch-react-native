@@ -33,10 +33,7 @@ export default function RootLayout() {
   }, [error])
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync()
-      // setTimeout(() => SplashScreen.hideAsync(), 2000);
-    }
+    if (loaded) SplashScreen.hideAsync()
   }, [loaded])
 
   if (!loaded) {
@@ -52,13 +49,17 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <ClerkProvider>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="modal"
-          options={{ presentation: "modal", headerTransparent: true }}
-        />
-      </Stack>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="signInModal"
+            options={{
+              presentation: "modal",
+              headerTransparent: true,
+              title: "",
+            }}
+          />
+        </Stack>
       </ClerkProvider>
     </ThemeProvider>
   )

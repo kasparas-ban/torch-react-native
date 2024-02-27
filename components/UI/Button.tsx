@@ -1,51 +1,36 @@
 import React from "react"
 import Colors from "@/constants/Colors"
-import { BlurView } from "expo-blur"
 import {
   Pressable,
   PressableProps,
   StyleSheet,
   Text,
-  View,
-  ViewProps,
+  TextProps,
 } from "react-native"
 
 type Props = Omit<PressableProps, "children"> & {
   children: string
   type?: "primary"
-  wrapperProps?: ViewProps
+  textProps?: TextProps
 }
 
 export default function Button(props: Props) {
-  const { wrapperProps, ...pressableProps } = props
-
+  const { textProps, ...buttonProps } = props
   const buttonStyle = buttonStyles[props.type || "primary"]
 
   return (
-    <View {...wrapperProps} style={[wrapperProps?.style || styles.wrapper]}>
-      <BlurView
-        style={styles.blur}
-        intensity={30}
-        experimentalBlurMethod="none"
-      >
-        <Pressable {...pressableProps} style={[styles.button, buttonStyle]}>
-          <Text style={styles.label}>{pressableProps.children}</Text>
-        </Pressable>
-      </BlurView>
-    </View>
+    <Pressable
+      {...props}
+      style={[styles.button, buttonStyle, buttonProps.style as any]}
+    >
+      <Text style={[styles.label, textProps?.style]}>{props.children}</Text>
+    </Pressable>
   )
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    width: "100%",
-    paddingHorizontal: 24,
-    maxWidth: 400,
-  },
-  blur: {
-    borderRadius: 12,
-  },
   button: {
+    width: "100%",
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",

@@ -299,7 +299,7 @@ function NavBarButton({
   children: ReactNode
 }) {
   return isPrivate ? (
-    <Link href="/modal" asChild>
+    <Link href="/signInModal" asChild>
       <Pressable
         role="button"
         testID={options.tabBarTestID}

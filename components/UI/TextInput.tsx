@@ -22,7 +22,7 @@ export default function TextInput(props: Props) {
   const isError = !!errorProps?.children
 
   return (
-    <View {...wrapperProps} style={[wrapperProps?.style || styles.wrapper]}>
+    <View {...wrapperProps} style={[wrapperProps?.style, styles.wrapper]}>
       {labelProps?.children && (
         <Text {...labelProps} style={[styles.label, labelProps?.style]} />
       )}
@@ -46,8 +46,6 @@ export default function TextInput(props: Props) {
 const styles = StyleSheet.create({
   wrapper: {
     width: "100%",
-    paddingHorizontal: 24,
-    maxWidth: 400,
   },
   blur: {
     borderRadius: 12,
