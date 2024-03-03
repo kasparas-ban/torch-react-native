@@ -8,40 +8,26 @@ import { z } from "zod"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
 import Button from "../UI/Button"
-import Link from "../UI/Link"
 import TextInput from "../UI/TextInput"
 
-const SignInSchema = z.object({
+const ForgotPasswordSchema = z.object({
   email: z.string().email(),
-  password: z.string(),
 })
 
-type SignInFormType = z.infer<typeof SignInSchema>
+type ForgotPasswordFormType = z.infer<typeof ForgotPasswordSchema>
 
-export default function SignInScreen() {
+export default function ForgotPasswordScreen() {
   const { signIn, setActive, isLoaded } = useSignIn()
   const { styles } = useThemeStyles(componentStyles)
 
-  const form = useForm<SignInFormType>({
-    resolver: zodResolver(SignInSchema),
+  const form = useForm<ForgotPasswordFormType>({
+    resolver: zodResolver(ForgotPasswordSchema),
     // defaultValues: { email: "" },
     shouldUnregister: true,
   })
 
-  const onSignInPress = (data: SignInFormType) => {
+  const onSignInPress = (data: ForgotPasswordFormType) => {
     console.log(data)
-    // if (!isLoaded) return
-    // try {
-    //   const completeSignIn = await signIn.create({
-    //     identifier: emailAddress,
-    //     password,
-    //   })
-    //   // This is an important step,
-    //   // This indicates the user is signed in
-    //   await setActive({ session: completeSignIn.createdSessionId })
-    // } catch (err: any) {
-    //   console.log(err)
-    // }
   }
 
   return (
@@ -51,11 +37,15 @@ export default function SignInScreen() {
           style={{
             flexDirection: "row",
             width: "100%",
-            marginBottom: 12,
+            marginBottom: 20,
           }}
         >
-          <Text style={styles.title}>Sign In</Text>
+          <Text style={styles.title}>Forgot password</Text>
         </View>
+
+        <Text style={styles.text}>
+          Type in your email address and we'll send you a password reset link.
+        </Text>
 
         <Controller
           name="email"
@@ -80,51 +70,9 @@ export default function SignInScreen() {
           )}
         />
 
-        <Controller
-          name="password"
-          control={form.control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              placeholder="Password"
-              textContentType="password"
-              secureTextEntry
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              errorProps={{
-                children:
-                  form.formState.errors.email && "Please enter your password",
-              }}
-              wrapperProps={{
-                style: { marginBottom: 12 },
-              }}
-            />
-          )}
-        />
-
-        <Link href="/(modals)/forgot-password" style={styles.link}>
-          Forgot password?
-        </Link>
-
         <View style={{ position: "absolute", bottom: 48, width: "100%" }}>
-          <View
-            style={{
-              flexDirection: "row",
-              gap: 6,
-              marginTop: 18,
-              marginBottom: 18,
-              justifyContent: "center",
-            }}
-          >
-            <Text style={styles.text}>No account?</Text>
-            <Link href="/(modals)/forgot-password">Sign Up</Link>
-          </View>
-
           <Button scale={0.97} onPress={form.handleSubmit(onSignInPress)}>
-            Login
+            Send link
           </Button>
         </View>
       </View>
@@ -154,6 +102,10 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     },
     text: {
       color: isDark ? Colors.gray[400] : Colors.gray[900],
+      marginBottom: 16,
+      textAlign: "justify",
+      fontSize: 16,
+      width: "100%",
     },
     link: {
       marginLeft: "auto",

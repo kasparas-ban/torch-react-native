@@ -52,7 +52,15 @@ function RootLayoutNav() {
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen
-            name="signInModal"
+            name="(modals)/sign-in"
+            options={{
+              presentation: "modal",
+              headerTransparent: true,
+              title: "",
+            }}
+          />
+          <Stack.Screen
+            name="(modals)/forgot-password"
             options={{
               presentation: "modal",
               headerTransparent: true,

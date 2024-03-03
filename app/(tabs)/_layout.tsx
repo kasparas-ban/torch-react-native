@@ -2,6 +2,7 @@ import React from "react"
 import { BlurView } from "expo-blur"
 import { ImageBackground } from "expo-image"
 import { Tabs } from "expo-router"
+import { Platform } from "react-native"
 import {
   BottomTabBarItems,
   BottomTabBarWrapper,
@@ -29,7 +30,16 @@ export default function TabLayout() {
             <BottomTabBarItems tabBarProps={props} />
           </BottomTabBarWrapper>
         )}
-        sceneContainerStyle={{ backgroundColor: "transparent" }}
+        sceneContainerStyle={{
+          backgroundColor: "transparent",
+          width: "100%",
+          ...(Platform.OS === "web"
+            ? {
+                maxWidth: Platform.OS === "web" ? 850 : "auto",
+                marginHorizontal: "auto",
+              }
+            : {}),
+        }}
       >
         <Tabs.Screen
           name="goals"
@@ -46,7 +56,7 @@ export default function TabLayout() {
         <Tabs.Screen name="world" options={{ title: "World" }} />
         <Tabs.Screen
           name="account"
-          options={{ title: "Sign In" }}
+          options={{ title: "Account" }}
           initialParams={{ isPrivate: true }}
         />
         <Tabs.Screen name="index" options={{ href: null }} />

@@ -9,7 +9,7 @@ import {
   View,
   ViewProps,
 } from "react-native"
-import useThemeStyles, { StyleType } from "@/utils/themeStyles"
+import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
 type Props = TextInputProps & {
   wrapperProps?: ViewProps
@@ -41,7 +41,7 @@ export default function TextInput(props: Props) {
   )
 }
 
-const inputStyles: StyleType<any> = ({ isDark, isFocused, platform }) =>
+const inputStyles = ({ isDark, isFocused, platform }: ThemeStylesProps) =>
   StyleSheet.create({
     wrapper: {
       width: "100%",

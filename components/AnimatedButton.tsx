@@ -1,8 +1,14 @@
-import React from "react"
-import { Pressable, PressableProps } from "react-native"
+import React, { forwardRef, Ref } from "react"
+import {
+  GestureResponderEvent,
+  Pressable,
+  PressableProps,
+  View,
+} from "react-native"
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  withSequence,
   withTiming,
 } from "react-native-reanimated"
 
@@ -16,7 +22,7 @@ type Props = PressableProps & {
   opacity?: number
 }
 
-export function AnimatedButton(props: Props) {
+function AnimatedButtonBase(props: Props, ref: Ref<View>) {
   const scale = useSharedValue(1)
   const opacity = useSharedValue(1)
 
@@ -38,6 +44,18 @@ export function AnimatedButton(props: Props) {
     })
   }
 
+  const handlePress = (e: GestureResponderEvent) => {
+    scale.value = withSequence(
+      withTiming(props.scale || DEFAULT_SCALE, {
+        duration: 100,
+      }),
+      withTiming(1, {
+        duration: 100,
+      })
+    )
+    props.onPress?.(e)
+  }
+
   const animatedStyles = useAnimatedStyle(() => {
     return {
       transform: [{ scale: scale.value }],
@@ -47,11 +65,15 @@ export function AnimatedButton(props: Props) {
 
   return (
     <AnimatedPressable
+      ref={ref}
       key={props.children?.toString()}
       {...props}
       style={[props.style, animatedStyles]}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
+      onPress={handlePress}
     />
   )
 }
+
+export const AnimatedButton = forwardRef(AnimatedButtonBase)

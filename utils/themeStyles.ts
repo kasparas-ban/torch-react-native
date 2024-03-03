@@ -9,15 +9,17 @@ import {
 
 type NamedStyles<T> = { [P in keyof T]: ViewStyle | TextStyle | ImageStyle }
 
+export type ThemeStylesProps = {
+  isDark?: boolean
+  isFocused?: boolean
+  platform?: typeof Platform.OS
+}
+
 export type StyleType<T> = ({
   isDark,
   isFocused,
   platform,
-}: {
-  isDark?: boolean
-  isFocused?: boolean
-  platform?: typeof Platform.OS
-}) => NamedStyles<T>
+}: ThemeStylesProps) => NamedStyles<T>
 
 const useThemeStyles = <T>(createStylesheet: StyleType<T>) => {
   const colorScheme = useColorScheme()
