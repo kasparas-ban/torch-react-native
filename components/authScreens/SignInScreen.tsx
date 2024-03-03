@@ -28,7 +28,8 @@ export default function SignInScreen() {
     shouldUnregister: true,
   })
 
-  const onSignInPress = async () => {
+  const onSignInPress = (data: SignInFormType) => {
+    console.log(data)
     // if (!isLoaded) return
     // try {
     //   const completeSignIn = await signIn.create({
@@ -120,7 +121,9 @@ export default function SignInScreen() {
             <Link>Sign Up</Link>
           </View>
 
-          <Button scale={0.97}>Login</Button>
+          <Button scale={0.97} onPress={form.handleSubmit(onSignInPress)}>
+            Login
+          </Button>
         </View>
       </View>
     </View>

@@ -9,6 +9,7 @@ import {
   View,
   ViewProps,
 } from "react-native"
+import useThemeStyles, { StyleType } from "@/utils/themeStyles"
 
 type Props = TextInputProps & {
   wrapperProps?: ViewProps
@@ -18,6 +19,7 @@ type Props = TextInputProps & {
 
 export default function TextInput(props: Props) {
   const { wrapperProps, labelProps, errorProps, ...inputProps } = props
+  const { styles, onFocus, onBlur } = useThemeStyles(inputStyles)
   const isError = !!errorProps?.children
 
   return (
@@ -29,6 +31,8 @@ export default function TextInput(props: Props) {
         {...inputProps}
         placeholderTextColor={Colors.gray[500]}
         style={[styles.input, inputProps.style, isError && styles.errorInput]}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
       {errorProps?.children && (
         <Text {...errorProps} style={[styles.errorlabel, errorProps?.style]} />
@@ -37,30 +41,43 @@ export default function TextInput(props: Props) {
   )
 }
 
-const styles = StyleSheet.create({
-  wrapper: {
-    width: "100%",
-  },
-  input: {
-    paddingHorizontal: 16,
-    height: 48,
-    width: "100%",
-    backgroundColor: "rgba(20, 15, 38, 0.15)",
-    // backgroundColor: "rgba(80, 80, 80, 0.4)",
-    borderRadius: 12,
-  },
-  errorInput: {
-    borderColor: "red",
-    borderWidth: 1,
-    backgroundColor: Colors.rose[50],
-  },
-  label: {
-    paddingLeft: 8,
-    marginBottom: 4,
-  },
-  errorlabel: {
-    marginTop: 4,
-    paddingLeft: 8,
-    color: Colors.rose[600],
-  },
-})
+const inputStyles: StyleType<any> = ({ isDark, isFocused, platform }) =>
+  StyleSheet.create({
+    wrapper: {
+      width: "100%",
+    },
+    input: {
+      paddingHorizontal: 16,
+      height: 48,
+      width: "100%",
+      backgroundColor: isDark
+        ? "rgba(80, 80, 80, 0.6)"
+        : "rgba(20, 15, 38, 0.15)",
+      borderRadius: 12,
+      color: isDark ? "white" : "black",
+      ...(platform === "web"
+        ? {
+            outlineStyle: isFocused ? "solid" : "none",
+            outlineWidth: 2,
+            outlineColor: Colors.gray[700],
+          }
+        : {
+            borderWidth: isFocused ? 2 : 0,
+            borderColor: Colors.gray[700],
+          }),
+    },
+    errorInput: {
+      borderColor: "red",
+      borderWidth: 1,
+      backgroundColor: Colors.rose[50],
+    },
+    label: {
+      paddingLeft: 8,
+      marginBottom: 4,
+    },
+    errorlabel: {
+      marginTop: 4,
+      paddingLeft: 8,
+      color: Colors.rose[600],
+    },
+  })
