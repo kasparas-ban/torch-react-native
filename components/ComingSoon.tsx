@@ -1,5 +1,6 @@
 import React from "react"
 import Colors from "@/constants/Colors"
+import { Link } from "expo-router"
 import {
   ImageBackground,
   StyleSheet,
@@ -35,25 +36,27 @@ export function ComingSoon() {
       >
         Sign up now and you'll be the first to know when it goes live!
       </Text>
-      <AnimatedButton style={styles.button}>
-        <ImageBackground
-          source={require("@/assets/images/gradient_animation.gif")}
-          style={styles.buttonBackground}
-        >
-          <View
-            style={{
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              backgroundColor: "black",
-              position: "absolute",
-              opacity: isDark ? 0.2 : 0,
-            }}
-          />
-          <Text style={styles.buttonText}>Sign Up</Text>
-        </ImageBackground>
-      </AnimatedButton>
+      <Link href="/sign-up" asChild>
+        <AnimatedButton style={styles.button}>
+          <ImageBackground
+            source={require("@/assets/images/gradient_animation.gif")}
+            style={styles.buttonBackground}
+          >
+            <View
+              style={{
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                backgroundColor: "black",
+                position: "absolute",
+                opacity: isDark ? 0.2 : 0,
+              }}
+            />
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </ImageBackground>
+        </AnimatedButton>
+      </Link>
     </View>
   )
 }

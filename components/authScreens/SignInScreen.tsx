@@ -24,24 +24,11 @@ export default function SignInScreen() {
 
   const form = useForm<SignInFormType>({
     resolver: zodResolver(SignInSchema),
-    // defaultValues: { email: "" },
     shouldUnregister: true,
   })
 
   const onSignInPress = (data: SignInFormType) => {
     console.log(data)
-    // if (!isLoaded) return
-    // try {
-    //   const completeSignIn = await signIn.create({
-    //     identifier: emailAddress,
-    //     password,
-    //   })
-    //   // This is an important step,
-    //   // This indicates the user is signed in
-    //   await setActive({ session: completeSignIn.createdSessionId })
-    // } catch (err: any) {
-    //   console.log(err)
-    // }
   }
 
   return (
@@ -120,7 +107,7 @@ export default function SignInScreen() {
             }}
           >
             <Text style={styles.text}>No account?</Text>
-            <Link href="/(modals)/forgot-password">Sign Up</Link>
+            <Link href="/(modals)/sign-up">Sign Up</Link>
           </View>
 
           <Button scale={0.97} onPress={form.handleSubmit(onSignInPress)}>

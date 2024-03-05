@@ -59,17 +59,17 @@ const inputStyles = ({ isDark, isFocused, platform }: ThemeStylesProps) =>
         ? {
             outlineStyle: isFocused ? "solid" : "none",
             outlineWidth: 2,
-            outlineColor: Colors.gray[700],
+            outlineColor: isDark ? Colors.gray[300] : Colors.gray[700],
           }
         : {
             borderWidth: isFocused ? 2 : 0,
-            borderColor: Colors.gray[700],
+            borderColor: isDark ? Colors.gray[300] : Colors.gray[700],
           }),
     },
     errorInput: {
       borderColor: "red",
       borderWidth: 1,
-      backgroundColor: Colors.rose[50],
+      backgroundColor: isDark ? Colors.rose[200] : Colors.rose[50],
     },
     label: {
       paddingLeft: 8,

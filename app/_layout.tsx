@@ -60,6 +60,14 @@ function RootLayoutNav() {
             }}
           />
           <Stack.Screen
+            name="(modals)/sign-up"
+            options={{
+              presentation: "modal",
+              headerTransparent: true,
+              title: "",
+            }}
+          />
+          <Stack.Screen
             name="(modals)/forgot-password"
             options={{
               presentation: "modal",
