@@ -1,0 +1,70 @@
+import Colors from "@/constants/Colors"
+import { StyleSheet, Text, View } from "react-native"
+import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
+
+import useTimerStore from "./hooks/useTimer"
+import timerButtons from "./TimerActionButtons"
+import TimerShape from "./TimerShape"
+
+export default function TimerClock() {
+  //   useTimerListener()
+
+  const { styles } = useThemeStyles(componentStyles)
+
+  const time = useTimerStore.use.time()
+  const timerState = useTimerStore.use.timerState()
+
+  const initialTimerTime = useTimerStore.use.initialTime()
+  const isBreakActive = useTimerStore.use.break()
+  const isLongBreakActive = useTimerStore.use.timerCount() >= 4
+  const longBreakTime = useTimerStore.use.longBreakTime()
+  const breakTime = useTimerStore.use.breakTime()
+  const initialTime = isBreakActive
+    ? isLongBreakActive
+      ? longBreakTime
+      : breakTime
+    : initialTimerTime
+
+  const minutes = Math.floor(time / 60)
+  const seconds = time - minutes * 60
+
+  return (
+    <View>
+      <TimerShape
+        initialTime={initialTime}
+        currentTime={time}
+        isBreakActive={isBreakActive}
+      >
+        <Text style={styles.timerText}>
+          {`${minutes}:${seconds < 10 ? "0" + seconds : seconds}`}
+        </Text>
+      </TimerShape>
+
+      <View style={{ display: "flex", alignItems: "center", marginTop: 32 }}>
+        <timerButtons.TimerActionButtons key="timer_action_buttons" />
+      </View>
+    </View>
+  )
+}
+
+const componentStyles = ({ isDark }: ThemeStylesProps) =>
+  StyleSheet.create({
+    timerText: {
+      fontSize: 92,
+      fontWeight: "100",
+      fontVariant: ["tabular-nums"],
+      color: isDark ? Colors.gray[50] : Colors.gray[900],
+      position: "absolute",
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+
+      alignContent: "center",
+      margin: "auto",
+      alignSelf: "center",
+      textAlign: "center",
+      textAlignVertical: "center",
+    },
+  })

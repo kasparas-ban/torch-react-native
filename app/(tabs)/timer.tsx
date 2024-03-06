@@ -1,17 +1,11 @@
 import { StyleSheet } from "react-native"
-import EditScreenInfo from "@/components/EditScreenInfo"
-import { Text, View } from "@/components/Themed"
+import { View } from "@/components/Themed"
+import TimerClock from "@/components/Timer/TimerClock"
 
 export default function TimerScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Timer</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="app/(tabs)/timer.tsx" />
+      <TimerClock />
     </View>
   )
 }
@@ -22,14 +16,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "transparent",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
   },
 })
