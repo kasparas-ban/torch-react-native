@@ -12,8 +12,6 @@ export default function TimerClock() {
   const { styles } = useThemeStyles(componentStyles)
 
   const time = useTimerStore.use.time()
-  const timerState = useTimerStore.use.timerState()
-
   const initialTimerTime = useTimerStore.use.initialTime()
   const isBreakActive = useTimerStore.use.break()
   const isLongBreakActive = useTimerStore.use.timerCount() >= 4
@@ -51,9 +49,9 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
   StyleSheet.create({
     timerText: {
       fontSize: 92,
-      fontWeight: "100",
+      fontWeight: "300",
       fontVariant: ["tabular-nums"],
-      color: isDark ? Colors.gray[50] : Colors.gray[900],
+      color: isDark ? Colors.gray[50] : Colors.gray[700],
       position: "absolute",
       width: "100%",
       height: "100%",

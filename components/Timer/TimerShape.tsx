@@ -1,7 +1,15 @@
-import { ReactNode } from "react"
-import { View } from "react-native"
-import { useSharedValue } from "react-native-reanimated"
+import { ReactNode, useEffect } from "react"
+import Colors from "@/constants/Colors"
+import { useColorScheme, View } from "react-native"
+import Animated, {
+  Easing,
+  useAnimatedProps,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated"
 import Svg, { Path } from "react-native-svg"
+
+const AnimatedPath = Animated.createAnimatedComponent(Path)
 
 export default function TimerShape({
   initialTime,
@@ -14,52 +22,59 @@ export default function TimerShape({
   isBreakActive: boolean
   children: ReactNode
 }) {
-  const fractionComplete = 1 - currentTime / initialTime
-  const strokeDashoffset = useSharedValue(fractionComplete)
-
   const size = 318
   const { path, pathLength } = getPathProps(size, 5, "counterclockwise")
-  const strokeWidth = fractionComplete ? 5 : 0
-  const stroke = isBreakActive ? "#60A5FA" : "#E11D48"
-  const strokeLinecap = "round"
+  const fractionComplete = useSharedValue(1 - currentTime / initialTime)
 
-  strokeDashoffset.value = linearEase(
-    initialTime - currentTime,
-    0,
-    pathLength,
-    initialTime
-  )
+  const colorScheme = useColorScheme()
+  const isDark = colorScheme === "dark"
 
-  strokeDashoffset.value = (pathLength * currentTime) / initialTime
+  useEffect(() => {
+    fractionComplete.value = 1 - currentTime / initialTime
+  }, [currentTime])
+
+  const animatedProps = useAnimatedProps(() => {
+    return {
+      strokeDashoffset: withTiming(pathLength * fractionComplete.value, {
+        duration: 1000,
+        easing: Easing.linear,
+      }),
+    }
+  })
+
+  const breakPathColor = Colors.sky[400]
+  const timerPathColor = isDark ? Colors.rose[600] : Colors.rose[500]
+  const backgroundPathColor = isDark ? Colors.gray[600] : Colors.gray[300]
 
   return (
     <View style={{ position: "relative" }}>
-      <Svg viewBox={`0 0 ${size} ${size}`} width={size} height={size}>
+      <Svg
+        viewBox={`0 0 ${size} ${size}`}
+        width={size}
+        height={size}
+        style={{ position: "absolute" }}
+      >
         <Path
-          strokeDasharray={pathLength}
-          strokeDashoffset={strokeDashoffset.value}
           d={path}
           fill="none"
-          stroke={stroke}
-          strokeLinecap={strokeLinecap ?? "round"}
-          strokeWidth={strokeWidth}
+          stroke={backgroundPathColor}
+          strokeLinecap="round"
+        />
+      </Svg>
+      <Svg viewBox={`0 0 ${size} ${size}`} width={size} height={size}>
+        <AnimatedPath
+          animatedProps={animatedProps}
+          strokeDasharray={pathLength}
+          d={path}
+          fill="none"
+          stroke={isBreakActive ? breakPathColor : timerPathColor}
+          strokeLinecap="round"
+          strokeWidth={4}
         />
       </Svg>
       {children}
     </View>
   )
-}
-
-const linearEase = (
-  time: number,
-  start: number,
-  goal: number,
-  duration: number
-) => {
-  if (duration === 0) return start
-
-  const currentTime = (duration - time) / duration
-  return start + goal * currentTime
 }
 
 const getPathProps = (

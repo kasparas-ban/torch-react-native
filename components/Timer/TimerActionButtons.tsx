@@ -22,7 +22,7 @@ function TimerActionButtons() {
         style={styles.primaryBtnBackground}
       >
         <View style={styles.primaryBtnFilter} />
-        <Text style={styles.startBtnText}>Start</Text>
+        <Text style={styles.primaryBtnText}>Start</Text>
       </ImageBackground>
     </AnimatedButton>
   ) : timerState === "running" ? (
@@ -40,10 +40,16 @@ function TimerActionButtons() {
     >
       <AnimatedButton
         key="timer_continue"
-        style={[styles.btn, styles.standardBtn]}
+        style={styles.btn}
         onPress={startTimer}
       >
-        <Text style={styles.standardBtnText}>Continue</Text>
+        <ImageBackground
+          source={require("@/assets/images/gradient_animation.gif")}
+          style={styles.primaryBtnBackground}
+        >
+          <View style={styles.primaryBtnFilter} />
+          <Text style={styles.primaryBtnText}>Continue</Text>
+        </ImageBackground>
       </AnimatedButton>
 
       <AnimatedButton
@@ -64,8 +70,8 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       width: 92,
       borderRadius: 100,
     },
-    // Start button
-    startBtnText: {
+    // Start/Continue button
+    primaryBtnText: {
       fontWeight: "600",
       color: isDark ? Colors.gray[50] : "white",
       letterSpacing: 1,
@@ -89,7 +95,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       position: "absolute",
       opacity: isDark ? 0.2 : 0.05,
     },
-    // Pause/Continue/Stop buttons
+    // Pause/Stop buttons
     standardBtn: {
       alignItems: "center",
       justifyContent: "center",
