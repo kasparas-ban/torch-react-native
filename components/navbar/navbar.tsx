@@ -251,8 +251,8 @@ export function BottomTabBarItems({
             {isFocused && (
               <Animated.View
                 style={{ position: "absolute", width: 60, height: 60 }}
-                entering={FadeIn}
-                exiting={FadeOut}
+                entering={FadeIn()}
+                exiting={FadeOut()}
               >
                 <Image
                   source={require("@/assets/images/highlight.png")}

@@ -6,6 +6,7 @@ import {
   View,
 } from "react-native"
 import Animated, {
+  AnimatedProps,
   useAnimatedStyle,
   useSharedValue,
   withSequence,
@@ -17,10 +18,11 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 const DEFAULT_SCALE = 0.92
 const DEFAULT_OPACITY = 0.7
 
-type Props = PressableProps & {
-  scale?: number
-  opacity?: number
-}
+type Props = AnimatedProps<PressableProps> &
+  PressableProps & {
+    scale?: number
+    opacity?: number
+  }
 
 function AnimatedButtonBase(props: Props, ref: Ref<View>) {
   const scale = useSharedValue(1)

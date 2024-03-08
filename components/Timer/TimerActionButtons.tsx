@@ -1,4 +1,5 @@
 import { forwardRef } from "react"
+import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import { ImageBackground, StyleSheet, Text, View } from "react-native"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
@@ -16,7 +17,13 @@ function TimerActionButtons() {
   const resetTimer = useTimerStore.use.resetTimer()
 
   return timerState === "idle" ? (
-    <AnimatedButton key="timer_start" style={styles.btn} onPress={startTimer}>
+    <AnimatedButton
+      key="timer_start"
+      style={styles.btn}
+      onPress={startTimer}
+      entering={FadeIn(0.7)}
+      exiting={FadeOut(0.7)}
+    >
       <ImageBackground
         source={require("@/assets/images/gradient_animation.gif")}
         style={styles.primaryBtnBackground}
@@ -30,6 +37,8 @@ function TimerActionButtons() {
       key="timer_pause"
       style={[styles.btn, styles.standardBtn]}
       onPress={pauseTimer}
+      entering={FadeIn(0.7)}
+      exiting={FadeOut(0.7)}
     >
       <Text style={styles.standardBtnText}>Pause</Text>
     </AnimatedButton>
@@ -42,6 +51,8 @@ function TimerActionButtons() {
         key="timer_continue"
         style={styles.btn}
         onPress={startTimer}
+        entering={FadeIn(0.7)}
+        exiting={FadeOut(0.7)}
       >
         <ImageBackground
           source={require("@/assets/images/gradient_animation.gif")}
@@ -56,6 +67,8 @@ function TimerActionButtons() {
         key="timer_reset"
         style={[styles.btn, styles.standardBtn]}
         onPress={resetTimer}
+        entering={FadeIn(0.7)}
+        exiting={FadeOut(0.7)}
       >
         <Text style={styles.standardBtnText}>Stop</Text>
       </AnimatedButton>
