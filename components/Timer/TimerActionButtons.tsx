@@ -1,4 +1,3 @@
-import { forwardRef } from "react"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import { ImageBackground, StyleSheet, Text, View } from "react-native"
@@ -8,7 +7,7 @@ import { rgbToRGBA } from "@/utils/utils"
 import { AnimatedButton } from "../AnimatedButton"
 import useTimerStore from "./hooks/useTimer"
 
-function TimerActionButtons() {
+export default function TimerActionButtons() {
   const { styles } = useThemeStyles(componentStyles)
 
   const timerState = useTimerStore.use.timerState()
@@ -123,10 +122,3 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       letterSpacing: 1,
     },
   })
-
-const exports = {
-  TimerActionButtons: forwardRef(TimerActionButtons),
-  //   TimerSettingsButton: forwardRef(TimerSettingsButton),
-}
-
-export default exports

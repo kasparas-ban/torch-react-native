@@ -59,9 +59,15 @@ export default function TimerShape({
           fill="none"
           stroke={backgroundPathColor}
           strokeLinecap="round"
+          strokeWidth={2}
         />
       </Svg>
-      <Svg viewBox={`0 0 ${size} ${size}`} width={size} height={size}>
+      <Svg
+        viewBox={`0 0 ${size} ${size}`}
+        width={size}
+        height={size}
+        style={{ zIndex: 1 }}
+      >
         <AnimatedPath
           animatedProps={animatedProps}
           strokeDasharray={pathLength}

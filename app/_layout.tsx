@@ -75,6 +75,14 @@ function RootLayoutNav() {
               title: "",
             }}
           />
+          <Stack.Screen
+            name="(modals)/timer-settings"
+            options={{
+              presentation: "modal",
+              headerTransparent: true,
+              title: "",
+            }}
+          />
         </Stack>
       </ClerkProvider>
     </ThemeProvider>

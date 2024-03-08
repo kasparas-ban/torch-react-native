@@ -3,7 +3,8 @@ import { StyleSheet, Text, View } from "react-native"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
 import useTimerStore from "./hooks/useTimer"
-import timerButtons from "./TimerActionButtons"
+import TimerActionButtons from "./TimerActionButtons"
+import TimerSettingsButton from "./TimerSettingsButton"
 import TimerShape from "./TimerShape"
 
 export default function TimerClock() {
@@ -36,10 +37,23 @@ export default function TimerClock() {
         <Text style={styles.timerText}>
           {`${minutes}:${seconds < 10 ? "0" + seconds : seconds}`}
         </Text>
+
+        <View
+          style={{
+            position: "absolute",
+            bottom: 40,
+            width: "100%",
+            zIndex: 1,
+          }}
+        >
+          <View style={{ alignItems: "center" }}>
+            <TimerSettingsButton />
+          </View>
+        </View>
       </TimerShape>
 
       <View style={{ display: "flex", alignItems: "center", marginTop: 32 }}>
-        <timerButtons.TimerActionButtons key="timer_action_buttons" />
+        <TimerActionButtons key="timer_action_buttons" />
       </View>
     </View>
   )
