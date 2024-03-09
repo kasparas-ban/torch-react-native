@@ -12,20 +12,25 @@ import {
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
 type Props = TextInputProps & {
+  label?: string
   wrapperProps?: ViewProps
   labelProps?: TextProps
   errorProps?: TextProps
 }
 
 export default function TextInput(props: Props) {
-  const { wrapperProps, labelProps, errorProps, ...inputProps } = props
+  const { label, wrapperProps, labelProps, errorProps, ...inputProps } = props
   const { styles, onFocus, onBlur } = useThemeStyles(inputStyles)
   const isError = !!errorProps?.children
 
   return (
     <View {...wrapperProps} style={[wrapperProps?.style, styles.wrapper]}>
-      {labelProps?.children && (
-        <Text {...labelProps} style={[styles.label, labelProps?.style]} />
+      {label && (
+        <Text
+          {...labelProps}
+          children={label}
+          style={[styles.label, labelProps?.style]}
+        />
       )}
       <BaseInput
         {...inputProps}
@@ -72,8 +77,10 @@ const inputStyles = ({ isDark, isFocused, platform }: ThemeStylesProps) =>
       backgroundColor: isDark ? Colors.rose[200] : Colors.rose[50],
     },
     label: {
-      paddingLeft: 8,
+      marginRight: "auto",
+      marginLeft: 12,
       marginBottom: 4,
+      color: Colors.gray[500],
     },
     errorlabel: {
       marginTop: 4,

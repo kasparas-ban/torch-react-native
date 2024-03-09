@@ -6,7 +6,7 @@ import { AnimatedButton } from "../AnimatedButton"
 
 type Props = Omit<ComponentProps<typeof AnimatedButton>, "children"> & {
   children: string
-  type?: "primary"
+  type?: "primary" | "base"
   textProps?: TextProps
 }
 
@@ -43,4 +43,5 @@ const buttonStyles = StyleSheet.create({
     height: 48,
     backgroundColor: Colors.rose[500],
   },
+  base: {},
 })

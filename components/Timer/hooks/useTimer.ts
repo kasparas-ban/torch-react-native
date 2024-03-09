@@ -45,7 +45,7 @@ const getStoredTimerSettings = () => {
   return null
 }
 
-const DEFAULT_TIME = 0.5 // 25
+const DEFAULT_TIME = 1 // 25
 const DEFAULT_BREAK_TIME = 5
 const DEFAULT_LONG_BREAK_TIME = 15
 
