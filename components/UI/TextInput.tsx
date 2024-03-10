@@ -1,4 +1,5 @@
 import React from "react"
+import { FadeIn } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import {
   TextInput as BaseInput,
@@ -9,6 +10,7 @@ import {
   View,
   ViewProps,
 } from "react-native"
+import Animated from "react-native-reanimated"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
 type Props = TextInputProps & {
@@ -40,7 +42,13 @@ export default function TextInput(props: Props) {
         onBlur={onBlur}
       />
       {errorProps?.children && (
-        <Text {...errorProps} style={[styles.errorlabel, errorProps?.style]} />
+        <Animated.View style={styles.errorlabel}>
+          <Animated.Text
+            {...errorProps}
+            style={[styles.errorText, errorProps?.style]}
+            entering={FadeIn(0.9)}
+          />
+        </Animated.View>
       )}
     </View>
   )
@@ -84,7 +92,10 @@ const inputStyles = ({ isDark, isFocused, platform }: ThemeStylesProps) =>
     },
     errorlabel: {
       marginTop: 4,
-      paddingLeft: 8,
+      paddingLeft: 12,
+      alignSelf: "flex-start",
+    },
+    errorText: {
       color: Colors.rose[600],
     },
   })

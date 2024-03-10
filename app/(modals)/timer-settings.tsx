@@ -12,9 +12,33 @@ import Button from "@/components/UI/Button"
 import TextInput from "@/components/UI/TextInput"
 
 const timerSettingsSchema = z.object({
-  timer: z.number().nonnegative().int(),
-  break: z.number().nonnegative().int(),
-  longBreak: z.number().nonnegative().int(),
+  timer: z
+    .string({
+      required_error: "Value is required",
+      invalid_type_error: "Duration must be a positive integer",
+    })
+    .min(1, { message: "Duration is required" })
+    .refine(val => Number(val) > 0, {
+      message: "Duration must be a positive integer",
+    }),
+  break: z
+    .string({
+      required_error: "Value is required",
+      invalid_type_error: "Duration must be a positive integer",
+    })
+    .min(1, { message: "Duration is required" })
+    .refine(val => Number(val) > 0, {
+      message: "Duration must be a positive integer",
+    }),
+  longBreak: z
+    .string({
+      required_error: "Value is required",
+      invalid_type_error: "Duration must be a positive integer",
+    })
+    .min(1, { message: "Duration is required" })
+    .refine(val => Number(val) > 0, {
+      message: "Duration must be a positive integer",
+    }),
 })
 
 type TimerSettingsForm = z.infer<typeof timerSettingsSchema>
@@ -33,9 +57,9 @@ export default function TimerSettingsModal() {
   const resetTimer = useTimerStore.use.resetTimer()
 
   const defaultSettings = {
-    timer: timerDuration,
-    break: breakDuration,
-    longBreak: longBreakDuration,
+    timer: timerDuration.toString(),
+    break: breakDuration.toString(),
+    longBreak: longBreakDuration.toString(),
   }
 
   const form = useForm<TimerSettingsForm>({
@@ -44,8 +68,16 @@ export default function TimerSettingsModal() {
   })
 
   const onSavePress = (data: TimerSettingsForm) => {
-    setStorageDurations(data.timer, data.break, data.longBreak)
-    setTimerDurations(data.timer * 60, data.break * 60, data.longBreak * 60)
+    setStorageDurations(
+      Number(data.timer),
+      Number(data.break),
+      Number(data.longBreak)
+    )
+    setTimerDurations(
+      Number(data.timer) * 60,
+      Number(data.break) * 60,
+      Number(data.longBreak) * 60
+    )
     resetTimer()
     router.back()
   }
@@ -94,27 +126,21 @@ export default function TimerSettingsModal() {
       <Controller
         name="timer"
         control={form.control}
-        rules={{
-          required: true,
-        }}
+        rules={{ required: true }}
         render={({ field: { onChange, onBlur, value } }) => (
-          <>
-            <TextInput
-              label="Timer"
-              keyboardType="number-pad"
-              placeholder="25"
-              onBlur={onBlur}
-              onChangeText={val => onChange(Number(val))}
-              value={value.toString()}
-              errorProps={{
-                children:
-                  form.formState.errors.timer && "Enter a valid timer duration",
-              }}
-              wrapperProps={{
-                style: { marginBottom: 12 },
-              }}
-            />
-          </>
+          <TextInput
+            label="Timer"
+            keyboardType="number-pad"
+            placeholder="25"
+            onBlur={onBlur}
+            maxLength={3}
+            onChangeText={val => onChange(val.replace(/[^0-9]/g, ""))}
+            value={value.toString()}
+            errorProps={{ children: form.formState.errors.timer?.message }}
+            wrapperProps={{
+              style: { marginBottom: 12 },
+            }}
+          />
         )}
       />
 
@@ -125,23 +151,19 @@ export default function TimerSettingsModal() {
           required: true,
         }}
         render={({ field: { onChange, onBlur, value } }) => (
-          <>
-            <TextInput
-              label="Break"
-              keyboardType="number-pad"
-              placeholder="5"
-              onBlur={onBlur}
-              onChangeText={val => onChange(val ? Number(val) : undefined)}
-              value={value.toString()}
-              errorProps={{
-                children:
-                  form.formState.errors.break && "Enter a valid break duration",
-              }}
-              wrapperProps={{
-                style: { marginBottom: 12 },
-              }}
-            />
-          </>
+          <TextInput
+            label="Break"
+            keyboardType="number-pad"
+            placeholder="5"
+            onBlur={onBlur}
+            maxLength={3}
+            onChangeText={val => onChange(val.replace(/[^0-9]/g, ""))}
+            value={value.toString()}
+            errorProps={{ children: form.formState.errors.break?.message }}
+            wrapperProps={{
+              style: { marginBottom: 12 },
+            }}
+          />
         )}
       />
 
@@ -152,24 +174,19 @@ export default function TimerSettingsModal() {
           required: true,
         }}
         render={({ field: { onChange, onBlur, value } }) => (
-          <>
-            <TextInput
-              label="Long break"
-              keyboardType="number-pad"
-              placeholder="15"
-              onBlur={onBlur}
-              onChangeText={val => onChange(val ? Number(val) : undefined)}
-              value={value.toString()}
-              errorProps={{
-                children:
-                  form.formState.errors.longBreak &&
-                  "Enter a valid long break duration",
-              }}
-              wrapperProps={{
-                style: { marginBottom: 12 },
-              }}
-            />
-          </>
+          <TextInput
+            label="Long break"
+            keyboardType="number-pad"
+            placeholder="15"
+            onBlur={onBlur}
+            maxLength={3}
+            onChangeText={val => onChange(val.replace(/[^0-9]/g, ""))}
+            value={value.toString()}
+            errorProps={{ children: form.formState.errors.longBreak?.message }}
+            wrapperProps={{
+              style: { marginBottom: 12 },
+            }}
+          />
         )}
       />
 
