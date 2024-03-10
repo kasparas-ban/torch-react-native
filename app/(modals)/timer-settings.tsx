@@ -11,6 +11,8 @@ import useTimerSettings from "@/components/Timer/hooks/useTimerSettings"
 import Button from "@/components/UI/Button"
 import TextInput from "@/components/UI/TextInput"
 
+import InfoIcon from "../../assets/icons/info.svg"
+
 const timerSettingsSchema = z.object({
   timer: z
     .string({
@@ -99,11 +101,25 @@ export default function TimerSettingsModal() {
         style={{
           flexDirection: "row",
           width: "100%",
-          marginBottom: 24,
+          marginBottom: 18,
           justifyContent: "center",
         }}
       >
         <Text style={styles.title}>Timer Settings</Text>
+      </View>
+
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 4,
+          marginBottom: 18,
+        }}
+      >
+        <InfoIcon style={styles.infoIcon} />
+        <Text style={styles.infoText}>
+          Changing the settings will reset the timers.
+        </Text>
       </View>
 
       <View
@@ -214,6 +230,14 @@ export default function TimerSettingsModal() {
 
 const componentStyles = ({ isDark }: ThemeStylesProps) =>
   StyleSheet.create({
+    infoIcon: {
+      color: Colors.amber[500],
+      width: 24,
+      height: 24,
+    },
+    infoText: {
+      color: isDark ? Colors.gray[400] : Colors.gray[600],
+    },
     title: {
       color: Colors.gray[400],
       fontFamily: "GabaritoSemibold",
