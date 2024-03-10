@@ -30,6 +30,7 @@ export default function TimerSettingsModal() {
   } = useTimerSettings()
 
   const setTimerDurations = useTimerStore.use.setDurations()
+  const resetTimer = useTimerStore.use.resetTimer()
 
   const defaultSettings = {
     timer: timerDuration,
@@ -45,10 +46,9 @@ export default function TimerSettingsModal() {
   const onSavePress = (data: TimerSettingsForm) => {
     setStorageDurations(data.timer, data.break, data.longBreak)
     setTimerDurations(data.timer * 60, data.break * 60, data.longBreak * 60)
+    resetTimer()
     router.back()
   }
-
-  console.log(form.formState.errors)
 
   return (
     <View

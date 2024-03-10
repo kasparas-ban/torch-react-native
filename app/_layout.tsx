@@ -5,6 +5,7 @@ import { useFonts } from "expo-font"
 import { Stack } from "expo-router"
 import * as SplashScreen from "expo-splash-screen"
 import { ClerkProvider } from "@/components/providers/ClerkProvider"
+import { StorageProvider } from "@/components/providers/StorageProvider"
 import { useColorScheme } from "@/components/useColorScheme"
 
 export {
@@ -48,6 +49,7 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <StorageProvider />
       <ClerkProvider>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

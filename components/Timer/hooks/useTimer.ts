@@ -1,10 +1,7 @@
-import { Platform } from "react-native"
 import { create } from "zustand"
 import { subscribeWithSelector } from "zustand/middleware"
 import { createSelectors } from "@/utils/zustandUtils"
 import { TimerState } from "@/app/types/itemTypes"
-
-import { TimerSettingsState } from "./useTimerSettings"
 
 type TimerStoreState = {
   time: number
@@ -34,27 +31,13 @@ type TimerStoreState = {
   ) => void
 }
 
-const getStoredTimerSettings = () => {
-  if (Platform.OS === "web") {
-    return null //TODO: fix this
-    const storedValues = JSON.parse(
-      window.localStorage.getItem("timer-settings-storage") || "null"
-    ) as { state: TimerSettingsState } | null
-    return storedValues
-  }
-  return null
-}
-
 const DEFAULT_TIME = 1 // 25
 const DEFAULT_BREAK_TIME = 5
 const DEFAULT_LONG_BREAK_TIME = 15
 
-const timerSettings = getStoredTimerSettings()?.state
-
-const defaultTime = (timerSettings?.timerDuration ?? DEFAULT_TIME) * 60
-const breakTime = (timerSettings?.breakDuration || DEFAULT_BREAK_TIME) * 60
-const longBreakTime =
-  (timerSettings?.longBreakDuration || DEFAULT_LONG_BREAK_TIME) * 60
+const defaultTime = DEFAULT_TIME * 60
+const breakTime = DEFAULT_BREAK_TIME * 60
+const longBreakTime = DEFAULT_LONG_BREAK_TIME * 60
 
 const useTimerStoreBase = create<TimerStoreState>()(
   subscribeWithSelector(set => ({
