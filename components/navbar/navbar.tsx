@@ -8,10 +8,8 @@ import {
 } from "@react-navigation/bottom-tabs"
 import { Image } from "expo-image"
 import { Link } from "expo-router"
-import { Pressable } from "react-native"
+import { Pressable, Text, useColorScheme, View } from "react-native"
 import Animated from "react-native-reanimated"
-import { Text, View } from "@/components/Themed"
-import { useColorScheme } from "@/components/useColorScheme"
 
 import AccountIcon from "../../assets/icons/navigationIcons/account.svg"
 import GoalsIcon from "../../assets/icons/navigationIcons/goals.svg"

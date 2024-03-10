@@ -8,7 +8,6 @@ import {
   BottomTabBarWrapper,
   Header,
 } from "@/components/navbar/navbar"
-import { useClientOnlyValue } from "@/components/useClientOnlyValue"
 
 export default function TabLayout() {
   return (
@@ -19,9 +18,6 @@ export default function TabLayout() {
       <Tabs
         screenOptions={{
           tabBarBackground: () => <BlurView />,
-          // Disable the static render of the header on web
-          // to prevent a hydration error in React Navigation v6.
-          headerShown: useClientOnlyValue(false, true),
           headerTransparent: true,
           header: Header,
         }}

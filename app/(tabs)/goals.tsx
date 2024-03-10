@@ -1,17 +1,10 @@
-import { StyleSheet } from "react-native"
-import EditScreenInfo from "@/components/EditScreenInfo"
-import { Text, View } from "@/components/Themed"
+import { StyleSheet, Text, View } from "react-native"
 
 export default function GoalsScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Goals</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="app/(tabs)/goals.tsx" />
+      <View style={styles.separator} />
     </View>
   )
 }

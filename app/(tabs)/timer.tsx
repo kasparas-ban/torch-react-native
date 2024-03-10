@@ -1,5 +1,4 @@
-import { StyleSheet } from "react-native"
-import { View } from "@/components/Themed"
+import { StyleSheet, View } from "react-native"
 import TimerClock from "@/components/Timer/TimerClock"
 
 export default function TimerScreen() {
