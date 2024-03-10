@@ -1,0 +1,58 @@
+import {
+  AddUserReq,
+  ProfileResp,
+  UpdateProfileReq,
+  UpdateUserTime,
+} from "@/types/userTypes"
+
+import { HOST } from "../utils/apiConfig"
+
+export const addUser = (token: string, user: AddUserReq) =>
+  fetch(`${HOST}/add-user`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify(user),
+  }).then(res => res.json() as Promise<ProfileResp>)
+
+export const updateUser = (token: string, user: UpdateProfileReq) =>
+  fetch(`${HOST}/update-user`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify(user),
+  }).then(res => res.json() as Promise<ProfileResp>)
+
+export const updateUserTime = (token: string, user: UpdateUserTime) =>
+  fetch(`${HOST}/update-user-progress`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify(user),
+  })
+
+export const getUserInfo = (token: string) =>
+  fetch(`${HOST}/user-info`, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+  }).then(async res => {
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error)
+    return data as ProfileResp
+  })
+
+export const deleteAccount = (token: string) =>
+  fetch(`${HOST}/delete-user`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  }).then(async res => {
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error)
+  })
+
+export const notifyUser = (token: string, email: string) =>
+  fetch(`${HOST}/notify`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ emailAddress: email }),
+  }).then(async res => {
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error)
+  })
