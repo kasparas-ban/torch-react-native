@@ -104,7 +104,7 @@ const ParentInfo = ({ focusOn }: { focusOn: ItemOptionType }) => {
         {focusOn?.containsTasks ||
           (focusOn.totalTimeSpent !== undefined && (
             <View style={{ flexDirection: "row" }}>
-              <TimerIcon
+              <TimerBoldIcon
                 color={Colors.gray[800]}
                 style={{ width: 20, height: 20, marginRight: 4 }}
               />

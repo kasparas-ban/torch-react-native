@@ -8,7 +8,7 @@ export default function TimerScreen() {
     <View style={styles.container}>
       <View style={{ width: "100%", paddingHorizontal: 24, marginBottom: 22 }}>
         <FocusSelect />
-        <View style={{ marginTop: 12 }}>
+        <View style={{ marginTop: 12, height: 64 }}>
           <FocusInfo />
         </View>
       </View>
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    marginTop: 130,
+    marginTop: 120,
     backgroundColor: "transparent",
   },
 })

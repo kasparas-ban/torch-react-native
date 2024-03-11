@@ -4,7 +4,10 @@ import { getItemsByType } from "@/api-endpoints/utils/helpers"
 import CloseIcon from "@/assets/icons/close.svg"
 import Colors from "@/constants/Colors"
 import { StyleSheet, Text, View } from "react-native"
-import ActionSheet, { ActionSheetRef } from "react-native-actions-sheet"
+import ActionSheet, {
+  ActionSheetRef,
+  ScrollView,
+} from "react-native-actions-sheet"
 import { ItemOptionType, ItemType } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { toPercent } from "@/utils/utils"
@@ -32,7 +35,7 @@ const MOCK_DATA = [
       },
       {
         label: "Learn Spanish grammar",
-        value: "7bax1usfu2uk",
+        value: "9bax1usfu113",
         type: "GOAL" as ItemType,
         progress: 0,
         timeSpent: 0,
@@ -43,7 +46,7 @@ const MOCK_DATA = [
       },
       {
         label: "Spanish language comprehension",
-        value: "8bax1usfu2uk",
+        value: "9bax1usfu123",
         type: "GOAL" as ItemType,
         progress: 0,
         timeSpent: 0,
@@ -54,7 +57,7 @@ const MOCK_DATA = [
       },
       {
         label: "Spanish writing",
-        value: "9bax1usfu2uk",
+        value: "9bax1usfu111",
         type: "GOAL" as ItemType,
         progress: 0,
         timeSpent: 0,
@@ -144,65 +147,83 @@ export default function FocusSelect() {
   const isEmpty = !items.length
 
   return (
-    <View style={{ height: 50, right: 0, left: 0 }}>
-      <AnimatedButton
-        scale={0.98}
-        style={styles.input}
-        onPress={() => actionSheetRef.current?.show()}
+    <View>
+      <Text
+        style={{ marginLeft: 12, marginBottom: 4, color: Colors.gray[500] }}
       >
-        <Text
-          style={[
-            styles.inputText,
-            focusOn && {
-              color: Colors.gray[700],
-              fontWeight: "600",
-            },
-          ]}
+        Focus on
+      </Text>
+      <View style={{ height: 50, right: 0, left: 0 }}>
+        <AnimatedButton
+          scale={0.98}
+          style={styles.input}
+          onPress={() => actionSheetRef.current?.show()}
         >
-          {focusOn?.label ?? "Select..."}
-        </Text>
-        {focusOn && (
-          <AnimatedButton
-            style={{
-              width: 28,
-              height: 28,
-              right: 12,
-              top: 12,
-              position: "absolute",
-            }}
-            onPress={() => setFocusOn(null)}
+          <Text
+            style={[
+              styles.inputText,
+              focusOn && {
+                color: Colors.gray[700],
+                fontWeight: "600",
+              },
+            ]}
           >
-            <CloseIcon
-              color={Colors.gray[500]}
-              style={{ width: 28, height: 28 }}
-            />
-          </AnimatedButton>
-        )}
-      </AnimatedButton>
-
-      <ActionSheet ref={actionSheetRef}>
-        <View style={{ paddingBottom: 24, paddingHorizontal: 24 }}>
-          <ModalHandle />
-
-          <View style={{ width: "100%", marginBottom: 12 }}>
-            <ToggleSelect<FocusType>
-              options={focusTypeOptions}
-              selected={focusType}
-              onChange={type => setFocusType(type.value)}
-            />
-          </View>
-
-          {isGrouped ? (
-            <GroupedItems
-              items={MOCK_DATA}
-              selectedItem={focusOn}
-              onSelectItem={setFocusOn}
-            />
-          ) : (
-            <></>
+            {focusOn?.label ?? "Select..."}
+          </Text>
+          {focusOn && (
+            <AnimatedButton
+              style={{
+                width: 28,
+                height: 28,
+                right: 12,
+                top: 12,
+                position: "absolute",
+              }}
+              onPress={() => setFocusOn(null)}
+            >
+              <CloseIcon
+                color={Colors.gray[500]}
+                style={{ width: 28, height: 28 }}
+              />
+            </AnimatedButton>
           )}
-        </View>
-      </ActionSheet>
+        </AnimatedButton>
+
+        <ActionSheet
+          ref={actionSheetRef}
+          snapPoints={[60, 100]}
+          useBottomSafeAreaPadding
+          gestureEnabled
+        >
+          <ScrollView
+            style={{
+              paddingHorizontal: 24,
+              paddingVertical: 24,
+              height: "100%",
+            }}
+          >
+            <View style={{ paddingBottom: 68 }}>
+              <View style={{ width: "100%", marginBottom: 12 }}>
+                <ToggleSelect<FocusType>
+                  options={focusTypeOptions}
+                  selected={focusType}
+                  onChange={type => setFocusType(type.value)}
+                />
+              </View>
+
+              {isGrouped ? (
+                <GroupedItems
+                  items={MOCK_DATA}
+                  selectedItem={focusOn}
+                  onSelectItem={setFocusOn}
+                />
+              ) : (
+                <></>
+              )}
+            </View>
+          </ScrollView>
+        </ActionSheet>
+      </View>
     </View>
   )
 }
@@ -245,7 +266,7 @@ function GroupedItems({
                     backgroundColor: Colors.rose[400],
                   },
                 ]}
-                scale={0.97}
+                scale={0.99}
                 onPress={() => onSelectItem(option as ItemOptionType)}
               >
                 <Text
@@ -283,28 +304,6 @@ function GroupedItems({
           </View>
         </View>
       ))}
-    </View>
-  )
-}
-
-function ModalHandle() {
-  return (
-    <View
-      style={{
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 8,
-        marginBottom: 12,
-      }}
-    >
-      <View
-        style={{
-          backgroundColor: Colors.gray[500],
-          borderRadius: 100,
-          height: 4,
-          width: 60,
-        }}
-      />
     </View>
   )
 }
