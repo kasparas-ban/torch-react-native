@@ -50,7 +50,7 @@ const componentStyles = ({ isDark, isFocused, platform }: ThemeStylesProps) =>
       width: "100%",
       flexDirection: "row",
       borderRadius: 16,
-      backgroundColor: Colors.gray[200],
+      backgroundColor: isDark ? Colors.gray[600] : Colors.gray[200],
     },
     item: {
       width: "100%",
@@ -61,12 +61,12 @@ const componentStyles = ({ isDark, isFocused, platform }: ThemeStylesProps) =>
       margin: 4,
     },
     selectedItem: {
-      backgroundColor: Colors.gray[50],
+      backgroundColor: isDark ? Colors.gray[300] : Colors.gray[50],
     },
     itemText: {
       textAlign: "center",
       fontSize: 16,
-      color: Colors.gray[500],
+      color: isDark ? Colors.gray[400] : Colors.gray[500],
       fontWeight: "600",
     },
     selectedText: {

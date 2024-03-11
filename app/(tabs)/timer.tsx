@@ -6,7 +6,7 @@ import FocusSelect from "@/components/Timer/TimerForm/FocusSelect"
 export default function TimerScreen() {
   return (
     <View style={styles.container}>
-      <View style={{ width: "100%", paddingHorizontal: 24, marginBottom: 22 }}>
+      <View style={{ width: "100%", paddingHorizontal: 24, marginBottom: 12 }}>
         <FocusSelect />
         <View style={{ marginTop: 12, height: 64 }}>
           <FocusInfo />

@@ -115,6 +115,222 @@ const MOCK_DATA = [
   },
 ]
 
+const MOCK_ALL = [
+  {
+    label: "Make a Figma design sketch",
+    value: "15ax1usfu2uk",
+    type: "TASK" as ItemType,
+    progress: 0.893,
+    timeSpent: 90000,
+    containsTasks: false,
+    duration: 100800,
+    parent: "4bax1usfu2uk",
+  },
+  {
+    label: "Code MVP frontend",
+    value: "16ax1usfu2uk",
+    type: "TASK" as ItemType,
+    progress: 0.59,
+    timeSpent: 85001,
+    containsTasks: false,
+    duration: 144000,
+    parent: "4bax1usfu2uk",
+  },
+  {
+    label: "Make MVP backend",
+    value: "17ax1usfu2uk",
+    type: "TASK" as ItemType,
+    progress: 0.37,
+    timeSpent: 40000,
+    containsTasks: false,
+    duration: 108000,
+    parent: "4bax1usfu2uk",
+  },
+  {
+    label: "Learn common Spanish greeting phrases",
+    value: "18ax1usfu2uk",
+    type: "TASK" as ItemType,
+    progress: 0.222,
+    timeSpent: 8000,
+    containsTasks: false,
+    duration: 36000,
+    parent: "6bax1usfu2uk",
+  },
+  {
+    label: "Memorize a list of essential words",
+    value: "19ax1usfu2uk",
+    type: "TASK" as ItemType,
+    progress: 0.028,
+    timeSpent: 1000,
+    containsTasks: false,
+    duration: 36000,
+    parent: "6bax1usfu2uk",
+  },
+  {
+    label: "Learn Spanish pronunciation",
+    value: "20ax1usfu2uk",
+    type: "TASK" as ItemType,
+    progress: 0.833,
+    timeSpent: 30000,
+    containsTasks: false,
+    duration: 36000,
+    parent: "6bax1usfu2uk",
+  },
+  {
+    label: "Do weight lifting",
+    value: "21ax1usfu2uk",
+    type: "TASK" as ItemType,
+    progress: 0,
+    timeSpent: 0,
+    containsTasks: false,
+    parent: "10ax1usfu2uk",
+  },
+  {
+    label: "Make a todo/timer app",
+    value: "4bax1usfu2uk",
+    type: "GOAL" as ItemType,
+    progress: 0.609,
+    timeSpent: 0,
+    totalTimeSpent: 215001,
+    containsTasks: true,
+    duration: 352800,
+  },
+  {
+    label: "Learn chess",
+    value: "5bax1usfu2uk",
+    type: "GOAL" as ItemType,
+    progress: 0,
+    timeSpent: 0,
+    totalTimeSpent: 0,
+    containsTasks: false,
+    duration: 0,
+  },
+  {
+    label: "Learn Spanish vocabulary",
+    value: "6bax1usfu2uk",
+    type: "GOAL" as ItemType,
+    progress: 0.361,
+    timeSpent: 0,
+    totalTimeSpent: 39000,
+    containsTasks: true,
+    duration: 108000,
+    parent: "1ax1usfu2uku",
+  },
+  {
+    label: "Learn Spanish grammar",
+    value: "7bax1usfu2uk",
+    type: "GOAL" as ItemType,
+    progress: 0,
+    timeSpent: 0,
+    totalTimeSpent: 0,
+    containsTasks: false,
+    duration: 0,
+    parent: "1ax1usfu2uku",
+  },
+  {
+    label: "Spanish language comprehension",
+    value: "8bax1usfu2uk",
+    type: "GOAL" as ItemType,
+    progress: 0,
+    timeSpent: 0,
+    totalTimeSpent: 0,
+    containsTasks: false,
+    duration: 0,
+    parent: "1ax1usfu2uku",
+  },
+  {
+    label: "Spanish writing",
+    value: "9bax1usfu2uk",
+    type: "GOAL" as ItemType,
+    progress: 0,
+    timeSpent: 0,
+    totalTimeSpent: 0,
+    containsTasks: false,
+    duration: 0,
+    parent: "1ax1usfu2uku",
+  },
+  {
+    label: "Build muscle",
+    value: "10ax1usfu2uk",
+    type: "GOAL" as ItemType,
+    progress: 0,
+    timeSpent: 0,
+    totalTimeSpent: 0,
+    containsTasks: true,
+    duration: 0,
+    parent: "2ax1usfu2uku",
+  },
+  {
+    label: "Learn Linear Algebra",
+    value: "11ax1usfu2uk",
+    type: "GOAL" as ItemType,
+    progress: 0,
+    timeSpent: 0,
+    totalTimeSpent: 0,
+    containsTasks: false,
+    duration: 0,
+    parent: "3ax1usfu2uku",
+  },
+  {
+    label: "Learn Calculus",
+    value: "12ax1usfu2uk",
+    type: "GOAL" as ItemType,
+    progress: 0,
+    timeSpent: 0,
+    totalTimeSpent: 0,
+    containsTasks: false,
+    duration: 0,
+    parent: "3ax1usfu2uku",
+  },
+  {
+    label: 'Read "Demons" by Dostoevsky',
+    value: "13ax1usfu2uk",
+    type: "GOAL" as ItemType,
+    progress: 0,
+    timeSpent: 0,
+    totalTimeSpent: 0,
+    containsTasks: false,
+    duration: 0,
+  },
+  {
+    label: 'Read "The Shape of Space"',
+    value: "14ax1usfu2uk",
+    type: "GOAL" as ItemType,
+    progress: 0,
+    timeSpent: 0,
+    totalTimeSpent: 0,
+    containsTasks: false,
+    duration: 0,
+  },
+  {
+    label: "Learn Spanish",
+    value: "1ax1usfu2uku",
+    type: "DREAM" as ItemType,
+    progress: 0.361,
+    timeSpent: 0,
+    totalTimeSpent: 39000,
+    containsTasks: false,
+  },
+  {
+    label: "Get fit",
+    value: "2ax1usfu2uku",
+    type: "DREAM" as ItemType,
+    progress: 0,
+    timeSpent: 0,
+    totalTimeSpent: 0,
+    containsTasks: false,
+  },
+  {
+    label: "Get good at math",
+    value: "3ax1usfu2uku",
+    type: "DREAM" as ItemType,
+    progress: 0,
+    timeSpent: 0,
+    totalTimeSpent: 0,
+    containsTasks: false,
+  },
+]
+
 type GroupedItem = {
   label: string
   value: string
@@ -131,7 +347,7 @@ const focusTypeOptions = [
 export default function FocusSelect() {
   const actionSheetRef = useRef<ActionSheetRef>(null)
 
-  const { styles } = useThemeStyles(componentStyles)
+  const { styles, isDark } = useThemeStyles(componentStyles)
 
   const timerState = useTimerStore.use.timerState()
   const { focusOn, setFocusOn, focusType, setFocusType } = useTimerForm()
@@ -144,12 +360,14 @@ export default function FocusSelect() {
     grouped: isGrouped,
   })
 
-  const isEmpty = !items.length
-
   return (
     <View>
       <Text
-        style={{ marginLeft: 12, marginBottom: 4, color: Colors.gray[500] }}
+        style={{
+          marginLeft: 12,
+          marginBottom: 4,
+          color: isDark ? Colors.gray[400] : Colors.gray[500],
+        }}
       >
         Focus on
       </Text>
@@ -163,7 +381,7 @@ export default function FocusSelect() {
             style={[
               styles.inputText,
               focusOn && {
-                color: Colors.gray[700],
+                color: isDark ? Colors.gray[200] : Colors.gray[700],
                 fontWeight: "600",
               },
             ]}
@@ -182,7 +400,7 @@ export default function FocusSelect() {
               onPress={() => setFocusOn(null)}
             >
               <CloseIcon
-                color={Colors.gray[500]}
+                color={isDark ? Colors.gray[400] : Colors.gray[500]}
                 style={{ width: 28, height: 28 }}
               />
             </AnimatedButton>
@@ -194,6 +412,9 @@ export default function FocusSelect() {
           snapPoints={[60, 100]}
           useBottomSafeAreaPadding
           gestureEnabled
+          containerStyle={{
+            backgroundColor: isDark ? Colors.slate[800] : "auto",
+          }}
         >
           <ScrollView
             style={{
@@ -216,9 +437,15 @@ export default function FocusSelect() {
                   items={MOCK_DATA}
                   selectedItem={focusOn}
                   onSelectItem={setFocusOn}
+                  isDark={isDark}
                 />
               ) : (
-                <></>
+                <SingleItems
+                  items={MOCK_ALL}
+                  selectedItem={focusOn}
+                  onSelectItem={setFocusOn}
+                  isDark={isDark}
+                />
               )}
             </View>
           </ScrollView>
@@ -232,10 +459,12 @@ function GroupedItems({
   items,
   selectedItem,
   onSelectItem,
+  isDark,
 }: {
   items: GroupedItem[]
   selectedItem: ItemOptionType | null
   onSelectItem: (focus: ItemOptionType | null) => void
+  isDark: boolean
 }) {
   return (
     <View style={{ gap: 4 }}>
@@ -244,7 +473,7 @@ function GroupedItems({
           <Text
             style={{
               fontWeight: "600",
-              color: Colors.gray[500],
+              color: isDark ? Colors.gray[400] : Colors.gray[500],
               marginBottom: 6,
             }}
           >
@@ -257,7 +486,9 @@ function GroupedItems({
                 style={[
                   {
                     height: 48,
-                    backgroundColor: Colors.gray[200],
+                    backgroundColor: isDark
+                      ? Colors.gray[600]
+                      : Colors.gray[200],
                     borderRadius: 12,
                     flexDirection: "row",
                     alignItems: "center",
@@ -290,7 +521,7 @@ function GroupedItems({
                   style={[
                     {
                       marginLeft: 12,
-                      color: Colors.gray[700],
+                      color: isDark ? Colors.gray[300] : Colors.gray[700],
                     },
                     option.value === selectedItem?.value && {
                       color: Colors.gray[50],
@@ -308,10 +539,77 @@ function GroupedItems({
   )
 }
 
+function SingleItems({
+  items,
+  selectedItem,
+  onSelectItem,
+  isDark,
+}: {
+  items: ItemOptionType[]
+  selectedItem: ItemOptionType | null
+  onSelectItem: (focus: ItemOptionType | null) => void
+  isDark: boolean
+}) {
+  return (
+    <View style={{ gap: 4 }}>
+      {items.map(option => (
+        <AnimatedButton
+          key={option.value}
+          style={[
+            {
+              height: 48,
+              backgroundColor: isDark ? Colors.gray[600] : Colors.gray[200],
+              borderRadius: 12,
+              flexDirection: "row",
+              alignItems: "center",
+            },
+            option.value === selectedItem?.value && {
+              backgroundColor: Colors.rose[400],
+            },
+          ]}
+          scale={0.99}
+          onPress={() => onSelectItem(option as ItemOptionType)}
+        >
+          <Text
+            style={[
+              {
+                marginLeft: 12,
+                width: 40,
+                color: Colors.rose[500],
+                textAlign: "right",
+                fontWeight: "700",
+                fontSize: 18,
+              },
+              option.value === selectedItem?.value && {
+                color: Colors.gray[50],
+              },
+            ]}
+          >
+            {toPercent(option.progress)}
+          </Text>
+          <Text
+            style={[
+              {
+                marginLeft: 12,
+                color: isDark ? Colors.gray[300] : Colors.gray[700],
+              },
+              option.value === selectedItem?.value && {
+                color: Colors.gray[50],
+              },
+            ]}
+          >
+            {option.label}
+          </Text>
+        </AnimatedButton>
+      ))}
+    </View>
+  )
+}
+
 const componentStyles = ({ isDark }: ThemeStylesProps) =>
   StyleSheet.create({
     input: {
-      backgroundColor: Colors.gray[300],
+      backgroundColor: isDark ? Colors.gray[600] : Colors.gray[300],
       height: "100%",
       width: "100%",
       borderRadius: 18,
@@ -320,6 +618,6 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       top: 14,
       left: 18,
       fontSize: 16,
-      color: Colors.gray[500],
+      color: isDark ? Colors.gray[400] : Colors.gray[500],
     },
   })
