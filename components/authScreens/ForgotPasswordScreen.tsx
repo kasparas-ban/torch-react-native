@@ -70,7 +70,7 @@ export default function ForgotPasswordScreen() {
           )}
         />
 
-        <View style={{ position: "absolute", bottom: 48, width: "100%" }}>
+        <View style={{ position: "absolute", bottom: 28, width: "100%" }}>
           <Button scale={0.97} onPress={form.handleSubmit(onSignInPress)}>
             Send link
           </Button>

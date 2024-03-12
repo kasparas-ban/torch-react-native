@@ -155,7 +155,7 @@ export default function SignUpScreen() {
           )}
         />
 
-        <View style={{ position: "absolute", bottom: 48, width: "100%" }}>
+        <View style={{ position: "absolute", bottom: 28, width: "100%" }}>
           <View
             style={{
               flexDirection: "row",

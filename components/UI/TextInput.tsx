@@ -3,9 +3,9 @@ import { FadeIn } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import {
   TextInput as BaseInput,
+  TextInputProps as BaseTextInputProps,
   StyleSheet,
   Text,
-  TextInputProps,
   TextProps,
   View,
   ViewProps,
@@ -13,14 +13,14 @@ import {
 import Animated from "react-native-reanimated"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
-type Props = TextInputProps & {
+export type TextInputProps = BaseTextInputProps & {
   label?: string
   wrapperProps?: ViewProps
   labelProps?: TextProps
   errorProps?: TextProps
 }
 
-export default function TextInput(props: Props) {
+export default function TextInput(props: TextInputProps) {
   const { label, wrapperProps, labelProps, errorProps, ...inputProps } = props
   const { styles, onFocus, onBlur } = useThemeStyles(inputStyles)
   const isError = !!errorProps?.children
@@ -83,6 +83,7 @@ const inputStyles = ({ isDark, isFocused, platform }: ThemeStylesProps) =>
       borderColor: "red",
       borderWidth: 1,
       backgroundColor: isDark ? Colors.rose[200] : Colors.rose[50],
+      color: Colors.gray[900],
     },
     label: {
       marginRight: "auto",

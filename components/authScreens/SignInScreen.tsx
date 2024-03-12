@@ -7,6 +7,7 @@ import { StyleSheet, Text, View } from "react-native"
 import { z } from "zod"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
+import PasswordInput from "../PasswordInput"
 import Button from "../UI/Button"
 import Link from "../UI/Link"
 import TextInput from "../UI/TextInput"
@@ -27,8 +28,22 @@ export default function SignInScreen() {
     shouldUnregister: true,
   })
 
-  const onSignInPress = (data: SignInFormType) => {
+  const onSignInPress = async (data: SignInFormType) => {
     console.log(data)
+
+    if (!signIn) return
+
+    try {
+      const completeSignIn = await signIn.create({
+        strategy: "password",
+        identifier: data.email,
+        password: data.password,
+      })
+
+      await setActive({ session: completeSignIn.createdSessionId })
+    } catch (err: any) {
+      console.error(err)
+    }
   }
 
   return (
@@ -74,10 +89,8 @@ export default function SignInScreen() {
             required: true,
           }}
           render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
+            <PasswordInput
               placeholder="Password"
-              textContentType="password"
-              secureTextEntry
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
@@ -96,7 +109,7 @@ export default function SignInScreen() {
           Forgot password?
         </Link>
 
-        <View style={{ position: "absolute", bottom: 48, width: "100%" }}>
+        <View style={{ position: "absolute", bottom: 28, width: "100%" }}>
           <View
             style={{
               flexDirection: "row",
