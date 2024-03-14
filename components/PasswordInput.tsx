@@ -3,12 +3,12 @@ import ClosedEyeIcon from "@/assets/icons/closedEye.svg"
 import OpenEyeIcon from "@/assets/icons/openEye.svg"
 import Colors from "@/constants/Colors"
 import { StyleSheet, View } from "react-native"
-import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
+import useThemeStyles from "@/utils/themeStyles"
 
 import TextInput, { TextInputProps } from "./UI/TextInput"
 
 export default function PasswordInput(props: TextInputProps) {
-  const { styles } = useThemeStyles(inputStyles)
+  const { styles, isFocused, onFocus, onBlur } = useThemeStyles(inputStyles)
   const [isVisible, setIsVisible] = useState(false)
 
   return (
@@ -17,17 +17,19 @@ export default function PasswordInput(props: TextInputProps) {
         {...props}
         textContentType={isVisible ? "none" : "password"}
         secureTextEntry={!isVisible}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
       {isVisible ? (
         <ClosedEyeIcon
           style={styles.eyeIcon}
-          color={Colors.gray[400]}
+          color={isFocused ? Colors.gray[700] : Colors.gray[400]}
           onPress={() => setIsVisible(false)}
         />
       ) : (
         <OpenEyeIcon
           style={styles.eyeIcon}
-          color={Colors.gray[400]}
+          color={isFocused ? Colors.gray[700] : Colors.gray[400]}
           onPress={() => setIsVisible(true)}
         />
       )}
@@ -35,7 +37,7 @@ export default function PasswordInput(props: TextInputProps) {
   )
 }
 
-const inputStyles = ({ isDark }: ThemeStylesProps) =>
+const inputStyles = () =>
   StyleSheet.create({
     wrapper: {
       width: "100%",

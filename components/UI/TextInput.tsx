@@ -38,8 +38,14 @@ export default function TextInput(props: TextInputProps) {
         {...inputProps}
         placeholderTextColor={Colors.gray[500]}
         style={[styles.input, inputProps.style, isError && styles.errorInput]}
-        onFocus={onFocus}
-        onBlur={onBlur}
+        onFocus={e => {
+          onFocus()
+          inputProps?.onFocus?.(e)
+        }}
+        onBlur={e => {
+          onBlur()
+          inputProps?.onBlur?.(e)
+        }}
       />
       {errorProps?.children && (
         <Animated.View style={styles.errorlabel}>
