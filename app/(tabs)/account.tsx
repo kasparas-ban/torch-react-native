@@ -1,12 +1,30 @@
 import Colors from "@/constants/Colors"
-import { useUser } from "@clerk/clerk-expo"
+import { useClerk, useUser } from "@clerk/clerk-expo"
 import { Image, ImageStyle } from "expo-image"
+import { useRouter } from "expo-router"
 import { StyleSheet, Text, View } from "react-native"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
+import { AnimatedButton } from "@/components/AnimatedButton"
+import { notify } from "@/components/notifications/Notifications"
+
+import RightIcon from "../../assets/icons/chevronRight.svg"
+import DeleteIcon from "../../assets/icons/delete.svg"
+import LockIcon from "../../assets/icons/lock.svg"
+import LogoutIcon from "../../assets/icons/logout.svg"
+import UserIcon from "../../assets/icons/userCircle.svg"
 
 export default function AccountScreen() {
   const { user } = useUser()
+  const router = useRouter()
+  const { signOut } = useClerk()
   const { styles } = useThemeStyles(componentStyles)
+
+  const handleLogout = () => {
+    signOut(() => {
+      router.replace("/(tabs)/timer")
+      notify({ title: "Logout successful!" })
+    })
+  }
 
   return (
     <View style={styles.wrapper}>
@@ -62,10 +80,90 @@ export default function AccountScreen() {
           <Text style={styles.detailLabel}>Location</Text>
           <Text style={styles.detailData}>Vilnius, Lithuania 🇱🇹</Text>
         </View>
+      </View>
 
-        <View style={{ marginTop: 16, marginBottom: 16 }}>
-          <Text style={styles.sectionTitle}>Settings</Text>
-        </View>
+      <View style={{ marginTop: 16, marginBottom: 16 }}>
+        <Text style={styles.sectionTitle}>Settings</Text>
+      </View>
+
+      <View>
+        <AnimatedButton scale={0.99} onPress={handleLogout}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingVertical: 12,
+            }}
+          >
+            <LogoutIcon color={Colors.gray[700]} style={styles.settingsIcon} />
+            <Text style={styles.settingsLabel}>Logout</Text>
+            <RightIcon
+              color={Colors.gray[700]}
+              style={styles.arrowIcon}
+              strokeWidth={2.5}
+            />
+          </View>
+        </AnimatedButton>
+
+        <View style={styles.separator} />
+
+        <AnimatedButton scale={0.99}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingVertical: 12,
+            }}
+          >
+            <UserIcon color={Colors.gray[700]} style={styles.settingsIcon} />
+            <Text style={styles.settingsLabel}>Edit account info</Text>
+            <RightIcon
+              color={Colors.gray[700]}
+              style={styles.arrowIcon}
+              strokeWidth={2.5}
+            />
+          </View>
+        </AnimatedButton>
+
+        <View style={styles.separator} />
+
+        <AnimatedButton scale={0.99}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingVertical: 12,
+            }}
+          >
+            <LockIcon color={Colors.gray[700]} style={styles.settingsIcon} />
+            <Text style={styles.settingsLabel}>Change password</Text>
+            <RightIcon
+              color={Colors.gray[700]}
+              style={styles.arrowIcon}
+              strokeWidth={2.5}
+            />
+          </View>
+        </AnimatedButton>
+
+        <View style={styles.separator} />
+
+        <AnimatedButton scale={0.99}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingVertical: 12,
+            }}
+          >
+            <DeleteIcon color={Colors.gray[700]} style={styles.settingsIcon} />
+            <Text style={styles.settingsLabel}>Delete account</Text>
+            <RightIcon
+              color={Colors.gray[700]}
+              style={styles.arrowIcon}
+              strokeWidth={2.5}
+            />
+          </View>
+        </AnimatedButton>
       </View>
     </View>
   )
@@ -144,5 +242,28 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     detailData: {
       color: Colors.gray[700],
       fontWeight: "700",
+    },
+    // Settings
+    settingsIcon: {
+      width: 26,
+      height: 26,
+      marginRight: 12,
+    },
+    settingsLabel: {
+      fontWeight: "700",
+      color: Colors.gray[700],
+      flex: 1,
+    },
+    arrowIcon: {
+      width: 20,
+      height: 20,
+      marginTop: 2,
+    },
+    separator: {
+      width: "100%",
+      height: 1,
+      backgroundColor: Colors.gray[400],
+      opacity: 0.6,
+      margin: 0,
     },
   })

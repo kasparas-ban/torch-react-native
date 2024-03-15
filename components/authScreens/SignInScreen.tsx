@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import Colors from "@/constants/Colors"
 import { useSignIn } from "@clerk/clerk-expo"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
 import { StyleSheet, Text, View } from "react-native"
 import { z } from "zod"
@@ -21,6 +22,7 @@ const SignInSchema = z.object({
 type SignInFormType = z.infer<typeof SignInSchema>
 
 export default function SignInScreen() {
+  const router = useRouter()
   const { signIn, setActive } = useSignIn()
   const { styles } = useThemeStyles(componentStyles)
   const [isLoading, setIsLoading] = useState(false)
@@ -42,6 +44,7 @@ export default function SignInScreen() {
       })
 
       await setActive({ session: completeSignIn.createdSessionId })
+      router.replace("/(tabs)/timer")
       notify({ title: "Login successful!" })
     } catch (err: any) {
       // TODO: show error notification
