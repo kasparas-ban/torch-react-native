@@ -44,9 +44,9 @@ const inputStyles = () =>
     },
     eyeIcon: {
       position: "absolute",
-      width: 32,
-      height: 32,
-      right: 8,
-      top: 8,
+      width: 28,
+      height: 28,
+      right: 12,
+      top: 11,
     },
   })

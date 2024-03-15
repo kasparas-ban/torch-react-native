@@ -413,7 +413,7 @@ export default function FocusSelect() {
           useBottomSafeAreaPadding
           gestureEnabled
           containerStyle={{
-            backgroundColor: isDark ? Colors.slate[800] : "auto",
+            backgroundColor: isDark ? Colors.slate[800] : "white",
           }}
         >
           <ScrollView

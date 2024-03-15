@@ -5,6 +5,8 @@ import { useFonts } from "expo-font"
 import { Stack } from "expo-router"
 import * as SplashScreen from "expo-splash-screen"
 import { useColorScheme } from "react-native"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
+import { NotifierWrapper } from "react-native-notifier"
 import { ClerkProvider } from "@/components/providers/ClerkProvider"
 import QueryProvider from "@/components/providers/QueryProvider"
 import { StorageProvider } from "@/components/providers/StorageProvider"
@@ -51,44 +53,48 @@ function RootLayoutNav() {
   return (
     <QueryProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <StorageProvider />
-        <ClerkProvider>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="(modals)/sign-in"
-              options={{
-                presentation: "modal",
-                headerTransparent: true,
-                title: "",
-              }}
-            />
-            <Stack.Screen
-              name="(modals)/sign-up"
-              options={{
-                presentation: "modal",
-                headerTransparent: true,
-                title: "",
-              }}
-            />
-            <Stack.Screen
-              name="(modals)/forgot-password"
-              options={{
-                presentation: "modal",
-                headerTransparent: true,
-                title: "",
-              }}
-            />
-            <Stack.Screen
-              name="(modals)/timer-settings"
-              options={{
-                presentation: "modal",
-                headerTransparent: true,
-                title: "",
-              }}
-            />
-          </Stack>
-        </ClerkProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <NotifierWrapper>
+            <StorageProvider />
+            <ClerkProvider>
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="(modals)/sign-in"
+                  options={{
+                    presentation: "modal",
+                    headerTransparent: true,
+                    title: "",
+                  }}
+                />
+                <Stack.Screen
+                  name="(modals)/sign-up"
+                  options={{
+                    presentation: "modal",
+                    headerTransparent: true,
+                    title: "",
+                  }}
+                />
+                <Stack.Screen
+                  name="(modals)/forgot-password"
+                  options={{
+                    presentation: "modal",
+                    headerTransparent: true,
+                    title: "",
+                  }}
+                />
+                <Stack.Screen
+                  name="(modals)/timer-settings"
+                  options={{
+                    presentation: "modal",
+                    headerTransparent: true,
+                    title: "",
+                  }}
+                />
+              </Stack>
+            </ClerkProvider>
+          </NotifierWrapper>
+        </GestureHandlerRootView>
       </ThemeProvider>
     </QueryProvider>
   )

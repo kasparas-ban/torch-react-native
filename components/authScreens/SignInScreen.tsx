@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import Colors from "@/constants/Colors"
 import { useSignIn } from "@clerk/clerk-expo"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -7,6 +7,7 @@ import { StyleSheet, Text, View } from "react-native"
 import { z } from "zod"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
+import { notify } from "../notifications/Notifications"
 import PasswordInput from "../PasswordInput"
 import Button from "../UI/Button"
 import Link from "../UI/Link"
@@ -20,8 +21,9 @@ const SignInSchema = z.object({
 type SignInFormType = z.infer<typeof SignInSchema>
 
 export default function SignInScreen() {
-  const { signIn, setActive, isLoaded } = useSignIn()
+  const { signIn, setActive } = useSignIn()
   const { styles } = useThemeStyles(componentStyles)
+  const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<SignInFormType>({
     resolver: zodResolver(SignInSchema),
@@ -29,11 +31,10 @@ export default function SignInScreen() {
   })
 
   const onSignInPress = async (data: SignInFormType) => {
-    console.log(data)
-
     if (!signIn) return
 
     try {
+      setIsLoading(true)
       const completeSignIn = await signIn.create({
         strategy: "password",
         identifier: data.email,
@@ -41,8 +42,12 @@ export default function SignInScreen() {
       })
 
       await setActive({ session: completeSignIn.createdSessionId })
+      notify({ title: "Login successful!" })
     } catch (err: any) {
+      // TODO: show error notification
       console.error(err)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -123,7 +128,11 @@ export default function SignInScreen() {
             <Link href="/(modals)/sign-up">Sign Up</Link>
           </View>
 
-          <Button scale={0.97} onPress={form.handleSubmit(onSignInPress)}>
+          <Button
+            scale={0.97}
+            onPress={form.handleSubmit(onSignInPress)}
+            isLoading={isLoading}
+          >
             Login
           </Button>
         </View>
