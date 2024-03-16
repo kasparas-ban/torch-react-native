@@ -46,9 +46,9 @@ export default function SignInScreen() {
       await setActive({ session: completeSignIn.createdSessionId })
       router.replace("/(tabs)/timer")
       notify({ title: "Login successful!" })
-    } catch (err: any) {
-      // TODO: show error notification
+    } catch (err) {
       console.error(err)
+      notify({ title: "Incorrect username or password", type: "ERROR" })
     } finally {
       setIsLoading(false)
     }

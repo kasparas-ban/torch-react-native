@@ -1,6 +1,12 @@
 import React, { ComponentProps } from "react"
 import Colors from "@/constants/Colors"
-import { ActivityIndicator, StyleSheet, Text, TextProps } from "react-native"
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TextProps,
+  View,
+} from "react-native"
 
 import { AnimatedButton } from "../AnimatedButton"
 
@@ -21,12 +27,15 @@ export default function Button(props: Props) {
       style={[
         styles.button,
         buttonStyle,
-        buttonProps.style as any,
-        isLoading && buttonStyles.loading,
+        buttonProps.style,
+        isLoading && buttonStyles.loadingPrimary,
       ]}
+      disabled={isLoading}
     >
-      {isLoading && <ActivityIndicator color={Colors.gray[50]} />}
-      <Text style={[styles.label, textProps?.style]}>{props.children}</Text>
+      <View style={{ flexDirection: "row", gap: 8 }}>
+        {isLoading && <ActivityIndicator color={Colors.gray[50]} />}
+        <Text style={[styles.label, textProps?.style]}>{props.children}</Text>
+      </View>
     </AnimatedButton>
   )
 }
@@ -45,9 +54,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "white",
   },
-  spinner: {
-    color: "red",
-  },
 })
 
 const buttonStyles = StyleSheet.create({
@@ -56,7 +62,7 @@ const buttonStyles = StyleSheet.create({
     height: 48,
     backgroundColor: Colors.rose[500],
   },
-  loading: {
+  loadingPrimary: {
     backgroundColor: Colors.rose[300],
   },
 })

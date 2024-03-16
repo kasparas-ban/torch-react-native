@@ -1,5 +1,5 @@
 import Colors from "@/constants/Colors"
-import { useClerk, useUser } from "@clerk/clerk-expo"
+import { useAuth, useUser } from "@clerk/clerk-expo"
 import { Image, ImageStyle } from "expo-image"
 import { useRouter } from "expo-router"
 import { StyleSheet, Text, View } from "react-native"
@@ -16,14 +16,16 @@ import UserIcon from "../../assets/icons/userCircle.svg"
 export default function AccountScreen() {
   const { user } = useUser()
   const router = useRouter()
-  const { signOut } = useClerk()
+  const { signOut, sessionId } = useAuth()
   const { styles } = useThemeStyles(componentStyles)
 
   const handleLogout = () => {
-    signOut(() => {
-      router.replace("/(tabs)/timer")
-      notify({ title: "Logout successful!" })
-    })
+    if (sessionId) {
+      signOut({ sessionId }).then(() => {
+        router.replace("/(tabs)/timer")
+        notify({ title: "Logout successful!" })
+      })
+    }
   }
 
   return (
