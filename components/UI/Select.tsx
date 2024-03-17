@@ -1,11 +1,7 @@
+import { useRef } from "react"
 import CloseIcon from "@/assets/icons/close.svg"
-import { FadeIn } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
-import {
-  DateTimePickerAndroid,
-  DateTimePickerEvent,
-} from "@react-native-community/datetimepicker"
-import dayjs from "dayjs"
+import { BottomSheetModal } from "@gorhom/bottom-sheet"
 import {
   Pressable,
   StyleSheet,
@@ -14,14 +10,17 @@ import {
   View,
   ViewProps,
 } from "react-native"
-import Animated from "react-native-reanimated"
+import { SelectOption } from "@/types/generalTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
-import { AnimatedButton } from "./AnimatedButton"
+import { AnimatedButton } from "../AnimatedButton"
+import { BottomModal } from "../SelectModal/BottomModal"
+import ToggleGroup from "./ToggleGroup"
 
-export type DateInputProps = {
-  value?: Date
-  onChange: (event: DateTimePickerEvent, date?: Date | undefined) => void
+export type SelectProps<T> = {
+  value?: T
+  onChange: (val?: T) => void
+  options: SelectOption<T>[]
   placeholder: string
   label?: string
   wrapperProps?: ViewProps
@@ -29,34 +28,17 @@ export type DateInputProps = {
   errorProps?: TextProps
 }
 
-export default function DateInput(props: DateInputProps) {
-  const {
-    placeholder,
-    value,
-    onChange,
-    label,
-    labelProps,
-    wrapperProps,
-    errorProps,
-  } = props
+export default function Select<T>(props: SelectProps<T>) {
+  const { placeholder, value, onChange, label, labelProps, options } = props
+  const { styles, isDark } = useThemeStyles(selectStyles)
 
-  const { styles, isDark } = useThemeStyles(inputStyles)
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null)
+  const openSelectModal = () => bottomSheetModalRef.current?.present()
 
-  const handleChange = (event: DateTimePickerEvent, selectedDate: any) => {
-    onChange(selectedDate)
-  }
-
-  const openDatePicker = () => {
-    DateTimePickerAndroid.open({
-      value: value || new Date(),
-      onChange: handleChange,
-      mode: "date",
-      is24Hour: true,
-    })
-  }
+  const selected = options.find(option => option.value === value)
 
   return (
-    <View {...wrapperProps} style={[wrapperProps?.style, styles.wrapper]}>
+    <View style={styles.wrapper}>
       {label && (
         <Text
           {...labelProps}
@@ -64,23 +46,24 @@ export default function DateInput(props: DateInputProps) {
           style={[styles.label, labelProps?.style]}
         />
       )}
-      <Pressable style={styles.input} onPress={openDatePicker}>
+      <Pressable style={styles.input} onPress={openSelectModal}>
         {({ pressed }) => (
           <Text
             style={[
               styles.placeholder,
               pressed && styles.inputActive,
-              value && styles.inputValue,
+              selected && styles.inputValue,
             ]}
           >
-            {value ? dayjs(value).format("YYYY/MM/DD") : placeholder}
+            {selected?.label ?? placeholder}
           </Text>
         )}
       </Pressable>
-      {value && (
+
+      {selected && (
         <AnimatedButton
           style={styles.iconWrapper}
-          onPress={e => onChange(e as any, undefined)}
+          onPress={() => onChange(undefined)}
         >
           <CloseIcon
             color={isDark ? Colors.gray[400] : Colors.gray[600]}
@@ -88,20 +71,24 @@ export default function DateInput(props: DateInputProps) {
           />
         </AnimatedButton>
       )}
-      {errorProps?.children && (
-        <Animated.View style={styles.errorlabel}>
-          <Animated.Text
-            {...errorProps}
-            style={[styles.errorText, errorProps?.style]}
-            entering={FadeIn(0.9)}
-          />
-        </Animated.View>
-      )}
+
+      <BottomModal
+        modalRef={bottomSheetModalRef}
+        snapPoints={["30%"]}
+        enableDynamicSizing
+      >
+        <ToggleGroup
+          title="Select gender"
+          options={options}
+          selected={selected?.value}
+          onChange={val => onChange(val)}
+        />
+      </BottomModal>
     </View>
   )
 }
 
-const inputStyles = ({ isDark }: ThemeStylesProps) =>
+const selectStyles = ({ isDark }: ThemeStylesProps) =>
   StyleSheet.create({
     wrapper: {
       width: "100%",
@@ -150,13 +137,5 @@ const inputStyles = ({ isDark }: ThemeStylesProps) =>
     closeIcon: {
       width: 20,
       height: 20,
-    },
-    errorlabel: {
-      marginTop: 4,
-      paddingLeft: 12,
-      alignSelf: "flex-start",
-    },
-    errorText: {
-      color: Colors.rose[600],
     },
   })

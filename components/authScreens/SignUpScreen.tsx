@@ -2,6 +2,7 @@ import * as React from "react"
 import Colors from "@/constants/Colors"
 import { useSignUp } from "@clerk/clerk-expo"
 import { zodResolver } from "@hookform/resolvers/zod"
+import dayjs from "dayjs"
 import { Controller, useForm } from "react-hook-form"
 import { ScrollView, StyleSheet, Text, View } from "react-native"
 import { z } from "zod"
@@ -11,6 +12,7 @@ import useKeyboard from "@/utils/useKeyboard"
 import DateInput from "../DateInput"
 import Button from "../UI/Button"
 import Link from "../UI/Link"
+import Select from "../UI/Select"
 import TextInput from "../UI/TextInput"
 
 const SignUpSchema = z.object({
@@ -19,6 +21,7 @@ const SignUpSchema = z.object({
   password: z.string(),
   confirmPassword: z.string(),
   birthday: z.date().optional(),
+  gender: z.enum(["MALE", "FEMALE", "OTHER"]).optional(),
 })
 
 type SignUpFormType = z.infer<typeof SignUpSchema>
@@ -91,9 +94,7 @@ export default function SignUpScreen() {
             <Controller
               name="username"
               control={form.control}
-              rules={{
-                required: true,
-              }}
+              rules={{ required: true }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   placeholder="Aa"
@@ -118,9 +119,7 @@ export default function SignUpScreen() {
             <Controller
               name="email"
               control={form.control}
-              rules={{
-                required: true,
-              }}
+              rules={{ required: true }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   placeholder="Aa"
@@ -142,9 +141,7 @@ export default function SignUpScreen() {
             <Controller
               name="password"
               control={form.control}
-              rules={{
-                required: true,
-              }}
+              rules={{ required: true }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   placeholder="*********"
@@ -169,9 +166,7 @@ export default function SignUpScreen() {
             <Controller
               name="confirmPassword"
               control={form.control}
-              rules={{
-                required: true,
-              }}
+              rules={{ required: true }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   placeholder="*********"
@@ -195,30 +190,49 @@ export default function SignUpScreen() {
 
             <View
               style={{
-                height: 200,
-                width: "100%",
-                backgroundColor: "green",
-                marginBottom: 42,
+                flexDirection: "row",
+                alignItems: "center",
+                marginVertical: 14,
+                gap: 12,
               }}
-            />
+            >
+              <View style={styles.optionalDivider} />
+              <Text style={styles.optionalLabel}>Optional</Text>
+              <View style={styles.optionalDivider} />
+            </View>
 
             <Controller
               name="birthday"
               control={form.control}
-              rules={{
-                required: true,
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
                 <DateInput
-                  placeholder="2020/10/10"
+                  placeholder={dayjs(new Date()).format("YYYY/MM/DD")}
                   label="Birthday"
                   onChange={onChange}
                   value={value}
-                  errorProps={{
-                    children:
-                      form.formState.errors.email &&
-                      "Please enter your password",
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
                   }}
+                />
+              )}
+            />
+
+            <Controller
+              name="gender"
+              control={form.control}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  placeholder="Select"
+                  label="Gender"
+                  onChange={onChange}
+                  value={value ?? undefined}
+                  options={[
+                    { label: "Male", value: "MALE" },
+                    { label: "Female", value: "FEMALE" },
+                    { label: "Other", value: "OTHER" },
+                  ]}
                   wrapperProps={{
                     style: { marginBottom: 12 },
                   }}
@@ -286,5 +300,13 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     link: {
       marginLeft: "auto",
       marginRight: 4,
+    },
+    optionalDivider: {
+      height: 1,
+      flex: 1,
+      backgroundColor: Colors.gray[300],
+    },
+    optionalLabel: {
+      color: Colors.gray[500],
     },
   })

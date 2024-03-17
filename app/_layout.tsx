@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import { DarkTheme } from "@/constants/Themes"
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native"
 import { useFonts } from "expo-font"
 import { Stack } from "expo-router"
@@ -54,46 +55,51 @@ function RootLayoutNav() {
     <QueryProvider>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <GestureHandlerRootView style={{ flex: 1 }}>
-          <NotifierWrapper>
-            <StorageProvider />
-            <ClerkProvider>
-              <Stack>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="(modals)/sign-in"
-                  options={{
-                    presentation: "modal",
-                    headerTransparent: true,
-                    title: "",
-                  }}
-                />
-                <Stack.Screen
-                  name="(modals)/sign-up"
-                  options={{
-                    presentation: "modal",
-                    headerTransparent: true,
-                    title: "",
-                  }}
-                />
-                <Stack.Screen
-                  name="(modals)/forgot-password"
-                  options={{
-                    presentation: "modal",
-                    headerTransparent: true,
-                    title: "",
-                  }}
-                />
-                <Stack.Screen
-                  name="(modals)/timer-settings"
-                  options={{
-                    presentation: "modal",
-                    headerTransparent: true,
-                    title: "",
-                  }}
-                />
-              </Stack>
-            </ClerkProvider>
-          </NotifierWrapper>
+          <BottomSheetModalProvider>
+            <NotifierWrapper>
+              <StorageProvider />
+              <ClerkProvider>
+                <Stack>
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="(modals)/sign-in"
+                    options={{
+                      presentation: "modal",
+                      headerTransparent: true,
+                      title: "",
+                    }}
+                  />
+                  <Stack.Screen
+                    name="(modals)/sign-up"
+                    options={{
+                      presentation: "modal",
+                      headerTransparent: true,
+                      title: "",
+                    }}
+                  />
+                  <Stack.Screen
+                    name="(modals)/forgot-password"
+                    options={{
+                      presentation: "modal",
+                      headerTransparent: true,
+                      title: "",
+                    }}
+                  />
+                  <Stack.Screen
+                    name="(modals)/timer-settings"
+                    options={{
+                      presentation: "modal",
+                      headerTransparent: true,
+                      title: "",
+                    }}
+                  />
+                </Stack>
+              </ClerkProvider>
+            </NotifierWrapper>
+          </BottomSheetModalProvider>
         </GestureHandlerRootView>
       </ThemeProvider>
     </QueryProvider>
