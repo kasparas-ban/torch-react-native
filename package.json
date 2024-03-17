@@ -48,7 +48,8 @@
     "react-native-web": "~0.19.6",
     "tailwind-rn": "^4.2.0",
     "zod": "^3.22.4",
-    "zustand": "^4.5.2"
+    "zustand": "^4.5.2",
+    "@react-native-community/datetimepicker": "7.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

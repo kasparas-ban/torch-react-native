@@ -47,7 +47,6 @@ export default function SignInScreen() {
       router.replace("/(tabs)/timer")
       notify({ title: "Login successful!" })
     } catch (err) {
-      console.error(err)
       notify({ title: "Incorrect username or password", type: "ERROR" })
     } finally {
       setIsLoading(false)

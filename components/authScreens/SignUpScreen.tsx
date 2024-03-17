@@ -3,10 +3,12 @@ import Colors from "@/constants/Colors"
 import { useSignUp } from "@clerk/clerk-expo"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
-import { StyleSheet, Text, View } from "react-native"
+import { ScrollView, StyleSheet, Text, View } from "react-native"
 import { z } from "zod"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
+import useKeyboard from "@/utils/useKeyboard"
 
+import DateInput from "../DateInput"
 import Button from "../UI/Button"
 import Link from "../UI/Link"
 import TextInput from "../UI/TextInput"
@@ -15,11 +17,14 @@ const SignUpSchema = z.object({
   username: z.string(),
   email: z.string().email(),
   password: z.string(),
+  confirmPassword: z.string(),
+  birthday: z.date().optional(),
 })
 
 type SignUpFormType = z.infer<typeof SignUpSchema>
 
 export default function SignUpScreen() {
+  const isKeyboardOpen = useKeyboard()
   const { isLoaded, signUp, setActive } = useSignUp()
   const { styles } = useThemeStyles(componentStyles)
 
@@ -69,93 +74,170 @@ export default function SignUpScreen() {
   }
 
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.container}>
+    <View style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }}>
+        <View style={styles.wrapper}>
+          <View style={styles.container}>
+            <View
+              style={{
+                flexDirection: "row",
+                width: "100%",
+                marginBottom: 12,
+              }}
+            >
+              <Text style={styles.title}>Sign Up</Text>
+            </View>
+
+            <Controller
+              name="username"
+              control={form.control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Aa"
+                  label="Username"
+                  textContentType="username"
+                  secureTextEntry
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  errorProps={{
+                    children:
+                      form.formState.errors.username &&
+                      "Please enter your username",
+                  }}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              name="email"
+              control={form.control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Aa"
+                  label="Email"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  errorProps={{
+                    children:
+                      form.formState.errors.email && "Please enter your email",
+                  }}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              name="password"
+              control={form.control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="*********"
+                  label="Password"
+                  textContentType="password"
+                  secureTextEntry
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  errorProps={{
+                    children:
+                      form.formState.errors.email &&
+                      "Please enter your password",
+                  }}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              name="confirmPassword"
+              control={form.control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="*********"
+                  label="Repeat password"
+                  textContentType="password"
+                  secureTextEntry
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  errorProps={{
+                    children:
+                      form.formState.errors.email &&
+                      "Please enter your password",
+                  }}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
+
+            <View
+              style={{
+                height: 200,
+                width: "100%",
+                backgroundColor: "green",
+                marginBottom: 42,
+              }}
+            />
+
+            <Controller
+              name="birthday"
+              control={form.control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <DateInput
+                  placeholder="2020/10/10"
+                  label="Birthday"
+                  onChange={onChange}
+                  value={value}
+                  errorProps={{
+                    children:
+                      form.formState.errors.email &&
+                      "Please enter your password",
+                  }}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
+          </View>
+        </View>
+      </ScrollView>
+
+      {!isKeyboardOpen && (
         <View
           style={{
-            flexDirection: "row",
+            position: "absolute",
+            bottom: 28,
             width: "100%",
-            marginBottom: 12,
+            paddingHorizontal: 24,
           }}
         >
-          <Text style={styles.title}>Sign Up</Text>
-        </View>
-
-        <Controller
-          name="username"
-          control={form.control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              placeholder="Username"
-              textContentType="username"
-              secureTextEntry
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              errorProps={{
-                children:
-                  form.formState.errors.username &&
-                  "Please enter your username",
-              }}
-              wrapperProps={{
-                style: { marginBottom: 12 },
-              }}
-            />
-          )}
-        />
-
-        <Controller
-          name="email"
-          control={form.control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              placeholder="Email"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              errorProps={{
-                children:
-                  form.formState.errors.email && "Please enter your email",
-              }}
-              wrapperProps={{
-                style: { marginBottom: 12 },
-              }}
-            />
-          )}
-        />
-
-        <Controller
-          name="password"
-          control={form.control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              placeholder="Password"
-              textContentType="password"
-              secureTextEntry
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              errorProps={{
-                children:
-                  form.formState.errors.email && "Please enter your password",
-              }}
-              wrapperProps={{
-                style: { marginBottom: 12 },
-              }}
-            />
-          )}
-        />
-
-        <View style={{ position: "absolute", bottom: 28, width: "100%" }}>
           <View
             style={{
               flexDirection: "row",
@@ -173,7 +255,7 @@ export default function SignUpScreen() {
             Sign Up
           </Button>
         </View>
-      </View>
+      )}
     </View>
   )
 }

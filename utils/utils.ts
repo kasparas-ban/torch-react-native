@@ -54,3 +54,6 @@ export const formatTimeSpent = (totalSeconds: number) => {
   if (seconds) return `${seconds} sec`
   return "0 h"
 }
+
+export const formatDate = (date: Date) =>
+  date.toISOString().slice(0, 19).replace("T", " ")
