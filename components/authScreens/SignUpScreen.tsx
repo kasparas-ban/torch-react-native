@@ -1,21 +1,25 @@
-import * as React from "react"
 import Colors from "@/constants/Colors"
 import { useSignUp } from "@clerk/clerk-expo"
 import { zodResolver } from "@hookform/resolvers/zod"
 import dayjs from "dayjs"
+import { LinearGradient } from "expo-linear-gradient"
 import { Controller, useForm } from "react-hook-form"
-import { ScrollView, StyleSheet, Text, View } from "react-native"
+import { StyleSheet, Text, View } from "react-native"
+import Animated from "react-native-reanimated"
 import { z } from "zod"
 import { COUNTRIES } from "@/utils/countries"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import useKeyboard from "@/utils/useKeyboard"
 
 import DateInput from "../DateInput"
+import { AnimatedScrollView, useScrollViewHeader } from "../ScrollViewHeader"
 import SelectCountry from "../SelectCountry"
 import Button from "../UI/Button"
 import Link from "../UI/Link"
 import Select from "../UI/Select"
 import TextInput from "../UI/TextInput"
+
+const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient)
 
 const SignUpSchema = z.object({
   username: z.string(),
@@ -33,6 +37,9 @@ export default function SignUpScreen() {
   const isKeyboardOpen = useKeyboard()
   const { isLoaded, signUp, setActive } = useSignUp()
   const { styles } = useThemeStyles(componentStyles)
+
+  const { scrollHandler, headerTitleStyle, headerGradientStyle } =
+    useScrollViewHeader()
 
   const form = useForm<SignUpFormType>({
     resolver: zodResolver(SignUpSchema),
@@ -81,19 +88,38 @@ export default function SignUpScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView style={{ flex: 1 }}>
+      <AnimatedScrollView style={{ flex: 1 }} onScroll={scrollHandler}>
+        <View style={{ marginTop: 40, marginLeft: 28, position: "absolute" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              width: "100%",
+              marginBottom: 12,
+              marginTop: 40,
+              zIndex: 1,
+            }}
+          >
+            <Animated.Text style={[styles.title, headerTitleStyle]}>
+              Sign Up
+            </Animated.Text>
+          </View>
+          <AnimatedLinearGradient
+            colors={["#f2f2f2", "transparent"]}
+            locations={[0.7, 1]}
+            style={[
+              {
+                position: "absolute",
+                top: 0,
+                left: -60,
+                right: 0,
+                height: 140,
+              },
+              headerGradientStyle,
+            ]}
+          />
+        </View>
         <View style={styles.wrapper}>
           <View style={styles.container}>
-            <View
-              style={{
-                flexDirection: "row",
-                width: "100%",
-                marginBottom: 12,
-              }}
-            >
-              <Text style={styles.title}>Sign Up</Text>
-            </View>
-
             <Controller
               name="username"
               control={form.control}
@@ -262,7 +288,7 @@ export default function SignUpScreen() {
             />
           </View>
         </View>
-      </ScrollView>
+      </AnimatedScrollView>
 
       {!isKeyboardOpen && (
         <View
@@ -300,11 +326,10 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     wrapper: {
       flex: 1,
       alignItems: "center",
-      height: 1000,
+      height: 900,
     },
     container: {
       flex: 1,
-      marginTop: 100,
       justifyContent: "flex-start",
       alignItems: "center",
       paddingHorizontal: 24,
