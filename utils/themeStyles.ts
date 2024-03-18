@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import {
   ImageStyle,
   Platform,
@@ -7,7 +7,9 @@ import {
   ViewStyle,
 } from "react-native"
 
-type NamedStyles<T> = { [P in keyof T]: ViewStyle | TextStyle | ImageStyle }
+export type NamedStyles<T> = {
+  [P in keyof T]: ViewStyle | TextStyle | ImageStyle
+}
 
 export type ThemeStylesProps = {
   isDark?: boolean
@@ -29,8 +31,13 @@ const useThemeStyles = <T>(createStylesheet: StyleType<T>) => {
   const onFocus = () => setIsFocused(true)
   const onBlur = () => setIsFocused(false)
 
+  const memoStyles = useMemo(
+    () => createStylesheet({ isDark, isFocused, platform: Platform.OS }),
+    [isDark, isFocused, Platform.OS]
+  )
+
   return {
-    styles: createStylesheet({ isDark, isFocused, platform: Platform.OS }),
+    styles: memoStyles,
     isDark,
     isFocused,
     onFocus,

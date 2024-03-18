@@ -1,7 +1,8 @@
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import CloseIcon from "@/assets/icons/close.svg"
 import Colors from "@/constants/Colors"
 import { BottomSheetModal } from "@gorhom/bottom-sheet"
+import { LinearGradient } from "expo-linear-gradient"
 import {
   Pressable,
   StyleSheet,
@@ -13,43 +14,46 @@ import {
 import { SelectOption } from "@/types/generalTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
-import { AnimatedButton } from "../AnimatedButton"
-import { BottomModal, BottomModalType } from "../SelectModal/BottomModal"
-import ToggleGroup from "./ToggleGroup"
+import { AnimatedButton } from "./AnimatedButton"
+import { BottomModal, BottomModalType } from "./SelectModal/BottomModal"
+import TextInput from "./UI/TextInput"
+import ToggleGroup from "./UI/ToggleGroup"
 
-export type SelectProps<T> = {
-  value?: T
-  onChange: (val?: T) => void
-  options: SelectOption<T>[]
-  placeholder: string
+export type SelectProps = {
+  value?: string
+  onChange: (val?: string) => void
+  options: SelectOption<string>[]
   label?: string
-  title?: string
-  snapPoints?: (string | number)[]
   wrapperProps?: ViewProps
   labelProps?: TextProps
   errorProps?: TextProps
   sheetProps?: BottomModalType
 }
 
-export default function Select<T>(props: SelectProps<T>) {
+export default function SelectCountry(props: SelectProps) {
   const {
-    placeholder,
     value,
     onChange,
     label,
-    title,
     labelProps,
     sheetProps,
     wrapperProps,
     options,
-    snapPoints,
   } = props
   const { styles, isDark } = useThemeStyles(selectStyles)
+
+  const [searchText, setSearchText] = useState("")
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const openSelectModal = () => bottomSheetModalRef.current?.present()
 
   const selected = options.find(option => option.value === value)
+
+  const filteredOption = options.filter(option =>
+    option.label.toLowerCase().includes(searchText.toLowerCase())
+  )
+
+  const containerHeight = filteredOption.length * (44 + 4) + 14
 
   return (
     <View {...wrapperProps} style={[wrapperProps?.style, styles.wrapper]}>
@@ -69,7 +73,7 @@ export default function Select<T>(props: SelectProps<T>) {
               selected && styles.inputValue,
             ]}
           >
-            {selected?.label ?? placeholder}
+            {selected?.label ?? "Select"}
           </Text>
         )}
       </Pressable>
@@ -89,17 +93,56 @@ export default function Select<T>(props: SelectProps<T>) {
       <BottomModal
         modalRef={bottomSheetModalRef}
         {...sheetProps}
-        snapPoints={snapPoints || ["30%"]}
+        snapPoints={["90%"]}
+        onChange={idx => idx === -1 && setSearchText("")}
+        isVirtualized
       >
-        <View style={{ paddingHorizontal: 24 }}>
-          <ToggleGroup
-            title={title}
-            options={options}
-            selected={selected?.value}
-            onChange={val => onChange(val)}
-            isVirtualized={false}
+        <View
+          style={{
+            marginBottom: 12,
+            position: "absolute",
+            left: 24,
+            right: 24,
+            zIndex: 1,
+          }}
+        >
+          <View
+            style={{ backgroundColor: isDark ? Colors.gray[900] : "white" }}
+          >
+            <Text style={styles.title}>Select country</Text>
+            <TextInput
+              style={{ height: 48 }}
+              placeholder="Search"
+              onChangeText={val => setSearchText(val)}
+              value={searchText}
+              wrapperProps={{
+                style: { marginBottom: 8 },
+              }}
+            />
+          </View>
+          <LinearGradient
+            colors={[isDark ? Colors.gray[900] : "white", "transparent"]}
+            style={{
+              height: 30,
+              position: "absolute",
+              right: 0,
+              left: 0,
+              top: 98,
+            }}
           />
         </View>
+
+        <ToggleGroup
+          options={filteredOption}
+          selected={selected?.value}
+          onChange={val => onChange(val)}
+          containerStyle={{
+            flex: 1,
+            minHeight: containerHeight,
+            marginTop: 124,
+          }}
+          isVirtualized
+        />
       </BottomModal>
     </View>
   )
@@ -109,6 +152,13 @@ const selectStyles = ({ isDark }: ThemeStylesProps) =>
   StyleSheet.create({
     wrapper: {
       width: "100%",
+    },
+    title: {
+      color: isDark ? Colors.gray[400] : Colors.gray[600],
+      height: 32,
+      fontSize: 20,
+      fontWeight: "700",
+      marginBottom: 10,
     },
     input: {
       position: "relative",

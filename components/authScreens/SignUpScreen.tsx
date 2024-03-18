@@ -6,10 +6,12 @@ import dayjs from "dayjs"
 import { Controller, useForm } from "react-hook-form"
 import { ScrollView, StyleSheet, Text, View } from "react-native"
 import { z } from "zod"
+import { COUNTRIES } from "@/utils/countries"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import useKeyboard from "@/utils/useKeyboard"
 
 import DateInput from "../DateInput"
+import SelectCountry from "../SelectCountry"
 import Button from "../UI/Button"
 import Link from "../UI/Link"
 import Select from "../UI/Select"
@@ -22,6 +24,7 @@ const SignUpSchema = z.object({
   confirmPassword: z.string(),
   birthday: z.date().optional(),
   gender: z.enum(["MALE", "FEMALE", "OTHER"]).optional(),
+  country: z.string().optional(),
 })
 
 type SignUpFormType = z.infer<typeof SignUpSchema>
@@ -226,6 +229,7 @@ export default function SignUpScreen() {
                 <Select
                   placeholder="Select"
                   label="Gender"
+                  title="Select gender"
                   onChange={onChange}
                   value={value ?? undefined}
                   options={[
@@ -233,6 +237,23 @@ export default function SignUpScreen() {
                     { label: "Female", value: "FEMALE" },
                     { label: "Other", value: "OTHER" },
                   ]}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              name="country"
+              control={form.control}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <SelectCountry
+                  label="Country"
+                  onChange={onChange}
+                  value={value ?? undefined}
+                  options={COUNTRIES}
                   wrapperProps={{
                     style: { marginBottom: 12 },
                   }}
@@ -279,6 +300,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     wrapper: {
       flex: 1,
       alignItems: "center",
+      height: 1000,
     },
     container: {
       flex: 1,
@@ -304,7 +326,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     optionalDivider: {
       height: 1,
       flex: 1,
-      backgroundColor: Colors.gray[300],
+      backgroundColor: isDark ? Colors.gray[700] : Colors.gray[300],
     },
     optionalLabel: {
       color: Colors.gray[500],
