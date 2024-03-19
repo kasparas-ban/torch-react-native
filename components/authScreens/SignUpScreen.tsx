@@ -7,7 +7,6 @@ import { Controller, useForm } from "react-hook-form"
 import { StyleSheet, Text, View } from "react-native"
 import Animated from "react-native-reanimated"
 import { z } from "zod"
-import { COUNTRIES } from "@/utils/countries"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import useKeyboard from "@/utils/useKeyboard"
 
@@ -29,6 +28,7 @@ const SignUpSchema = z.object({
   birthday: z.date().optional(),
   gender: z.enum(["MALE", "FEMALE", "OTHER"]).optional(),
   country: z.string().optional(),
+  city: z.string().optional(),
 })
 
 type SignUpFormType = z.infer<typeof SignUpSchema>
@@ -104,7 +104,7 @@ export default function SignUpScreen() {
             </Animated.Text>
           </View>
           <AnimatedLinearGradient
-            colors={["#f2f2f2", "transparent"]}
+            colors={[Colors.default.light, "transparent"]}
             locations={[0.7, 1]}
             style={[
               {
@@ -279,7 +279,24 @@ export default function SignUpScreen() {
                   label="Country"
                   onChange={onChange}
                   value={value ?? undefined}
-                  options={COUNTRIES}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              name="city"
+              control={form.control}
+              rules={{ required: true }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Aa"
+                  label="City"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
                   wrapperProps={{
                     style: { marginBottom: 12 },
                   }}
@@ -299,6 +316,19 @@ export default function SignUpScreen() {
             paddingHorizontal: 24,
           }}
         >
+          <LinearGradient
+            colors={["transparent", Colors.default.light]}
+            locations={[0.1, 0.3]}
+            style={[
+              {
+                position: "absolute",
+                top: -20,
+                bottom: -28,
+                left: -24,
+                right: -24,
+              },
+            ]}
+          />
           <View
             style={{
               flexDirection: "row",

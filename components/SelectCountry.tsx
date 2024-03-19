@@ -1,6 +1,7 @@
-import { useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import CloseIcon from "@/assets/icons/close.svg"
 import Colors from "@/constants/Colors"
+import COUNTRIES from "@/data/countries.json"
 import { BottomSheetModal } from "@gorhom/bottom-sheet"
 import { LinearGradient } from "expo-linear-gradient"
 import {
@@ -11,7 +12,6 @@ import {
   View,
   ViewProps,
 } from "react-native"
-import { SelectOption } from "@/types/generalTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
 import { AnimatedButton } from "./AnimatedButton"
@@ -22,7 +22,6 @@ import ToggleGroup from "./UI/ToggleGroup"
 export type SelectProps = {
   value?: string
   onChange: (val?: string) => void
-  options: SelectOption<string>[]
   label?: string
   wrapperProps?: ViewProps
   labelProps?: TextProps
@@ -31,15 +30,7 @@ export type SelectProps = {
 }
 
 export default function SelectCountry(props: SelectProps) {
-  const {
-    value,
-    onChange,
-    label,
-    labelProps,
-    sheetProps,
-    wrapperProps,
-    options,
-  } = props
+  const { value, onChange, label, labelProps, sheetProps, wrapperProps } = props
   const { styles, isDark } = useThemeStyles(selectStyles)
 
   const [searchText, setSearchText] = useState("")
@@ -47,13 +38,23 @@ export default function SelectCountry(props: SelectProps) {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const openSelectModal = () => bottomSheetModalRef.current?.present()
 
+  const options = useMemo(
+    () =>
+      COUNTRIES.map(country => ({
+        label: country.name,
+        value: country.code,
+        icon: country.flag,
+      })),
+    [COUNTRIES]
+  )
+
   const selected = options.find(option => option.value === value)
 
-  const filteredOption = options.filter(option =>
+  const filteredOptions = options.filter(option =>
     option.label.toLowerCase().includes(searchText.toLowerCase())
   )
 
-  const containerHeight = filteredOption.length * (44 + 4) + 14
+  const containerHeight = filteredOptions.length * (44 + 4) + 14
 
   return (
     <View {...wrapperProps} style={[wrapperProps?.style, styles.wrapper]}>
@@ -133,7 +134,7 @@ export default function SelectCountry(props: SelectProps) {
         </View>
 
         <ToggleGroup
-          options={filteredOption}
+          options={filteredOptions}
           selected={selected?.value}
           onChange={val => onChange(val)}
           containerStyle={{
@@ -141,6 +142,7 @@ export default function SelectCountry(props: SelectProps) {
             minHeight: containerHeight,
             marginTop: 124,
           }}
+          iconParam="flag"
           isVirtualized
         />
       </BottomModal>
