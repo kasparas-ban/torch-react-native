@@ -74,6 +74,7 @@ export default function SelectCountry(props: SelectProps) {
               selected && styles.inputValue,
             ]}
           >
+            {selected?.icon ? `${selected?.icon}   ` : null}
             {selected?.label ?? "Select"}
           </Text>
         )}

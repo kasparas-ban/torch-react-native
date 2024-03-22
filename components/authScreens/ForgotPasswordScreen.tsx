@@ -101,9 +101,9 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       fontSize: 46,
     },
     text: {
-      color: isDark ? Colors.gray[400] : Colors.gray[900],
+      color: isDark ? Colors.gray[400] : Colors.gray[600],
       marginBottom: 16,
-      textAlign: "justify",
+      textAlign: "center",
       fontSize: 16,
       width: "100%",
     },

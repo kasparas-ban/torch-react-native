@@ -29,6 +29,7 @@ const SignUpSchema = z.object({
   gender: z.enum(["MALE", "FEMALE", "OTHER"]).optional(),
   country: z.string().optional(),
   city: z.string().optional(),
+  description: z.string().optional(),
 })
 
 type SignUpFormType = z.infer<typeof SignUpSchema>
@@ -303,6 +304,32 @@ export default function SignUpScreen() {
                 />
               )}
             />
+
+            <Controller
+              name="description"
+              control={form.control}
+              rules={{ required: true }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Aa"
+                  label="About me"
+                  multiline
+                  numberOfLines={4}
+                  maxLength={30}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  style={{
+                    height: 120,
+                    textAlignVertical: "top",
+                    paddingTop: 12,
+                  }}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
           </View>
         </View>
       </AnimatedScrollView>
@@ -356,7 +383,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     wrapper: {
       flex: 1,
       alignItems: "center",
-      height: 900,
+      height: 1100,
     },
     container: {
       flex: 1,
