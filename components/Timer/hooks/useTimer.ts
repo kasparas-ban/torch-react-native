@@ -1,7 +1,7 @@
 import { create } from "zustand"
 import { subscribeWithSelector } from "zustand/middleware"
+import { TimerState } from "@/types/itemTypes"
 import { createSelectors } from "@/utils/zustandUtils"
-import { TimerState } from "@/app/types/itemTypes"
 
 type TimerStoreState = {
   time: number

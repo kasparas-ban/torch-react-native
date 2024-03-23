@@ -3,14 +3,12 @@ import { useItemsList } from "@/api-endpoints/hooks/items/useItemsList"
 import { getItemsByType } from "@/api-endpoints/utils/helpers"
 import CloseIcon from "@/assets/icons/close.svg"
 import Colors from "@/constants/Colors"
-import { StyleSheet, Text, View } from "react-native"
-import ActionSheet, {
-  ActionSheetRef,
-  ScrollView,
-} from "react-native-actions-sheet"
+import { BottomSheetModal } from "@gorhom/bottom-sheet"
+import { ScrollView, StyleSheet, Text, View } from "react-native"
 import { ItemOptionType, ItemType } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { toPercent } from "@/utils/utils"
+import { BottomModal } from "@/components/SelectModal/BottomModal"
 
 import { AnimatedButton } from "../../AnimatedButton"
 import ToggleSelect from "../../UI/ToggleSelect"
@@ -345,7 +343,8 @@ const focusTypeOptions = [
 ]
 
 export default function FocusSelect() {
-  const actionSheetRef = useRef<ActionSheetRef>(null)
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null)
+  const openSelectModal = () => bottomSheetModalRef.current?.present()
 
   const { styles, isDark } = useThemeStyles(componentStyles)
 
@@ -375,7 +374,7 @@ export default function FocusSelect() {
         <AnimatedButton
           scale={0.98}
           style={styles.input}
-          onPress={() => actionSheetRef.current?.show()}
+          onPress={openSelectModal}
         >
           <Text
             style={[
@@ -407,14 +406,10 @@ export default function FocusSelect() {
           )}
         </AnimatedButton>
 
-        <ActionSheet
-          ref={actionSheetRef}
-          snapPoints={[60, 100]}
-          useBottomSafeAreaPadding
-          gestureEnabled
-          containerStyle={{
-            backgroundColor: isDark ? Colors.slate[800] : "white",
-          }}
+        <BottomModal
+          modalRef={bottomSheetModalRef}
+          snapPoints={["90%"]}
+          onChange={idx => idx === -1}
         >
           <ScrollView
             style={{
@@ -449,7 +444,7 @@ export default function FocusSelect() {
               )}
             </View>
           </ScrollView>
-        </ActionSheet>
+        </BottomModal>
       </View>
     </View>
   )

@@ -1,7 +1,7 @@
 import { withTiming } from "react-native-reanimated"
 
 export const FadeIn =
-  (scale: number = 0.2) =>
+  (scale: number = 0.2, duration: number = 200) =>
   () => {
     "worklet"
     const initialValues = {
@@ -9,8 +9,8 @@ export const FadeIn =
       transform: [{ scale }],
     }
     const animations = {
-      opacity: withTiming(1, { duration: 200 }),
-      transform: [{ scale: withTiming(1, { duration: 200 }) }],
+      opacity: withTiming(1, { duration }),
+      transform: [{ scale: withTiming(1, { duration }) }],
     }
     return {
       initialValues,
@@ -19,7 +19,7 @@ export const FadeIn =
   }
 
 export const FadeOut =
-  (scale: number = 0.2) =>
+  (scale: number = 0.2, duration: number = 200) =>
   () => {
     "worklet"
     const initialValues = {
@@ -27,8 +27,8 @@ export const FadeOut =
       transform: [{ scale: 1 }],
     }
     const animations = {
-      opacity: withTiming(0, { duration: 200 }),
-      transform: [{ scale: withTiming(scale, { duration: 200 }) }],
+      opacity: withTiming(0, { duration }),
+      transform: [{ scale: withTiming(scale, { duration }) }],
     }
     return {
       initialValues,

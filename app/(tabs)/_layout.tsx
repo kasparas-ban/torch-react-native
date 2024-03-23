@@ -4,6 +4,7 @@ import { BlurView } from "expo-blur"
 import { ImageBackground } from "expo-image"
 import { Tabs } from "expo-router"
 import { Platform } from "react-native"
+import GoalsHeader from "@/components/navbar/GoalsHeader"
 import {
   BottomTabBarItems,
   BottomTabBarWrapper,
@@ -44,6 +45,7 @@ export default function TabLayout() {
           name="goals"
           options={{
             title: "Goals",
+            header: props => <GoalsHeader {...props} />,
           }}
         />
         <Tabs.Screen name="stats" options={{ title: "Stats" }} />
