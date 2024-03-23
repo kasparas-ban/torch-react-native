@@ -147,8 +147,8 @@ function ItemTypeSelector() {
       {isOpen && (
         <Animated.View
           style={{
-            position: "relative",
-            width: 160,
+            position: "absolute",
+            width: 140,
             marginTop: 60,
             backgroundColor: rgbToRGBA(Colors.gray[200], 1),
             borderRadius: 12,
@@ -176,7 +176,7 @@ function ItemTypeSelector() {
                 style={[
                   styles.title,
                   {
-                    fontSize: 30,
+                    fontSize: 28,
                     color: Colors.gray[500],
                     paddingVertical: 6,
                     paddingLeft: 10,
@@ -206,7 +206,7 @@ function ItemTypeSelector() {
                 style={[
                   styles.title,
                   {
-                    fontSize: 30,
+                    fontSize: 28,
                     color: Colors.gray[500],
                     paddingVertical: 6,
                     paddingLeft: 10,
@@ -234,7 +234,7 @@ function ItemTypeSelector() {
                 style={[
                   styles.title,
                   {
-                    fontSize: 30,
+                    fontSize: 28,
                     color: Colors.gray[500],
                     paddingVertical: 6,
                     paddingLeft: 10,
