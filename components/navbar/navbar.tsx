@@ -201,6 +201,8 @@ export function BottomTabBarItems({
                   justifyContent: "center",
                   alignItems: "center",
                   backgroundColor: "transparent",
+                  overflow: "hidden",
+                  borderRadius: 100,
                 }}
               >
                 <Image
@@ -210,6 +212,7 @@ export function BottomTabBarItems({
                     height: 48,
                     borderRadius: 100,
                     position: "absolute",
+                    overflow: "hidden",
                   }}
                   source={require("@/assets/images/gradient_animation.gif")}
                 />

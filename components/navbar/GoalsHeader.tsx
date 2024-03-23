@@ -1,13 +1,19 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ChevronIcon from "@/assets/icons/chevronDown.svg"
 import FilterIcon from "@/assets/icons/filter.svg"
 import PlusIcon from "@/assets/icons/plus.svg"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs"
+import { BlurView } from "expo-blur"
 import { Image } from "expo-image"
-import { Pressable, StyleSheet, Text, View } from "react-native"
-import Animated from "react-native-reanimated"
+import { Modal, Pressable, StyleSheet, Text, View } from "react-native"
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { capitalize, rgbToRGBA } from "@/utils/utils"
 
@@ -103,6 +109,29 @@ function ItemTypeSelector() {
   const { itemType, saveItemType } = useItemListConfig()
   const { styles, isDark } = useThemeStyles(componentStyles)
 
+  const [position, setPosition] = useState({ x: 0, y: 0, width: 0, height: 0 })
+
+  const chevronRotate = useSharedValue(0)
+
+  useEffect(() => {
+    chevronRotate.value = withSpring(isOpen ? 1 : 0, {
+      duration: 50,
+    })
+  }, [isOpen])
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          rotate: `${interpolate(chevronRotate.value, [0, 1], [0, 180])}deg`,
+        },
+        {
+          translateY: chevronRotate.value ? 4 : 0,
+        },
+      ],
+    }
+  })
+
   return (
     <View
       style={[
@@ -114,6 +143,11 @@ function ItemTypeSelector() {
       ]}
     >
       <View
+        onLayout={event => {
+          event.target.measure((x, y, width, height, pageX, pageY) => {
+            setPosition({ x: x + pageX, y: y + pageY, width, height })
+          })
+        }}
         style={{
           position: "absolute",
           flexDirection: "row",
@@ -131,127 +165,156 @@ function ItemTypeSelector() {
             marginLeft: 4,
           }}
         >
-          <ChevronIcon
-            color={isDark ? Colors.gray[400] : Colors.gray[400]}
-            strokeWidth={2.5}
-            style={{
-              position: "relative",
-              top: 24,
-              width: 24,
-              height: 24,
-            }}
-          />
+          <Animated.View style={[{ top: 24 }, animatedStyle]}>
+            <ChevronIcon
+              color={isDark ? Colors.gray[400] : Colors.gray[400]}
+              strokeWidth={2.5}
+              style={[
+                {
+                  width: 24,
+                  height: 24,
+                },
+              ]}
+            />
+          </Animated.View>
         </View>
       </View>
 
-      {isOpen && (
-        <Animated.View
+      <Modal visible={isOpen} animationType="fade">
+        <Pressable
+          onPress={() => setIsOpen(false)}
           style={{
             position: "absolute",
-            width: 140,
-            marginTop: 60,
-            backgroundColor: rgbToRGBA(Colors.gray[200], 1),
-            borderRadius: 12,
-            shadowOffset: {
-              width: 3,
-              height: -3,
-            },
-            shadowRadius: 10,
-            elevation: 10,
-            borderWidth: 1,
-            borderColor: "#dde1e7",
-            zIndex: 100000,
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
           }}
-          entering={FadeIn(0.9, 100)}
-          exiting={FadeOut(0.9, 100)}
         >
-          <Pressable
-            onPress={() => {
-              saveItemType("TASK")
-              setIsOpen(false)
+          <BlurView
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
+              zIndex: 10000,
             }}
-          >
-            {({ pressed }) => (
-              <Text
-                style={[
-                  styles.title,
-                  {
-                    fontSize: 28,
-                    color: Colors.gray[500],
-                    paddingVertical: 6,
-                    paddingLeft: 10,
-                    borderTopLeftRadius: 12,
-                    borderTopRightRadius: 12,
-                    borderBottomWidth: 1,
-                    borderBottomColor: rgbToRGBA(Colors.gray[400], 0.4),
-                  },
-                  pressed && {
-                    backgroundColor: Colors.gray[300],
-                  },
-                ]}
-              >
-                Tasks
-              </Text>
-            )}
-          </Pressable>
+            intensity={4}
+            experimentalBlurMethod="dimezisBlurView"
+          />
 
-          <Pressable
-            onPress={() => {
-              saveItemType("GOAL")
-              setIsOpen(false)
-            }}
-          >
-            {({ pressed }) => (
-              <Text
-                style={[
-                  styles.title,
-                  {
-                    fontSize: 28,
-                    color: Colors.gray[500],
-                    paddingVertical: 6,
-                    paddingLeft: 10,
-                    borderBottomWidth: 1,
-                    borderBottomColor: rgbToRGBA(Colors.gray[400], 0.4),
-                  },
-                  pressed && {
-                    backgroundColor: Colors.gray[300],
-                  },
-                ]}
+          {isOpen && (
+            <Animated.View
+              style={{
+                position: "absolute",
+                width: 140,
+                top: position.y + 10,
+                left: position.x,
+                backgroundColor: rgbToRGBA(Colors.gray[200], 1),
+                borderRadius: 12,
+                shadowOffset: {
+                  width: 3,
+                  height: -3,
+                },
+                shadowRadius: 10,
+                elevation: 10,
+                borderWidth: 1,
+                borderColor: "#dde1e7",
+                zIndex: 100000,
+              }}
+              entering={FadeIn(0.9, 100)}
+              exiting={FadeOut(0.9, 100)}
+            >
+              <Pressable
+                onPress={() => {
+                  saveItemType("TASK")
+                  setIsOpen(false)
+                }}
               >
-                Goals
-              </Text>
-            )}
-          </Pressable>
+                {({ pressed }) => (
+                  <Text
+                    style={[
+                      styles.title,
+                      {
+                        fontSize: 28,
+                        color: Colors.gray[500],
+                        paddingVertical: 6,
+                        paddingLeft: 10,
+                        borderTopLeftRadius: 12,
+                        borderTopRightRadius: 12,
+                        borderBottomWidth: 1,
+                        borderBottomColor: rgbToRGBA(Colors.gray[400], 0.4),
+                      },
+                      pressed && {
+                        backgroundColor: Colors.gray[300],
+                      },
+                    ]}
+                  >
+                    Tasks
+                  </Text>
+                )}
+              </Pressable>
 
-          <Pressable
-            onPress={() => {
-              saveItemType("DREAM")
-              setIsOpen(false)
-            }}
-          >
-            {({ pressed }) => (
-              <Text
-                style={[
-                  styles.title,
-                  {
-                    fontSize: 28,
-                    color: Colors.gray[500],
-                    paddingVertical: 6,
-                    paddingLeft: 10,
-                    borderBottomLeftRadius: 12,
-                    borderBottomRightRadius: 12,
-                  },
-                  pressed && {
-                    backgroundColor: Colors.gray[300],
-                  },
-                ]}
+              <Pressable
+                onPress={() => {
+                  saveItemType("GOAL")
+                  setIsOpen(false)
+                }}
               >
-                Dreams
-              </Text>
-            )}
-          </Pressable>
-        </Animated.View>
-      )}
+                {({ pressed }) => (
+                  <Text
+                    style={[
+                      styles.title,
+                      {
+                        fontSize: 28,
+                        color: Colors.gray[500],
+                        paddingVertical: 6,
+                        paddingLeft: 10,
+                        borderBottomWidth: 1,
+                        borderBottomColor: rgbToRGBA(Colors.gray[400], 0.4),
+                      },
+                      pressed && {
+                        backgroundColor: Colors.gray[300],
+                      },
+                    ]}
+                  >
+                    Goals
+                  </Text>
+                )}
+              </Pressable>
+
+              <Pressable
+                onPress={() => {
+                  saveItemType("DREAM")
+                  setIsOpen(false)
+                }}
+              >
+                {({ pressed }) => (
+                  <Text
+                    style={[
+                      styles.title,
+                      {
+                        fontSize: 28,
+                        color: Colors.gray[500],
+                        paddingVertical: 6,
+                        paddingLeft: 10,
+                        borderBottomLeftRadius: 12,
+                        borderBottomRightRadius: 12,
+                      },
+                      pressed && {
+                        backgroundColor: Colors.gray[300],
+                      },
+                    ]}
+                  >
+                    Dreams
+                  </Text>
+                )}
+              </Pressable>
+            </Animated.View>
+          )}
+        </Pressable>
+      </Modal>
     </View>
   )
 }
