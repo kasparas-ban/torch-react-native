@@ -19,9 +19,10 @@ import { capitalize, rgbToRGBA } from "@/utils/utils"
 
 import { AnimatedButton } from "../AnimatedButton"
 import useItemListConfig from "../ItemList/hooks/useItemListConfig"
+import Link from "../UI/Link"
 
 export default function GoalsHeader(props: BottomTabHeaderProps) {
-  const { styles, isDark } = useThemeStyles(componentStyles)
+  const { isDark } = useThemeStyles(componentStyles)
 
   return (
     <View
@@ -84,7 +85,8 @@ export default function GoalsHeader(props: BottomTabHeaderProps) {
               marginLeft: 6,
             }}
           >
-            <AnimatedButton
+            <Link
+              href="/(modals)/(items)/general-item"
               style={{
                 marginTop: 14,
                 padding: 8,
@@ -95,7 +97,7 @@ export default function GoalsHeader(props: BottomTabHeaderProps) {
                 strokeWidth={2}
                 style={{ width: 24, height: 24 }}
               />
-            </AnimatedButton>
+            </Link>
           </View>
         </View>
       </View>

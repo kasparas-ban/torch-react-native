@@ -37,7 +37,7 @@ type SignUpFormType = z.infer<typeof SignUpSchema>
 export default function SignUpScreen() {
   const isKeyboardOpen = useKeyboard()
   const { isLoaded, signUp, setActive } = useSignUp()
-  const { styles } = useThemeStyles(componentStyles)
+  const { styles, isDark } = useThemeStyles(componentStyles)
 
   const { scrollHandler, headerTitleStyle, headerGradientStyle } =
     useScrollViewHeader()
@@ -105,7 +105,10 @@ export default function SignUpScreen() {
             </Animated.Text>
           </View>
           <AnimatedLinearGradient
-            colors={[Colors.default.light, "transparent"]}
+            colors={[
+              isDark ? Colors.gray[900] : Colors.default.light,
+              "transparent",
+            ]}
             locations={[0.7, 1]}
             style={[
               {
@@ -344,7 +347,10 @@ export default function SignUpScreen() {
           }}
         >
           <LinearGradient
-            colors={["transparent", Colors.default.light]}
+            colors={[
+              "transparent",
+              isDark ? Colors.gray[900] : Colors.default.light,
+            ]}
             locations={[0.1, 0.3]}
             style={[
               {
