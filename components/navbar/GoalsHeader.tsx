@@ -29,7 +29,6 @@ export default function GoalsHeader(props: BottomTabHeaderProps) {
         height: 112,
         paddingHorizontal: 24,
         justifyContent: "flex-end",
-        backgroundColor: "transparent",
       }}
     >
       <View
@@ -155,9 +154,7 @@ function ItemTypeSelector() {
         }}
       >
         <AnimatedButton onPress={() => setIsOpen(prev => !prev)} scale={0.96}>
-          <Text style={[styles.title, isOpen && { color: Colors.gray[500] }]}>
-            {`${capitalize(itemType)}s`}
-          </Text>
+          <Text style={[styles.title]}>{`${capitalize(itemType)}s`}</Text>
         </AnimatedButton>
         <View
           style={{
@@ -167,14 +164,9 @@ function ItemTypeSelector() {
         >
           <Animated.View style={[{ top: 24 }, animatedStyle]}>
             <ChevronIcon
-              color={isDark ? Colors.gray[400] : Colors.gray[400]}
+              color={Colors.gray[400]}
               strokeWidth={2.5}
-              style={[
-                {
-                  width: 24,
-                  height: 24,
-                },
-              ]}
+              style={{ width: 24, height: 24 }}
             />
           </Animated.View>
         </View>
@@ -198,7 +190,6 @@ function ItemTypeSelector() {
               right: 0,
               top: 0,
               bottom: 0,
-              zIndex: 10000,
             }}
             intensity={4}
             experimentalBlurMethod="dimezisBlurView"
@@ -211,7 +202,7 @@ function ItemTypeSelector() {
                 width: 140,
                 top: position.y + 10,
                 left: position.x,
-                backgroundColor: rgbToRGBA(Colors.gray[200], 1),
+                backgroundColor: isDark ? Colors.gray[700] : Colors.gray[200],
                 borderRadius: 12,
                 shadowOffset: {
                   width: 3,
@@ -220,8 +211,7 @@ function ItemTypeSelector() {
                 shadowRadius: 10,
                 elevation: 10,
                 borderWidth: 1,
-                borderColor: "#dde1e7",
-                zIndex: 100000,
+                borderColor: isDark ? Colors.gray[600] : "#dde1e7",
               }}
               entering={FadeIn(0.9, 100)}
               exiting={FadeOut(0.9, 100)}
@@ -238,7 +228,7 @@ function ItemTypeSelector() {
                       styles.title,
                       {
                         fontSize: 28,
-                        color: Colors.gray[500],
+                        color: isDark ? Colors.gray[400] : Colors.gray[500],
                         paddingVertical: 6,
                         paddingLeft: 10,
                         borderTopLeftRadius: 12,
@@ -247,7 +237,9 @@ function ItemTypeSelector() {
                         borderBottomColor: rgbToRGBA(Colors.gray[400], 0.4),
                       },
                       pressed && {
-                        backgroundColor: Colors.gray[300],
+                        backgroundColor: isDark
+                          ? Colors.gray[600]
+                          : Colors.gray[300],
                       },
                     ]}
                   >
@@ -268,14 +260,16 @@ function ItemTypeSelector() {
                       styles.title,
                       {
                         fontSize: 28,
-                        color: Colors.gray[500],
+                        color: isDark ? Colors.gray[400] : Colors.gray[500],
                         paddingVertical: 6,
                         paddingLeft: 10,
                         borderBottomWidth: 1,
                         borderBottomColor: rgbToRGBA(Colors.gray[400], 0.4),
                       },
                       pressed && {
-                        backgroundColor: Colors.gray[300],
+                        backgroundColor: isDark
+                          ? Colors.gray[600]
+                          : Colors.gray[300],
                       },
                     ]}
                   >
@@ -296,14 +290,16 @@ function ItemTypeSelector() {
                       styles.title,
                       {
                         fontSize: 28,
-                        color: Colors.gray[500],
+                        color: isDark ? Colors.gray[400] : Colors.gray[500],
                         paddingVertical: 6,
                         paddingLeft: 10,
                         borderBottomLeftRadius: 12,
                         borderBottomRightRadius: 12,
                       },
                       pressed && {
-                        backgroundColor: Colors.gray[300],
+                        backgroundColor: isDark
+                          ? Colors.gray[600]
+                          : Colors.gray[300],
                       },
                     ]}
                   >
