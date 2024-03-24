@@ -1,7 +1,7 @@
 import Colors from "@/constants/Colors"
 import { StyleSheet, Text, View } from "react-native"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
-import { AnimatedButton } from "@/components/AnimatedButton"
+import Link from "@/components/UI/Link"
 
 export default function GeneralItemModal() {
   const { styles } = useThemeStyles(componentStyles)
@@ -20,7 +20,11 @@ export default function GeneralItemModal() {
         </View>
 
         <View style={{ width: "100%", gap: 8 }}>
-          <AnimatedButton style={styles.typeBtn} scale={0.99}>
+          <Link
+            href="/(modals)/(items)/add-task"
+            style={styles.typeBtn}
+            scale={0.99}
+          >
             <View style={{ gap: 4 }}>
               <View
                 style={{
@@ -39,9 +43,13 @@ export default function GeneralItemModal() {
                 Read 20 pages, run 3km, study for 2h...
               </Text>
             </View>
-          </AnimatedButton>
+          </Link>
 
-          <AnimatedButton style={styles.typeBtn} scale={0.99}>
+          <Link
+            href="/(modals)/(items)/add-task"
+            style={styles.typeBtn}
+            scale={0.99}
+          >
             <View style={{ gap: 4 }}>
               <View
                 style={{
@@ -60,9 +68,13 @@ export default function GeneralItemModal() {
                 Finish a book, run a marathon, pass the exam...
               </Text>
             </View>
-          </AnimatedButton>
+          </Link>
 
-          <AnimatedButton style={styles.typeBtn} scale={0.99}>
+          <Link
+            href="/(modals)/(items)/add-task"
+            style={styles.typeBtn}
+            scale={0.99}
+          >
             <View style={{ gap: 4 }}>
               <View
                 style={{
@@ -81,7 +93,7 @@ export default function GeneralItemModal() {
                 Become a novelist, learn Spanish, finish university...
               </Text>
             </View>
-          </AnimatedButton>
+          </Link>
         </View>
       </View>
     </View>

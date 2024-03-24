@@ -57,3 +57,12 @@ export const formatTimeSpent = (totalSeconds: number) => {
 
 export const formatDate = (date: Date) =>
   date.toISOString().slice(0, 19).replace("T", " ")
+
+export const pruneObject = <T extends Object>(obj: T) => {
+  const deepCopy = structuredClone(obj)
+  Object.keys(deepCopy).forEach(
+    (key: string) =>
+      !deepCopy[key as keyof T] && delete deepCopy[key as keyof T]
+  )
+  return deepCopy
+}

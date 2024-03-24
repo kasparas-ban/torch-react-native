@@ -10,16 +10,17 @@ type Props<T> = AnimatedProps<LinkProps<T>> &
   Omit<PressableProps, "children"> & {
     children: ReactNode
     href: Href<T>
+    scale?: number
     textProps?: TextProps
   }
 
 export default function Link<T>(props: Props<T>) {
-  const { textProps, children, ...pressableProps } = props
+  const { textProps, scale, children, ...pressableProps } = props
 
   return (
     <BaseLink href={props.href} style={[pressableProps.style as any]} asChild>
       <AnimatedButton
-        scale={0.98}
+        scale={scale || 0.98}
         entering={props.entering}
         exiting={props.exiting}
       >

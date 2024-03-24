@@ -104,6 +104,14 @@ function RootLayoutNav() {
                       title: "",
                     }}
                   />
+                  <Stack.Screen
+                    name="(modals)/(items)/add-task"
+                    options={{
+                      presentation: "modal",
+                      headerTransparent: true,
+                      title: "",
+                    }}
+                  />
                 </Stack>
               </ClerkProvider>
             </NotifierWrapper>
