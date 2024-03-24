@@ -66,3 +66,12 @@ export const pruneObject = <T extends Object>(obj: T) => {
   )
   return deepCopy
 }
+
+export const getTime = (seconds?: number | null) => {
+  const time = { hours: 0, minutes: 0, seconds: 0 }
+  if (!seconds) return time
+
+  const hours = Math.floor(seconds / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  return { hours, minutes, seconds: 0 }
+}

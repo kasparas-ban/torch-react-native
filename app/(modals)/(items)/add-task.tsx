@@ -15,6 +15,7 @@ import {
   taskFormSchema,
   TaskFormType,
 } from "@/components/itemModal/itemForms/schemas"
+import DurationInput from "@/components/UI/DurationInput"
 import TextInput from "@/components/UI/TextInput"
 
 type InputType = keyof z.infer<typeof taskFormSchema>
@@ -112,7 +113,6 @@ export default function AddTaskModal() {
               <TextInput
                 placeholder="Aa"
                 label="Title"
-                secureTextEntry
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
@@ -125,16 +125,14 @@ export default function AddTaskModal() {
           />
 
           <Controller
-            name="title"
+            name="duration"
             control={form.control}
             rules={{ required: true }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                placeholder="Aa"
-                label="Title"
-                secureTextEntry
-                onBlur={onBlur}
-                onChangeText={onChange}
+            render={({ field: { onChange, value } }) => (
+              <DurationInput
+                placeholder="1h 30 min"
+                label="Duration"
+                onChange={onChange}
                 value={value}
                 errorProps={{ children: form.formState.errors.title?.message }}
                 wrapperProps={{

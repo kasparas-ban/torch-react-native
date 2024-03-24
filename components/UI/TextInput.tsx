@@ -1,4 +1,4 @@
-import React from "react"
+import React, { isValidElement, ReactNode } from "react"
 import { FadeIn } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import {
@@ -22,7 +22,7 @@ export type TextInputProps = BaseTextInputProps & {
 
 export default function TextInput(props: TextInputProps) {
   const { label, wrapperProps, labelProps, errorProps, ...inputProps } = props
-  const { styles, onFocus, onBlur } = useThemeStyles(inputStyles)
+  const { styles, isDark, onFocus, onBlur } = useThemeStyles(inputStyles)
   const isError = !!errorProps?.children
 
   return (
@@ -36,7 +36,7 @@ export default function TextInput(props: TextInputProps) {
       )}
       <BaseInput
         {...inputProps}
-        placeholderTextColor={Colors.gray[500]}
+        placeholderTextColor={isDark ? Colors.gray[400] : Colors.gray[500]}
         style={[styles.input, inputProps.style, isError && styles.errorInput]}
         onFocus={e => {
           onFocus()
@@ -95,7 +95,7 @@ const inputStyles = ({ isDark, isFocused, platform }: ThemeStylesProps) =>
       marginRight: "auto",
       marginLeft: 12,
       marginBottom: 4,
-      color: Colors.gray[500],
+      color: isDark ? Colors.gray[300] : Colors.gray[500],
     },
     errorlabel: {
       marginTop: 4,

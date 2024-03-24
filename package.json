@@ -46,6 +46,7 @@
     "react-native-screens": "~3.29.0",
     "react-native-svg": "14.1.0",
     "react-native-svg-transformer": "^1.3.0",
+    "react-native-timer-picker": "^1.6.0",
     "react-native-web": "~0.19.6",
     "tailwind-rn": "^4.2.0",
     "zod": "^3.22.4",

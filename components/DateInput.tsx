@@ -126,14 +126,14 @@ const inputStyles = ({ isDark }: ThemeStylesProps) =>
     label: {
       marginLeft: 12,
       marginBottom: 4,
-      color: Colors.gray[500],
+      color: isDark ? Colors.gray[300] : Colors.gray[500],
     },
     placeholder: {
       paddingHorizontal: 16,
       borderRadius: 12,
       textAlignVertical: "center",
       height: "100%",
-      color: Colors.gray[500],
+      color: isDark ? Colors.gray[400] : Colors.gray[500],
     },
     iconWrapper: {
       position: "absolute",
