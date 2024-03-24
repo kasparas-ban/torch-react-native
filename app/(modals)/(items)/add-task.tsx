@@ -16,6 +16,7 @@ import {
   TaskFormType,
 } from "@/components/itemModal/itemForms/schemas"
 import DurationInput from "@/components/UI/DurationInput"
+import PriorityInput from "@/components/UI/PriorityInput"
 import TextInput from "@/components/UI/TextInput"
 
 type InputType = keyof z.infer<typeof taskFormSchema>
@@ -134,7 +135,28 @@ export default function AddTaskModal() {
                 label="Duration"
                 onChange={onChange}
                 value={value}
-                errorProps={{ children: form.formState.errors.title?.message }}
+                errorProps={{
+                  children: form.formState.errors.duration?.message,
+                }}
+                wrapperProps={{
+                  style: { marginBottom: 12 },
+                }}
+              />
+            )}
+          />
+
+          <Controller
+            name="priority"
+            control={form.control}
+            rules={{ required: true }}
+            render={({ field: { onChange, value } }) => (
+              <PriorityInput
+                label="Priority"
+                onChange={onChange}
+                value={value}
+                errorProps={{
+                  children: form.formState.errors.priority?.message,
+                }}
                 wrapperProps={{
                   style: { marginBottom: 12 },
                 }}
