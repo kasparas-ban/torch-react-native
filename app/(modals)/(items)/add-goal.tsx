@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { useItemsList } from "@/api-endpoints/hooks/items/useItemsList"
 import { useUpsertItem } from "@/api-endpoints/hooks/items/useUpsertItem"
-import { groupItemsByParent } from "@/api-endpoints/utils/helpers"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -10,198 +9,79 @@ import { StyleSheet, Text, View } from "react-native"
 import Animated, { LinearTransition } from "react-native-reanimated"
 import { z } from "zod"
 import { SelectOption } from "@/types/generalTypes"
-import { Goal, Task } from "@/types/itemTypes"
+import { Goal } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import useKeyboard from "@/utils/useKeyboard"
 import { pruneObject } from "@/utils/utils"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
 import InputSelectPanel from "@/components/itemModal/itemForms/InputSelectPanel"
 import {
-  taskFormSchema,
-  TaskFormType,
+  goalFormSchema,
+  GoalFormType,
 } from "@/components/itemModal/itemForms/schemas"
 import Button from "@/components/UI/Button"
 import DateInput from "@/components/UI/DateInput"
-import DurationInput from "@/components/UI/DurationInput"
 import PriorityInput from "@/components/UI/PriorityInput"
 import Select from "@/components/UI/Select"
 import TextInput from "@/components/UI/TextInput"
 
-const GOALS_MOCK = [
-  {
-    label: "Other",
-    options: [
-      {
-        label: "Make a todo/timer app",
-        value: "4bax1usfu2uk",
-      },
-      {
-        label: "Learn chess",
-        value: "5bax1usfu2uk",
-      },
-      {
-        label: 'Read "Demons" by Dostoevsky',
-        value: "13ax1usfu2uk",
-      },
-      {
-        label: 'Read "The Shape of Space"',
-        value: "14ax1usfu2uk",
-      },
-    ],
-  },
-  {
-    label: "Learn Spanish",
-    options: [
-      {
-        label: "Learn Spanish vocabulary",
-        value: "6bax1usfu2uk",
-      },
-      {
-        label: "Learn Spanish grammar",
-        value: "7bax1usfu2uk",
-      },
-      {
-        label: "Spanish language comprehension",
-        value: "8bax1usfu2uk",
-      },
-      {
-        label: "Spanish writing",
-        value: "9bax1usfu2uk",
-      },
-    ],
-  },
-  {
-    label: "Learn Spanish111",
-    options: [
-      {
-        label: "Learn Spanish vocabulary",
-        value: "6bax1usfu2u1",
-      },
-      {
-        label: "Learn Spanish grammar",
-        value: "7bax1usfu2u1",
-      },
-      {
-        label: "Spanish language comprehension",
-        value: "8bax1usfu2u1",
-      },
-      {
-        label: "Spanish writing",
-        value: "9bax1usfu2u1",
-      },
-    ],
-  },
-  {
-    label: "Learn Spanish222",
-    options: [
-      {
-        label: "Learn Spanish vocabulary",
-        value: "6bax1usfu2u2",
-      },
-      {
-        label: "Learn Spanish grammar",
-        value: "7bax1usfu2u2",
-      },
-      {
-        label: "Spanish language comprehension",
-        value: "8bax1usfu2u2",
-      },
-      {
-        label: "Spanish writing",
-        value: "9bax1usfu2u2",
-      },
-    ],
-  },
-  {
-    label: "Get fit",
-    options: [
-      {
-        label: "Build muscle",
-        value: "10ax1usfu2uk",
-      },
-    ],
-  },
-  {
-    label: "Get good at math",
-    options: [
-      {
-        label: "Learn Linear Algebra",
-        value: "11ax1usfu2uk",
-      },
-      {
-        label: "Learn Calculus",
-        value: "12ax1usfu2uk",
-      },
-    ],
-  },
-]
-
-type InputType = keyof z.infer<typeof taskFormSchema>
+type InputType = keyof z.infer<typeof goalFormSchema>
 
 const inputNames = [
   { label: "Priority", value: "priority" },
   { label: "Target date", value: "targetDate" },
-  { label: "Assign goal", value: "goal" },
+  { label: "Assign dream", value: "dream" },
 ] as SelectOption<InputType>[]
 
-const getInitialTaskForm = (
-  initialTask?: Task,
-  parentItem?: Goal
-): TaskFormType => ({
-  title: initialTask?.title || "",
-  duration: initialTask?.duration || 30 * 60,
-  priority: initialTask?.priority,
-  targetDate: initialTask?.targetDate,
-  recurring: initialTask?.recurring,
-  goal: parentItem
-    ? { label: parentItem.title, value: parentItem.itemID }
-    : initialTask?.goal
-      ? { label: initialTask.goal.title, value: initialTask.goal.itemID }
-      : undefined,
+const getInitialGoalForm = (initialGoal: Goal): GoalFormType => ({
+  title: initialGoal?.title || "",
+  priority: initialGoal?.priority,
+  targetDate: initialGoal?.targetDate,
+  tasks:
+    initialGoal?.tasks?.map(task => ({ ...task, itemID: task.itemID })) || [],
+  dream: initialGoal?.dream
+    ? { label: initialGoal.dream.title, value: initialGoal.dream.itemID }
+    : undefined,
 })
 
-export default function AddTaskModal() {
+export default function AddGoalModal() {
   const isKeyboardOpen = useKeyboard()
   const { styles } = useThemeStyles(componentStyles)
 
-  const { goals } = useItemsList()
+  const { dreams } = useItemsList()
   const { editItem } = useEditItem()
-  // const { closeModal, parentItem } = useItemModal()
-  const parentItem = undefined
 
   const { mutateAsync, reset, isPending, isError, isSuccess } =
-    useUpsertItem("TASK")
+    useUpsertItem("GOAL")
 
-  const defaultTask = getInitialTaskForm(
-    parentItem ? undefined : (editItem as Task),
-    parentItem as Goal | undefined
+  const defaultGoal = getInitialGoalForm(editItem as Goal)
+
+  const defaultInputOrder = (Object.keys(defaultGoal) as InputType[]).filter(
+    key => !!defaultGoal[key]
   )
-
-  const defaultInputOrder = Object.keys(defaultTask).filter(
-    key => !!defaultTask[key as InputType]
-  ) as InputType[]
   const [inputOrder, setInputOrder] = useState(defaultInputOrder)
 
-  const form = useForm<TaskFormType>({
-    resolver: zodResolver(taskFormSchema),
-    defaultValues: defaultTask,
+  const form = useForm<GoalFormType>({
+    resolver: zodResolver(goalFormSchema),
+    defaultValues: defaultGoal,
     shouldUnregister: true,
   })
 
-  const onSubmit = (data: TaskFormType) => {
-    const { goal, ...rest } = data
-    const newTask = {
+  const onSubmit = (data: GoalFormType) => {
+    const { dream, tasks, ...rest } = data
+    const newGoal = {
       ...pruneObject(rest),
-      ...(editItem && !parentItem ? { itemID: editItem.itemID } : {}),
-      ...(goal ? { parentID: goal.value } : {}),
+      ...(editItem ? { itemID: editItem.itemID } : {}),
+      ...(dream ? { parentID: dream.value } : {}),
+      type: "GOAL" as const,
     }
 
-    console.log("New Task", newTask)
+    console.log("data", newGoal)
 
-    // mutateAsync(newTask)
+    // mutateAsync(newGoal)
     //   .then(() => {
     //     setTimeout(() => {
-    //       router.replace("/(tabs)/goals")
+    //       closeModal()
     //     }, 2000)
     //   })
     //   .catch(() => {
@@ -210,11 +90,11 @@ export default function AddTaskModal() {
     //         toast({
     //           title: "Failed to save",
     //           description:
-    //             "Your task has not been saved. Please try adding it again later.",
+    //             "Your goal has not been saved. Please try adding it again later.",
     //         }),
     //       100
     //     )
-    //     setTimeout(() => reset(), 2500)
+    //     setTimeout(() => reset(), 2000)
     //   })
   }
 
@@ -228,11 +108,11 @@ export default function AddTaskModal() {
             marginBottom: 20,
           }}
         >
-          <Text style={styles.title}>New Task</Text>
+          <Text style={styles.title}>New Goal</Text>
         </View>
 
         <View style={{ width: "100%", gap: 8 }}>
-          <Animated.View key="task_title" layout={LinearTransition}>
+          <Animated.View key="goal_title" layout={LinearTransition}>
             <Controller
               name="title"
               control={form.control}
@@ -255,57 +135,32 @@ export default function AddTaskModal() {
             />
           </Animated.View>
 
-          <Animated.View key="task_duration" layout={LinearTransition}>
-            <Controller
-              name="duration"
-              control={form.control}
-              rules={{ required: true }}
-              render={({ field: { onChange, value } }) => (
-                <DurationInput
-                  placeholder="1h 30 min"
-                  label="Duration"
-                  onChange={onChange}
-                  value={value}
-                  errorProps={{
-                    children: form.formState.errors.duration?.message,
-                  }}
-                  wrapperProps={{
-                    style: { marginBottom: 12 },
-                  }}
-                />
-              )}
-            />
-          </Animated.View>
-
           {inputOrder.map(input => {
-            if (input === "goal") {
-              const groupedGoals = groupItemsByParent(goals || [], "GOAL")
-              const goalOptions = Object.keys(groupedGoals).map(dreamId => ({
-                label: groupedGoals[dreamId].parentLabel || "Other",
-                options: groupedGoals[dreamId].items.map(goal => ({
-                  label: goal.title,
-                  value: goal.itemID,
-                })),
-              }))
+            if (input === "dream") {
+              const dreamOptions =
+                dreams?.map(dream => ({
+                  label: dream.title,
+                  value: dream.itemID,
+                })) || []
 
               return (
                 <Animated.View
-                  key="task_goal"
+                  key="goal_dream"
                   entering={FadeIn(0.8)}
                   exiting={FadeOut(0.8)}
                   layout={LinearTransition}
                 >
                   <Controller
-                    name="goal"
+                    name="dream"
                     control={form.control}
                     render={({ field: { onChange, value } }) => (
                       <Select
                         placeholder="Select..."
-                        label="Goal"
-                        title="Select goal"
+                        label="Dream"
+                        title="Select dream"
                         onChange={onChange}
                         value={value ?? undefined}
-                        options={goalOptions}
+                        options={dreamOptions}
                         wrapperProps={{
                           style: { marginBottom: 12 },
                         }}
@@ -320,7 +175,7 @@ export default function AddTaskModal() {
             if (input === "priority") {
               return (
                 <Animated.View
-                  key="task_priority"
+                  key="goal_priority"
                   entering={FadeIn(0.8)}
                   exiting={FadeOut(0.8)}
                   layout={LinearTransition}
@@ -346,7 +201,7 @@ export default function AddTaskModal() {
             if (input === "targetDate") {
               return (
                 <Animated.View
-                  key="task_targetDate"
+                  key="goal_targetDate"
                   entering={FadeIn(0.8)}
                   exiting={FadeOut(0.8)}
                   layout={LinearTransition}

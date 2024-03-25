@@ -112,6 +112,22 @@ function RootLayoutNav() {
                       title: "",
                     }}
                   />
+                  <Stack.Screen
+                    name="(modals)/(items)/add-goal"
+                    options={{
+                      presentation: "modal",
+                      headerTransparent: true,
+                      title: "",
+                    }}
+                  />
+                  <Stack.Screen
+                    name="(modals)/(items)/add-dream"
+                    options={{
+                      presentation: "modal",
+                      headerTransparent: true,
+                      title: "",
+                    }}
+                  />
                 </Stack>
               </ClerkProvider>
             </NotifierWrapper>

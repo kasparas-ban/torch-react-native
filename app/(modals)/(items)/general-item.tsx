@@ -46,7 +46,7 @@ export default function GeneralItemModal() {
           </Link>
 
           <Link
-            href="/(modals)/(items)/add-task"
+            href="/(modals)/(items)/add-goal"
             style={styles.typeBtn}
             scale={0.99}
           >
@@ -71,7 +71,7 @@ export default function GeneralItemModal() {
           </Link>
 
           <Link
-            href="/(modals)/(items)/add-task"
+            href="/(modals)/(items)/add-dream"
             style={styles.typeBtn}
             scale={0.99}
           >
