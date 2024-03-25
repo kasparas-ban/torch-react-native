@@ -42,48 +42,59 @@ export default function ToggleGroup<T>({
     onChange(item.value)
   }, [])
 
+  const isOptionsEmpty = !options.length
+
   return (
     <View style={styles.wrapper}>
       {title && <Text style={styles.title}>{title}</Text>}
+
       {isVirtualized ? (
-        <BottomSheetVirtualizedList
-          data={options}
-          keyExtractor={(item: SelectOptionExtended<T>) => item.value as any}
-          getItemCount={data => data.length}
-          getItem={(data, index) => data[index]}
-          renderItem={({ item }) => (
-            <ListItemMemo
-              item={item}
-              styles={styles}
-              onPress={handlePress}
-              isSelected={selected === item.value}
-              iconParam={iconParam}
-            />
-          )}
-          contentContainerStyle={containerStyle}
-        />
+        isOptionsEmpty ? (
+          <Text style={styles.noOptionsLabel}>No options</Text>
+        ) : (
+          <BottomSheetVirtualizedList
+            data={options}
+            keyExtractor={(item: SelectOptionExtended<T>) => item.value as any}
+            getItemCount={data => data.length}
+            getItem={(data, index) => data[index]}
+            renderItem={({ item }) => (
+              <ListItemMemo
+                item={item}
+                styles={styles}
+                onPress={handlePress}
+                isSelected={selected === item.value}
+                iconParam={iconParam}
+              />
+            )}
+            contentContainerStyle={containerStyle}
+          />
+        )
       ) : (
         <>
-          {options.map((option, idx) => (
-            <AnimatedButton
-              key={idx}
-              style={[
-                styles.optionWrapper,
-                selected === option.value && styles.activeOption,
-              ]}
-              onPress={() => onChange(option.value)}
-              scale={0.99}
-            >
-              <Text
+          {isOptionsEmpty ? (
+            <Text style={styles.noOptionsLabel}>No options</Text>
+          ) : (
+            options.map((option, idx) => (
+              <AnimatedButton
+                key={idx}
                 style={[
-                  styles.optionLabel,
-                  selected === option.value && styles.activeLabel,
+                  styles.optionWrapper,
+                  selected === option.value && styles.activeOption,
                 ]}
+                onPress={() => onChange(option.value)}
+                scale={0.99}
               >
-                {option.label}
-              </Text>
-            </AnimatedButton>
-          ))}
+                <Text
+                  style={[
+                    styles.optionLabel,
+                    selected === option.value && styles.activeLabel,
+                  ]}
+                >
+                  {option.label}
+                </Text>
+              </AnimatedButton>
+            ))
+          )}
         </>
       )}
     </View>
@@ -157,5 +168,13 @@ const groupStyles = ({ isDark }: ThemeStylesProps) =>
     },
     activeLabel: {
       color: Colors.gray[50],
+    },
+    noOptionsLabel: {
+      textAlign: "center",
+      textAlignVertical: "center",
+      height: 32,
+      fontSize: 16,
+      fontStyle: "italic",
+      color: Colors.gray[500],
     },
   })

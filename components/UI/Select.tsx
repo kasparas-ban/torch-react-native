@@ -34,7 +34,7 @@ export type SelectProps<T> = {
 }
 
 function isGrouped<T>(options: any): options is GroupedOption<T>[] {
-  return options.length && "options" in options?.[0]
+  return !!options.length && "options" in options?.[0]
 }
 
 export default function Select<T>(props: SelectProps<T>) {

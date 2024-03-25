@@ -13,7 +13,6 @@ type InputProps = {
   title?: string
   wrapperProps?: ViewProps
   labelProps?: TextProps
-  errorProps?: TextProps
 }
 
 export default function PriorityInput(props: InputProps) {

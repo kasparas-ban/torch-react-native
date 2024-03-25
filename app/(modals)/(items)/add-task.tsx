@@ -4,7 +4,6 @@ import { useUpsertItem } from "@/api-endpoints/hooks/items/useUpsertItem"
 import { groupItemsByParent } from "@/api-endpoints/utils/helpers"
 import Colors from "@/constants/Colors"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { router } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
 import { StyleSheet, Text, View } from "react-native"
 import { z } from "zod"
@@ -12,10 +11,12 @@ import { Goal, Task } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { pruneObject } from "@/utils/utils"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
+import InputSelectPanel from "@/components/itemModal/itemForms/InputSelectPanel"
 import {
   taskFormSchema,
   TaskFormType,
 } from "@/components/itemModal/itemForms/schemas"
+import Button from "@/components/UI/Button"
 import DateInput from "@/components/UI/DateInput"
 import DurationInput from "@/components/UI/DurationInput"
 import PriorityInput from "@/components/UI/PriorityInput"
@@ -170,15 +171,6 @@ export default function AddTaskModal() {
   ) as InputType[]
   const [inputOrder, setInputOrder] = useState(defaultInputOrder)
 
-  const groupedGoals = groupItemsByParent(goals || [], "GOAL")
-  const goalOptions = Object.keys(groupedGoals).map(dreamId => ({
-    label: groupedGoals[dreamId].parentLabel || "Other",
-    options: groupedGoals[dreamId].items.map(goal => ({
-      label: goal.title,
-      value: goal.itemID,
-    })),
-  }))
-
   const form = useForm<TaskFormType>({
     resolver: zodResolver(taskFormSchema),
     defaultValues: defaultTask,
@@ -193,24 +185,26 @@ export default function AddTaskModal() {
       ...(goal ? { parentID: goal.value } : {}),
     }
 
-    mutateAsync(newTask)
-      .then(() => {
-        setTimeout(() => {
-          router.replace("/(tabs)/goals")
-        }, 2000)
-      })
-      .catch(() => {
-        // setTimeout(
-        //   () =>
-        //     toast({
-        //       title: "Failed to save",
-        //       description:
-        //         "Your task has not been saved. Please try adding it again later.",
-        //     }),
-        //   100
-        // )
-        setTimeout(() => reset(), 2500)
-      })
+    console.log("New Task", newTask)
+
+    // mutateAsync(newTask)
+    //   .then(() => {
+    //     setTimeout(() => {
+    //       router.replace("/(tabs)/goals")
+    //     }, 2000)
+    //   })
+    //   .catch(() => {
+    //     setTimeout(
+    //       () =>
+    //         toast({
+    //           title: "Failed to save",
+    //           description:
+    //             "Your task has not been saved. Please try adding it again later.",
+    //         }),
+    //       100
+    //     )
+    //     setTimeout(() => reset(), 2500)
+    //   })
   }
 
   return (
@@ -266,65 +260,105 @@ export default function AddTaskModal() {
             )}
           />
 
-          <Controller
-            name="priority"
-            control={form.control}
-            rules={{ required: true }}
-            render={({ field: { onChange, value } }) => (
-              <PriorityInput
-                label="Priority"
-                onChange={onChange}
-                value={value}
-                errorProps={{
-                  children: form.formState.errors.priority?.message,
-                }}
-                wrapperProps={{
-                  style: { marginBottom: 12 },
-                }}
-              />
-            )}
-          />
+          {inputOrder.map(input => {
+            if (input === "goal") {
+              const groupedGoals = groupItemsByParent(goals || [], "GOAL")
+              const goalOptions = Object.keys(groupedGoals).map(dreamId => ({
+                label: groupedGoals[dreamId].parentLabel || "Other",
+                options: groupedGoals[dreamId].items.map(goal => ({
+                  label: goal.title,
+                  value: goal.itemID,
+                })),
+              }))
 
-          <Controller
-            name="targetDate"
-            control={form.control}
-            rules={{ required: true }}
-            render={({ field: { onChange, value } }) => (
-              <DateInput
-                label="Target date"
-                placeholder="mm/dd/yyyy"
-                onChange={onChange}
-                value={value ? new Date(value) : undefined}
-                errorProps={{
-                  children: form.formState.errors.priority?.message,
-                }}
-                wrapperProps={{
-                  style: { marginBottom: 12 },
-                }}
-              />
-            )}
-          />
+              return (
+                <Controller
+                  key="task_goal"
+                  name="goal"
+                  control={form.control}
+                  render={({ field: { onChange, value } }) => (
+                    <Select
+                      placeholder="Select..."
+                      label="Goal"
+                      title="Select goal"
+                      onChange={onChange}
+                      value={value ?? undefined}
+                      options={goalOptions}
+                      wrapperProps={{
+                        style: { marginBottom: 12 },
+                      }}
+                      snapPoints={["90%"]}
+                    />
+                  )}
+                />
+              )
+            }
 
-          <Controller
-            name="goal"
-            control={form.control}
-            rules={{ required: true }}
-            render={({ field: { onChange, value } }) => (
-              <Select
-                placeholder="Select..."
-                label="Goal"
-                title="Select goal"
-                onChange={onChange}
-                value={value ?? undefined}
-                options={GOALS_MOCK}
-                wrapperProps={{
-                  style: { marginBottom: 12 },
-                }}
-                snapPoints={["90%"]}
-              />
-            )}
+            if (input === "priority") {
+              return (
+                <Controller
+                  name="priority"
+                  control={form.control}
+                  render={({ field: { onChange, value } }) => (
+                    <PriorityInput
+                      label="Priority"
+                      onChange={onChange}
+                      value={value || "MEDIUM"}
+                      wrapperProps={{
+                        style: { marginBottom: 12 },
+                      }}
+                    />
+                  )}
+                />
+              )
+            }
+
+            if (input === "targetDate") {
+              return (
+                <Controller
+                  name="targetDate"
+                  control={form.control}
+                  render={({ field: { onChange, value } }) => (
+                    <DateInput
+                      label="Target date"
+                      placeholder="mm/dd/yyyy"
+                      onChange={onChange}
+                      value={value ? new Date(value) : undefined}
+                      wrapperProps={{
+                        style: { marginBottom: 12 },
+                      }}
+                    />
+                  )}
+                />
+              )
+            }
+          })}
+        </View>
+
+        <View>
+          <InputSelectPanel
+            inputOrder={inputOrder}
+            setInputOrder={setInputOrder}
+            wrapperStyles={{ marginTop: 20 }}
           />
         </View>
+      </View>
+
+      <View
+        style={{
+          position: "absolute",
+          bottom: 28,
+          width: "100%",
+          paddingHorizontal: 24,
+        }}
+      >
+        <Button
+          scale={0.98}
+          onPress={form.handleSubmit(onSubmit)}
+          isLoading={isPending}
+        >
+          Save
+        </Button>
       </View>
     </View>
   )

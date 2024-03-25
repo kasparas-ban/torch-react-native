@@ -21,7 +21,7 @@ import { AnimatedButton } from "../AnimatedButton"
 
 export type DateInputProps = {
   value?: Date
-  onChange: (event: DateTimePickerEvent, date?: Date | undefined) => void
+  onChange: (date?: string | undefined) => void
   placeholder: string
   label?: string
   wrapperProps?: ViewProps
@@ -42,8 +42,8 @@ export default function DateInput(props: DateInputProps) {
 
   const { styles, isDark } = useThemeStyles(inputStyles)
 
-  const handleChange = (event: DateTimePickerEvent, selectedDate: any) => {
-    onChange(selectedDate)
+  const handleChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    onChange(selectedDate?.toLocaleDateString("en-CA"))
   }
 
   const openDatePicker = () => {
@@ -80,7 +80,7 @@ export default function DateInput(props: DateInputProps) {
       {value && (
         <AnimatedButton
           style={styles.iconWrapper}
-          onPress={e => onChange(e as any, undefined)}
+          onPress={() => onChange(undefined)}
         >
           <CloseIcon
             color={isDark ? Colors.gray[400] : Colors.gray[600]}
