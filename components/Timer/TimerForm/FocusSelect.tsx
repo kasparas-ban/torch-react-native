@@ -520,6 +520,7 @@ function GroupedItems({
                     },
                     option.value === selectedItem?.value && {
                       color: Colors.gray[50],
+                      fontWeight: "600",
                     },
                   ]}
                 >
@@ -590,6 +591,7 @@ function SingleItems({
               },
               option.value === selectedItem?.value && {
                 color: Colors.gray[50],
+                fontWeight: "600",
               },
             ]}
           >

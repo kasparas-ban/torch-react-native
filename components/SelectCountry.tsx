@@ -54,7 +54,7 @@ export default function SelectCountry(props: SelectProps) {
     option.label.toLowerCase().includes(searchText.toLowerCase())
   )
 
-  const containerHeight = filteredOptions.length * (44 + 4) + 14
+  const containerHeight = filteredOptions.length * (44 + 4) + 148
 
   return (
     <View {...wrapperProps} style={[wrapperProps?.style, styles.wrapper]}>

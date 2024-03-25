@@ -16,6 +16,7 @@ type ListItemProps<T> = {
   styles: NamedStyles<any>
   onPress: (item: SelectOptionExtended<T>) => void
   isSelected: boolean
+  iconParam?: ReactNode
 }
 
 export default function ToggleGroup<T>({
@@ -114,7 +115,8 @@ function ListItem<T>({ item, styles, onPress, isSelected }: ListItemProps<T>) {
   )
 }
 
-const ListItemMemo = memo((props: any) => ListItem(props))
+const genericMemo: <T>(component: T) => T = memo
+const ListItemMemo = genericMemo(ListItem)
 
 function ItemIcon({ icon }: { icon: string | ReactNode }) {
   if (typeof icon === "string") {

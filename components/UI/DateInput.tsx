@@ -17,7 +17,7 @@ import {
 import Animated from "react-native-reanimated"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
-import { AnimatedButton } from "./AnimatedButton"
+import { AnimatedButton } from "../AnimatedButton"
 
 export type DateInputProps = {
   value?: Date
