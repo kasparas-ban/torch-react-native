@@ -2,13 +2,16 @@ import { useState } from "react"
 import { useItemsList } from "@/api-endpoints/hooks/items/useItemsList"
 import { useUpsertItem } from "@/api-endpoints/hooks/items/useUpsertItem"
 import { groupItemsByParent } from "@/api-endpoints/utils/helpers"
+import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import { StyleSheet, Text, View } from "react-native"
+import Animated, { LinearTransition } from "react-native-reanimated"
 import { z } from "zod"
 import { Goal, Task } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
+import useKeyboard from "@/utils/useKeyboard"
 import { pruneObject } from "@/utils/utils"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
 import InputSelectPanel from "@/components/itemModal/itemForms/InputSelectPanel"
@@ -151,6 +154,7 @@ const getInitialTaskForm = (
 })
 
 export default function AddTaskModal() {
+  const isKeyboardOpen = useKeyboard()
   const { styles } = useThemeStyles(componentStyles)
 
   const { goals } = useItemsList()
@@ -221,44 +225,50 @@ export default function AddTaskModal() {
         </View>
 
         <View style={{ width: "100%", gap: 8 }}>
-          <Controller
-            name="title"
-            control={form.control}
-            rules={{ required: true }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                placeholder="Aa"
-                label="Title"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                errorProps={{ children: form.formState.errors.title?.message }}
-                wrapperProps={{
-                  style: { marginBottom: 12 },
-                }}
-              />
-            )}
-          />
+          <Animated.View key="task_title" layout={LinearTransition}>
+            <Controller
+              name="title"
+              control={form.control}
+              rules={{ required: true }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Aa"
+                  label="Title"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  errorProps={{
+                    children: form.formState.errors.title?.message,
+                  }}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
+          </Animated.View>
 
-          <Controller
-            name="duration"
-            control={form.control}
-            rules={{ required: true }}
-            render={({ field: { onChange, value } }) => (
-              <DurationInput
-                placeholder="1h 30 min"
-                label="Duration"
-                onChange={onChange}
-                value={value}
-                errorProps={{
-                  children: form.formState.errors.duration?.message,
-                }}
-                wrapperProps={{
-                  style: { marginBottom: 12 },
-                }}
-              />
-            )}
-          />
+          <Animated.View key="task_duration" layout={LinearTransition}>
+            <Controller
+              name="duration"
+              control={form.control}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <DurationInput
+                  placeholder="1h 30 min"
+                  label="Duration"
+                  onChange={onChange}
+                  value={value}
+                  errorProps={{
+                    children: form.formState.errors.duration?.message,
+                  }}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
+          </Animated.View>
 
           {inputOrder.map(input => {
             if (input === "goal") {
@@ -272,94 +282,116 @@ export default function AddTaskModal() {
               }))
 
               return (
-                <Controller
+                <Animated.View
                   key="task_goal"
-                  name="goal"
-                  control={form.control}
-                  render={({ field: { onChange, value } }) => (
-                    <Select
-                      placeholder="Select..."
-                      label="Goal"
-                      title="Select goal"
-                      onChange={onChange}
-                      value={value ?? undefined}
-                      options={goalOptions}
-                      wrapperProps={{
-                        style: { marginBottom: 12 },
-                      }}
-                      snapPoints={["90%"]}
-                    />
-                  )}
-                />
+                  entering={FadeIn(0.8)}
+                  exiting={FadeOut(0.8)}
+                  layout={LinearTransition}
+                >
+                  <Controller
+                    name="goal"
+                    control={form.control}
+                    render={({ field: { onChange, value } }) => (
+                      <Select
+                        placeholder="Select..."
+                        label="Goal"
+                        title="Select goal"
+                        onChange={onChange}
+                        value={value ?? undefined}
+                        options={goalOptions}
+                        wrapperProps={{
+                          style: { marginBottom: 12 },
+                        }}
+                        snapPoints={["90%"]}
+                      />
+                    )}
+                  />
+                </Animated.View>
               )
             }
 
             if (input === "priority") {
               return (
-                <Controller
-                  name="priority"
-                  control={form.control}
-                  render={({ field: { onChange, value } }) => (
-                    <PriorityInput
-                      label="Priority"
-                      onChange={onChange}
-                      value={value || "MEDIUM"}
-                      wrapperProps={{
-                        style: { marginBottom: 12 },
-                      }}
-                    />
-                  )}
-                />
+                <Animated.View
+                  key="priority_input"
+                  entering={FadeIn(0.8)}
+                  exiting={FadeOut(0.8)}
+                  layout={LinearTransition}
+                >
+                  <Controller
+                    name="priority"
+                    control={form.control}
+                    render={({ field: { onChange, value } }) => (
+                      <PriorityInput
+                        label="Priority"
+                        onChange={onChange}
+                        value={value || "MEDIUM"}
+                        wrapperProps={{
+                          style: { marginBottom: 12 },
+                        }}
+                      />
+                    )}
+                  />
+                </Animated.View>
               )
             }
 
             if (input === "targetDate") {
               return (
-                <Controller
-                  name="targetDate"
-                  control={form.control}
-                  render={({ field: { onChange, value } }) => (
-                    <DateInput
-                      label="Target date"
-                      placeholder="mm/dd/yyyy"
-                      onChange={onChange}
-                      value={value ? new Date(value) : undefined}
-                      wrapperProps={{
-                        style: { marginBottom: 12 },
-                      }}
-                    />
-                  )}
-                />
+                <Animated.View
+                  key="targetDate_input"
+                  entering={FadeIn(0.8)}
+                  exiting={FadeOut(0.8)}
+                  layout={LinearTransition}
+                >
+                  <Controller
+                    name="targetDate"
+                    control={form.control}
+                    render={({ field: { onChange, value } }) => (
+                      <DateInput
+                        label="Target date"
+                        placeholder="mm/dd/yyyy"
+                        onChange={onChange}
+                        value={value ? new Date(value) : undefined}
+                        wrapperProps={{
+                          style: { marginBottom: 12 },
+                        }}
+                      />
+                    )}
+                  />
+                </Animated.View>
               )
             }
           })}
         </View>
 
-        <View>
+        <Animated.View key="inputs_section" layout={LinearTransition}>
           <InputSelectPanel
             inputOrder={inputOrder}
             setInputOrder={setInputOrder}
             wrapperStyles={{ marginTop: 20 }}
           />
-        </View>
+        </Animated.View>
       </View>
 
-      <View
-        style={{
-          position: "absolute",
-          bottom: 28,
-          width: "100%",
-          paddingHorizontal: 24,
-        }}
-      >
-        <Button
-          scale={0.98}
-          onPress={form.handleSubmit(onSubmit)}
-          isLoading={isPending}
+      {!isKeyboardOpen && (
+        <View
+          style={{
+            position: "absolute",
+            bottom: 28,
+            width: "100%",
+            paddingHorizontal: 24,
+          }}
         >
-          Save
-        </Button>
-      </View>
+          <Button
+            scale={0.98}
+            onPress={form.handleSubmit(onSubmit)}
+            isLoading={isPending}
+          >
+            Save
+          </Button>
+        </View>
+      )}
     </View>
   )
 }

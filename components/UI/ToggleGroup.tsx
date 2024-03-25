@@ -172,7 +172,7 @@ const groupStyles = ({ isDark }: ThemeStylesProps) =>
     noOptionsLabel: {
       textAlign: "center",
       textAlignVertical: "center",
-      height: 32,
+      height: 62,
       fontSize: 16,
       fontStyle: "italic",
       color: Colors.gray[500],

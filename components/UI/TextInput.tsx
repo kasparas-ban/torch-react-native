@@ -1,5 +1,5 @@
-import React, { isValidElement, ReactNode } from "react"
-import { FadeIn } from "@/constants/Animations"
+import React from "react"
+import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import {
   TextInput as BaseInput,
@@ -53,6 +53,7 @@ export default function TextInput(props: TextInputProps) {
             {...errorProps}
             style={[styles.errorText, errorProps?.style]}
             entering={FadeIn(0.9)}
+            exiting={FadeOut(0.9)}
           />
         </Animated.View>
       )}
