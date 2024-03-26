@@ -27,6 +27,9 @@ type TabParams =
 const NAVBAR_ICONS = [GoalsIcon, StatsIcon, TimerIcon, WorldIcon, AccountIcon]
 
 export function Header(props: BottomTabHeaderProps) {
+  const colorScheme = useColorScheme()
+  const isDark = colorScheme === "dark"
+
   return (
     <View
       style={{
@@ -62,7 +65,7 @@ export function Header(props: BottomTabHeaderProps) {
         style={{
           fontSize: 46,
           fontFamily: "GabaritoSemibold",
-          color: Colors.gray[400],
+          color: isDark ? Colors.gray[300] : Colors.gray[400],
         }}
       >
         {props.options.title}

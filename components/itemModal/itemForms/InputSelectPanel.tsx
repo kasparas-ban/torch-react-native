@@ -54,6 +54,7 @@ export default function InputSelectPanel<T extends InputType>({
     >
       {inputNames.map(input => (
         <AnimatedButton
+          key={input.value}
           style={[styles.btn, getInput(input.value) && styles.btnSelected]}
           onPress={() =>
             getInput(input.value)

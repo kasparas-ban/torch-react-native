@@ -159,7 +159,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       width: "100%",
     },
     title: {
-      color: Colors.gray[400],
+      color: isDark ? Colors.gray[300] : Colors.gray[400],
       fontFamily: "GabaritoSemibold",
       fontSize: 46,
     },

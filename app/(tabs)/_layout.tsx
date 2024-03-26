@@ -23,7 +23,7 @@ export default function TabLayout() {
         screenOptions={{
           tabBarBackground: () => <BlurView />,
           headerTransparent: true,
-          header: Header,
+          header: props => <Header {...props} />,
         }}
         tabBar={props => (
           <BottomTabBarWrapper>
@@ -45,7 +45,7 @@ export default function TabLayout() {
           name="goals"
           options={{
             title: "Goals",
-            header: props => <GoalsHeader {...props} />,
+            header: () => <GoalsHeader />,
           }}
         />
         <Tabs.Screen name="stats" options={{ title: "Stats" }} />

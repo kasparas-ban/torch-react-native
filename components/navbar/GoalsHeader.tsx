@@ -4,7 +4,6 @@ import FilterIcon from "@/assets/icons/filter.svg"
 import PlusIcon from "@/assets/icons/plus.svg"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
-import { BottomTabHeaderProps } from "@react-navigation/bottom-tabs"
 import { BlurView } from "expo-blur"
 import { Image } from "expo-image"
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native"
@@ -21,7 +20,7 @@ import { AnimatedButton } from "../AnimatedButton"
 import useItemListConfig from "../ItemList/hooks/useItemListConfig"
 import Link from "../UI/Link"
 
-export default function GoalsHeader(props: BottomTabHeaderProps) {
+export default function GoalsHeader() {
   const { isDark } = useThemeStyles(componentStyles)
 
   return (
@@ -72,7 +71,7 @@ export default function GoalsHeader(props: BottomTabHeaderProps) {
               }}
             >
               <FilterIcon
-                color={isDark ? Colors.gray[400] : Colors.gray[600]}
+                color={isDark ? Colors.gray[300] : Colors.gray[600]}
                 strokeWidth={2}
                 style={{ width: 24, height: 24 }}
               />
@@ -93,7 +92,7 @@ export default function GoalsHeader(props: BottomTabHeaderProps) {
               }}
             >
               <PlusIcon
-                color={isDark ? Colors.gray[400] : Colors.gray[600]}
+                color={isDark ? Colors.gray[300] : Colors.gray[600]}
                 strokeWidth={2}
                 style={{ width: 24, height: 24 }}
               />
@@ -166,7 +165,7 @@ function ItemTypeSelector() {
         >
           <Animated.View style={[{ top: 24 }, animatedStyle]}>
             <ChevronIcon
-              color={Colors.gray[400]}
+              color={isDark ? Colors.gray[300] : Colors.gray[400]}
               strokeWidth={2.5}
               style={{ width: 24, height: 24 }}
             />
@@ -228,21 +227,14 @@ function ItemTypeSelector() {
                   <Text
                     style={[
                       styles.title,
+                      styles.menuOption,
                       {
-                        fontSize: 28,
-                        color: isDark ? Colors.gray[400] : Colors.gray[500],
-                        paddingVertical: 6,
-                        paddingLeft: 10,
                         borderTopLeftRadius: 12,
                         borderTopRightRadius: 12,
                         borderBottomWidth: 1,
                         borderBottomColor: rgbToRGBA(Colors.gray[400], 0.4),
                       },
-                      pressed && {
-                        backgroundColor: isDark
-                          ? Colors.gray[600]
-                          : Colors.gray[300],
-                      },
+                      pressed && styles.pressedOption,
                     ]}
                   >
                     Tasks
@@ -260,19 +252,12 @@ function ItemTypeSelector() {
                   <Text
                     style={[
                       styles.title,
+                      styles.menuOption,
                       {
-                        fontSize: 28,
-                        color: isDark ? Colors.gray[400] : Colors.gray[500],
-                        paddingVertical: 6,
-                        paddingLeft: 10,
                         borderBottomWidth: 1,
                         borderBottomColor: rgbToRGBA(Colors.gray[400], 0.4),
                       },
-                      pressed && {
-                        backgroundColor: isDark
-                          ? Colors.gray[600]
-                          : Colors.gray[300],
-                      },
+                      pressed && styles.pressedOption,
                     ]}
                   >
                     Goals
@@ -290,19 +275,12 @@ function ItemTypeSelector() {
                   <Text
                     style={[
                       styles.title,
+                      styles.menuOption,
                       {
-                        fontSize: 28,
-                        color: isDark ? Colors.gray[400] : Colors.gray[500],
-                        paddingVertical: 6,
-                        paddingLeft: 10,
                         borderBottomLeftRadius: 12,
                         borderBottomRightRadius: 12,
                       },
-                      pressed && {
-                        backgroundColor: isDark
-                          ? Colors.gray[600]
-                          : Colors.gray[300],
-                      },
+                      pressed && styles.pressedOption,
                     ]}
                   >
                     Dreams
@@ -322,6 +300,15 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     title: {
       fontSize: 46,
       fontFamily: "GabaritoSemibold",
-      color: Colors.gray[400],
+      color: isDark ? Colors.gray[300] : Colors.gray[400],
+    },
+    menuOption: {
+      fontSize: 28,
+      color: isDark ? Colors.gray[300] : Colors.gray[500],
+      paddingVertical: 6,
+      paddingLeft: 10,
+    },
+    pressedOption: {
+      backgroundColor: isDark ? Colors.gray[600] : Colors.gray[300],
     },
   })
