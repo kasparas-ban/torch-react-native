@@ -6,6 +6,7 @@ import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import { BlurView } from "expo-blur"
 import { Image } from "expo-image"
+import { LinearGradient } from "expo-linear-gradient"
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native"
 import Animated, {
   interpolate,
@@ -40,6 +41,17 @@ export default function GoalsHeader() {
         }}
         pointerEvents="none"
       >
+        <LinearGradient
+          colors={[isDark ? Colors.gray[900] : "white", "transparent"]}
+          locations={[0.75, 1]}
+          style={{
+            height: 150,
+            position: "absolute",
+            right: 0,
+            left: 0,
+            top: 0,
+          }}
+        />
         <Image
           source={require("@/assets/images/header_background.png")}
           style={{

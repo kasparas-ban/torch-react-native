@@ -6,7 +6,9 @@ import {
   BottomTabHeaderProps,
   BottomTabNavigationOptions,
 } from "@react-navigation/bottom-tabs"
+import { BlurView } from "expo-blur"
 import { Image } from "expo-image"
+import { LinearGradient } from "expo-linear-gradient"
 import { Link } from "expo-router"
 import { Pressable, Text, useColorScheme, View } from "react-native"
 import Animated from "react-native-reanimated"
@@ -97,6 +99,17 @@ export function BottomTabBarWrapper({ children }: { children: ReactNode }) {
         }}
         pointerEvents="none"
       >
+        <LinearGradient
+          colors={["transparent", isDark ? Colors.gray[900] : "white"]}
+          locations={[0, 0.3]}
+          style={{
+            height: 100,
+            position: "absolute",
+            right: 0,
+            left: 0,
+            bottom: -20,
+          }}
+        />
         <Image
           source={require("@/assets/images/header_background.png")}
           style={{
@@ -128,7 +141,41 @@ export function BottomTabBarWrapper({ children }: { children: ReactNode }) {
           paddingHorizontal: 12,
         }}
       >
-        {children}
+        <View
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+          }}
+        >
+          <BlurView
+            style={{
+              position: "relative",
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
+            }}
+            intensity={1}
+            experimentalBlurMethod="dimezisBlurView"
+          />
+        </View>
+
+        <View
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            flexDirection: "row",
+            zIndex: 1000,
+          }}
+        >
+          {children}
+        </View>
       </View>
     </View>
   )

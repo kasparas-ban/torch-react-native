@@ -50,42 +50,43 @@ export default function ItemsList<T extends Task | Goal | Dream>({
     <ScrollView
       style={{
         width: "100%",
-        paddingHorizontal: 14,
-        marginTop: 120,
         height: "100%",
+        paddingHorizontal: 14,
       }}
     >
-      {sortedItems.map((groupKey, groupIdx) => {
-        if (!groupedItems) return null
+      <View style={{ paddingTop: 140, paddingBottom: 160 }}>
+        {sortedItems.map((groupKey, groupIdx) => {
+          if (!groupedItems) return null
 
-        const parentLabel = groupedItems[groupKey].parentLabel
-        const items = groupedItems[groupKey].items
+          const parentLabel = groupedItems[groupKey].parentLabel
+          const items = groupedItems[groupKey].items
 
-        if (groupIdx - 1 >= 0) {
-          const prevKey = Object.keys(groupedItems)[groupIdx - 1]
-          totalIndex += groupedItems[prevKey].items.length
-        }
+          if (groupIdx - 1 >= 0) {
+            const prevKey = Object.keys(groupedItems)[groupIdx - 1]
+            totalIndex += groupedItems[prevKey].items.length
+          }
 
-        return (
-          <View key={`group_${groupKey}`}>
-            {parentLabel && (
-              <Text style={styles.itemParentLabel}>{parentLabel}</Text>
-            )}
-            {items?.length && (
-              <View style={{ gap: 12, marginBottom: 12 }}>
-                {items.map((item, itemIdx) => (
-                  <Item<T>
-                    idx={totalIndex + itemIdx}
-                    key={`${groupKey}_${itemType}_${item.itemID}`}
-                    item={item}
-                    itemType={itemType}
-                  />
-                ))}
-              </View>
-            )}
-          </View>
-        )
-      })}
+          return (
+            <View key={`group_${groupKey}`}>
+              {parentLabel && (
+                <Text style={styles.itemParentLabel}>{parentLabel}</Text>
+              )}
+              {items?.length && (
+                <View style={{ gap: 12, marginBottom: 12 }}>
+                  {items.map((item, itemIdx) => (
+                    <Item<T>
+                      idx={totalIndex + itemIdx}
+                      key={`${groupKey}_${itemType}_${item.itemID}`}
+                      item={item}
+                      itemType={itemType}
+                    />
+                  ))}
+                </View>
+              )}
+            </View>
+          )
+        })}
+      </View>
     </ScrollView>
   ) : (
     <Animated.View
