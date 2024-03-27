@@ -3,7 +3,14 @@ import {
   filterItemsByStatus,
   groupItemsByParent,
 } from "@/api-endpoints/utils/helpers"
-import { Dream, Goal, ItemStatus, Task } from "@/types/itemTypes"
+import MOCK_ITEMS from "@/data/items.json"
+import {
+  Dream,
+  FormattedItems,
+  Goal,
+  ItemStatus,
+  Task,
+} from "@/types/itemTypes"
 
 import useItemListConfig from "./hooks/useItemListConfig"
 import ItemsList from "./ItemsList"
@@ -11,7 +18,8 @@ import ItemsList from "./ItemsList"
 export default function ItemListWrapper() {
   const { itemType, showArchivedItems, showCompletedItems } =
     useItemListConfig()
-  const { data, error, isLoading } = useItemsList()
+  const { data: none, error, isLoading } = useItemsList()
+  const data = MOCK_ITEMS as FormattedItems | undefined
 
   const items =
     itemType === "TASK"

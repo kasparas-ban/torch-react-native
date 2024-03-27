@@ -3,13 +3,14 @@ import PlusIcon from "@/assets/icons/plus.svg"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import { Link } from "expo-router"
-import { StyleSheet, Text, View } from "react-native"
+import { ScrollView, StyleSheet, Text, View } from "react-native"
 import Animated from "react-native-reanimated"
 import { Dream, Goal, GroupedItems, ItemType, Task } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
 import { AnimatedButton } from "../AnimatedButton"
 import useEditItem from "../itemModal/hooks/useEditItem"
+import Item from "./Item/Item"
 
 export default function ItemsList<T extends Task | Goal | Dream>({
   groupedItems,
@@ -19,7 +20,6 @@ export default function ItemsList<T extends Task | Goal | Dream>({
   itemType: ItemType
 }) {
   const { styles, isDark } = useThemeStyles(componentStyles)
-
   const { setEditItem } = useEditItem()
 
   const addItemHref =
@@ -46,89 +46,85 @@ export default function ItemsList<T extends Task | Goal | Dream>({
 
   useEffect(() => () => setEditItem(undefined), [setEditItem])
 
-  return (
-    <>
-      {groupedItems && sortedItems && !isListEmpty ? (
-        <View>SOMETHING</View>
-      ) : (
-        // <motion.ul key={`list_${itemType}`} className="space-y-3 sm:pb-32">
-        //   {sortedItems.map((groupKey, groupIdx) => {
-        //     const parentLabel = groupedItems[groupKey].parentLabel
-        //     const items = groupedItems[groupKey].items
+  return groupedItems && sortedItems && !isListEmpty ? (
+    <ScrollView
+      style={{
+        width: "100%",
+        paddingHorizontal: 14,
+        marginTop: 120,
+        height: "100%",
+      }}
+    >
+      {sortedItems.map((groupKey, groupIdx) => {
+        if (!groupedItems) return null
 
-        //     if (groupIdx - 1 >= 0) {
-        //       const prevKey = Object.keys(groupedItems)[groupIdx - 1]
-        //       totalIndex += groupedItems[prevKey].items.length
-        //     }
+        const parentLabel = groupedItems[groupKey].parentLabel
+        const items = groupedItems[groupKey].items
 
-        //     return (
-        //       <motion.li key={`group_${groupKey}`}>
-        //         {parentLabel && (
-        //           <motion.div
-        //             layout
-        //             className="mb-2 ml-3 font-medium text-gray-500"
-        //             initial={{ opacity: 0 }}
-        //             animate={{ opacity: 1 }}
-        //             transition={{ duration: 1 }}
-        //           >
-        //             {parentLabel}
-        //           </motion.div>
-        //         )}
-        //         {items?.length && (
-        //           <motion.ul className="space-y-3">
-        //             {items.map((item, itemIdx) => (
-        //               <Item<T>
-        //                 idx={totalIndex + itemIdx}
-        //                 key={`${groupKey}_${itemType}_${item.itemID}`}
-        //                 item={item}
-        //                 itemType={itemType}
-        //               />
-        //             ))}
-        //           </motion.ul>
-        //         )}
-        //       </motion.li>
-        //     )
-        //   })}
-        // </motion.ul>
-        <Animated.View
-          entering={FadeIn(0.9)}
-          exiting={FadeOut(0.9)}
+        if (groupIdx - 1 >= 0) {
+          const prevKey = Object.keys(groupedItems)[groupIdx - 1]
+          totalIndex += groupedItems[prevKey].items.length
+        }
+
+        return (
+          <View key={`group_${groupKey}`}>
+            {parentLabel && (
+              <Text style={styles.itemParentLabel}>{parentLabel}</Text>
+            )}
+            {items?.length && (
+              <View style={{ gap: 12, marginBottom: 12 }}>
+                {items.map((item, itemIdx) => (
+                  <Item<T>
+                    idx={totalIndex + itemIdx}
+                    key={`${groupKey}_${itemType}_${item.itemID}`}
+                    item={item}
+                    itemType={itemType}
+                  />
+                ))}
+              </View>
+            )}
+          </View>
+        )
+      })}
+    </ScrollView>
+  ) : (
+    <Animated.View
+      entering={FadeIn(0.9)}
+      exiting={FadeOut(0.9)}
+      style={{
+        gap: 20,
+        alignItems: "center",
+      }}
+    >
+      <Text style={styles.emptyLabel}>
+        No {itemType.toLowerCase()}s have been added.
+      </Text>
+
+      <Link href={addItemHref} asChild>
+        <AnimatedButton
           style={{
-            gap: 20,
+            flexDirection: "row",
             alignItems: "center",
+            gap: 4,
           }}
+          scale={0.95}
         >
-          <Text style={styles.emptyLabel}>
-            No {itemType.toLowerCase()}s have been added.
+          <PlusIcon
+            color={isDark ? Colors.gray[200] : Colors.gray[600]}
+            style={styles.addNewIcon}
+            strokeWidth={3}
+          />
+          <Text style={styles.addNewLabel}>
+            Add new{" "}
+            {itemType === "TASK"
+              ? "task"
+              : itemType === "GOAL"
+                ? "goal"
+                : "dream"}
           </Text>
-
-          <Link href={addItemHref} asChild>
-            <AnimatedButton
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 4,
-              }}
-              scale={0.95}
-            >
-              <PlusIcon
-                color={isDark ? Colors.gray[200] : Colors.gray[400]}
-                style={styles.addNewIcon}
-                strokeWidth={3}
-              />
-              <Text style={styles.addNewLabel}>
-                Add new{" "}
-                {itemType === "TASK"
-                  ? "task"
-                  : itemType === "GOAL"
-                    ? "goal"
-                    : "dream"}
-              </Text>
-            </AnimatedButton>
-          </Link>
-        </Animated.View>
-      )}
-    </>
+        </AnimatedButton>
+      </Link>
+    </Animated.View>
   )
 }
 
@@ -137,10 +133,10 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     emptyLabel: {
       textAlign: "center",
       fontSize: 16,
-      color: Colors.gray[400],
+      color: Colors.gray[500],
     },
     addNewLabel: {
-      color: isDark ? Colors.gray[200] : Colors.gray[400],
+      color: isDark ? Colors.gray[200] : Colors.gray[600],
       fontSize: 16,
       fontWeight: "600",
     },
@@ -148,5 +144,11 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       width: 15,
       height: 15,
       marginTop: 2,
+    },
+    itemParentLabel: {
+      marginBottom: 8,
+      marginLeft: 12,
+      fontWeight: "600",
+      color: isDark ? Colors.gray[500] : Colors.gray[500],
     },
   })
