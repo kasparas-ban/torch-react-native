@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
-import { View } from "react-native"
+import { GestureResponderEvent, View } from "react-native"
 import Animated from "react-native-reanimated"
 import { Dream, FormattedItem, Goal, ItemType, Task } from "@/types/itemTypes"
 
@@ -40,7 +40,7 @@ export default function Item<T extends FormattedItem>({
   const showEditPanel =
     editItem?.type === item.type && editItem?.itemID === item.itemID
 
-  const toggleEditClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const toggleEditClick = (e: GestureResponderEvent) => {
     e.stopPropagation()
     setEditItem(showEditPanel ? undefined : item)
   }

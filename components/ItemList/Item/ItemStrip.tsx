@@ -1,7 +1,7 @@
 import DotsIcon from "@/assets/icons/dots.svg"
 import Colors from "@/constants/Colors"
 import { useRouter } from "expo-router"
-import { Text, View } from "react-native"
+import { GestureResponderEvent, Text, View } from "react-native"
 import {
   GeneralItem,
   Goal,
@@ -29,13 +29,15 @@ function ItemStrip<T extends GeneralItem>({
   itemSublist,
   showEditPanel,
   toggleEditClick,
+  disableClick,
 }: {
   item: T
   itemType: ItemType
   toggleSublist?: () => void
   itemSublist?: GeneralItem[]
   showEditPanel: boolean
-  toggleEditClick: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+  toggleEditClick: (e: GestureResponderEvent) => void
+  disableClick?: boolean
 }) {
   const { editItem, setEditItem } = useEditItem()
   const router = useRouter()
@@ -100,13 +102,13 @@ function ItemStrip<T extends GeneralItem>({
     >
       <AnimatedButton
         // layout
-        onPress={handleStripClick}
+        onPress={() => !disableClick && handleStripClick()}
         // className={cn(
         //   "relative flex w-full cursor-pointer items-center overflow-hidden rounded-2xl border pl-6 pr-1 md:rounded-3xl",
         //   stripBgColor,
         //   stripBorderColor
         // )}
-        scale={0.97}
+        scale={disableClick ? 1 : 0.97}
         opacity={1}
         style={[
           {

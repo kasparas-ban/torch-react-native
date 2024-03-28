@@ -1,9 +1,8 @@
 import React, { Fragment, useCallback, useEffect } from "react"
 import { useItemsList } from "@/api-endpoints/hooks/items/useItemsList"
 import { findItemByID } from "@/api-endpoints/utils/helpers"
-import { View } from "react-native"
+import { GestureResponderEvent, View } from "react-native"
 import Animated, {
-  LinearTransition,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -12,6 +11,8 @@ import { GeneralItem } from "@/types/itemTypes"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
 
 import { ItemStrip } from "./ItemStrip"
+
+const STRIP_HEIGHT = 48
 
 export default function ItemSublist({
   parentID,
@@ -34,10 +35,7 @@ export default function ItemSublist({
   const showEditPanel = (subitem: GeneralItem) =>
     subitem.type === editItem?.type && subitem.itemID === editItem?.itemID
 
-  const toggleEditClick = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    subitem: GeneralItem
-  ) => {
+  const toggleEditClick = (e: GestureResponderEvent, subitem: GeneralItem) => {
     e.stopPropagation()
     const formattedItem = findItemByID(subitem.itemID, data)
     setEditItem(showEditPanel(subitem) ? undefined : formattedItem)
@@ -66,23 +64,26 @@ export default function ItemSublist({
 
   useEffect(() => {
     animVal.value = withSpring(showSublist ? 0 : 1, {
-      duration: 300,
+      mass: 0.4,
+      damping: 10,
+      stiffness: 200,
+      overshootClamping: false,
+      restDisplacementThreshold: 0.001,
     })
   }, [showSublist])
 
+  const animatedHeight = useAnimatedStyle(() => ({
+    height: Math.max(
+      0,
+      (1 - animVal.value) * (STRIP_HEIGHT + 12) * subitems.length
+    ),
+  }))
+
   return (
-    <Animated.View
-      style={{
-        gap: 12,
-        height: showSublist ? "auto" : 0,
-        marginBottom: 12,
-      }}
-      // layout={LinearTransition}s
-    >
+    <Animated.View style={[{ gap: 12, marginBottom: 12 }, animatedHeight]}>
       {subitems.map((subitem, idx) => (
         <Fragment key={`${parentID}_${subitem.itemID}`}>
           <Animated.View
-            layout={LinearTransition}
             // entering={FadeIn(0.8)}
             // exiting={FadeOut(0.8)}
             // layout
@@ -100,7 +101,7 @@ export default function ItemSublist({
             style={[
               {
                 position: "relative",
-                minHeight: 48,
+                minHeight: STRIP_HEIGHT,
 
                 width:
                   !showSublist && isParentEditActive && !isParentArchived
@@ -129,9 +130,10 @@ export default function ItemSublist({
                 item={subitem}
                 itemType={subitemType}
                 showEditPanel={showEditPanel(subitem)}
-                toggleEditClick={(
-                  e: React.MouseEvent<HTMLDivElement, MouseEvent>
-                ) => toggleEditClick(e, subitem)}
+                toggleEditClick={(e: GestureResponderEvent) =>
+                  toggleEditClick(e, subitem)
+                }
+                disableClick={!showSublist}
               />
             )}
           </Animated.View>
