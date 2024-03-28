@@ -51,10 +51,15 @@ export default function ItemsList<T extends Task | Goal | Dream>({
       style={{
         width: "100%",
         height: "100%",
-        paddingHorizontal: 14,
       }}
     >
-      <View style={{ paddingTop: 140, paddingBottom: 160 }}>
+      <View
+        style={{
+          paddingTop: 140,
+          paddingBottom: 160,
+          paddingHorizontal: 14,
+        }}
+      >
         {sortedItems.map((groupKey, groupIdx) => {
           if (!groupedItems) return null
 

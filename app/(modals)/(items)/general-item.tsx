@@ -116,7 +116,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       width: "100%",
     },
     title: {
-      color: isDark ? Colors.gray[300] : Colors.gray[400],
+      color: isDark ? Colors.gray[300] : Colors.gray[500],
       fontFamily: "GabaritoSemibold",
       fontSize: 46,
     },
@@ -130,7 +130,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       borderColor: isDark ? Colors.gray[500] : Colors.gray[400],
     },
     typeTitle: {
-      color: isDark ? Colors.gray[300] : Colors.gray[700],
+      color: isDark ? Colors.gray[300] : Colors.gray[800],
       fontSize: 22,
       fontWeight: "600",
     },
@@ -140,7 +140,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       marginLeft: 8,
     },
     typeExplanation: {
-      color: isDark ? Colors.gray[300] : Colors.gray[700],
+      color: isDark ? Colors.gray[300] : Colors.gray[800],
     },
     typeExample: {
       fontSize: 13,

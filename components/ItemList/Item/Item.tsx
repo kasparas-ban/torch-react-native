@@ -1,12 +1,14 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { View } from "react-native"
+import Animated from "react-native-reanimated"
 import { Dream, FormattedItem, Goal, ItemType, Task } from "@/types/itemTypes"
 
 import useEditItem from "../../itemModal/hooks/useEditItem"
 import useItemListConfig from "../hooks/useItemListConfig"
 import { ItemStrip } from "./ItemStrip"
+import ItemSublist from "./ItemSublist"
 
 export default function Item<T extends FormattedItem>({
   idx,
@@ -62,18 +64,20 @@ export default function Item<T extends FormattedItem>({
         // />
         <View></View>
       ) : (
-        <ItemStrip
-          item={item}
-          itemType={itemType}
-          toggleSublist={toggleSublist}
-          itemSublist={itemSublist}
-          showEditPanel={showEditPanel}
-          toggleEditClick={toggleEditClick}
-        />
+        <Animated.View style={{ zIndex: (itemSublist || []).length + 1 }}>
+          <ItemStrip
+            item={item}
+            itemType={itemType}
+            toggleSublist={toggleSublist}
+            itemSublist={itemSublist}
+            showEditPanel={showEditPanel}
+            toggleEditClick={toggleEditClick}
+          />
+        </Animated.View>
       )}
-      {/* {showSublist ? (
+      {showSublist ? (
         <>
-          <AnimatePresence initial={false}>
+          {/* <AnimatePresence initial={false}>
             {showEditPanel && (
               <EditPanel<T>
                 key={`${itemType}_${item.itemID}_edit_panel`}
@@ -82,7 +86,7 @@ export default function Item<T extends FormattedItem>({
                 showAddTask={itemType === "GOAL"}
               />
             )}
-          </AnimatePresence>
+          </AnimatePresence> */}
           {containsSublist && (
             <ItemSublist
               parentID={item.itemID}
@@ -108,7 +112,7 @@ export default function Item<T extends FormattedItem>({
               isParentArchived={item.status === "ARCHIVED"}
             />
           )}
-          <AnimatePresence initial={false}>
+          {/* <AnimatePresence initial={false}>
             {showEditPanel && (
               <EditPanel<T>
                 key={`${itemType}_${item.itemID}_edit_panel`}
@@ -117,9 +121,9 @@ export default function Item<T extends FormattedItem>({
                 showAddTask={itemType === "GOAL"}
               />
             )}
-          </AnimatePresence>
+          </AnimatePresence> */}
         </>
-      )} */}
+      )}
     </View>
   )
 }

@@ -96,10 +96,7 @@ function ItemStrip<T extends GeneralItem>({
     <View
       //   className={cn("relative flex w-full min-w-0", containsSublist && "mb-3")}
       //   whileTap={{ scale: itemSublist ? (showEditPanel ? 1 : 0.98) : 1 }}
-      style={[
-        { zIndex: itemSublist?.length },
-        containsSublist && { marginBottom: 12 },
-      ]}
+      style={[{ zIndex: itemSublist?.length }]}
     >
       <AnimatedButton
         // layout
@@ -110,6 +107,7 @@ function ItemStrip<T extends GeneralItem>({
         //   stripBorderColor
         // )}
         scale={0.97}
+        opacity={1}
         style={[
           {
             flexDirection: "row",
