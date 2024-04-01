@@ -24,6 +24,7 @@ import Button from "@/components/UI/Button"
 import DateInput from "@/components/UI/DateInput"
 import DurationInput from "@/components/UI/DurationInput"
 import PriorityInput from "@/components/UI/PriorityInput"
+import RecurringInput from "@/components/UI/RecuringInput"
 import Select from "@/components/UI/Select"
 import TextInput from "@/components/UI/TextInput"
 
@@ -269,6 +270,27 @@ export default function AddTaskModal() {
                   errorProps={{
                     children: form.formState.errors.duration?.message,
                   }}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
+          </Animated.View>
+
+          <Animated.View
+            key="task_recurring"
+            layout={LinearTransition}
+            style={{ zIndex: 1 }}
+          >
+            <Controller
+              name="recurring"
+              control={form.control}
+              render={({ field: { onChange, value } }) => (
+                <RecurringInput
+                  label="Recurring"
+                  value={value}
+                  onChange={onChange}
                   wrapperProps={{
                     style: { marginBottom: 12 },
                   }}
