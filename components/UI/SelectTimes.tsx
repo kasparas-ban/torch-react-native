@@ -14,7 +14,6 @@ export type SelectProps = {
   value: number
   onChange: (val: number) => void
   options: SelectOption<number>[]
-  placeholder: string
   title?: string
   snapPoints?: (string | number)[]
   wrapperProps?: ViewProps
@@ -56,7 +55,7 @@ export default function SelectTimes(props: SelectProps) {
             <WheelPicker
               selectedIndex={value - 1}
               options={options.map(o => o.label)}
-              onChange={index => onChange(index)}
+              onChange={index => onChange(index + 1)}
               visibleRest={20}
               itemTextStyle={{ fontSize: 20 }}
               isHorizontal

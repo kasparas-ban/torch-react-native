@@ -4,11 +4,12 @@ import Colors from "@/constants/Colors"
 import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet"
 import { LinearGradient } from "expo-linear-gradient"
 import {
-  Pressable,
   ScrollView,
+  StyleProp,
   StyleSheet,
   Text,
   TextProps,
+  TextStyle,
   View,
   ViewProps,
 } from "react-native"
@@ -29,8 +30,11 @@ export type SelectProps<T> = {
   snapPoints?: (string | number)[]
   wrapperProps?: ViewProps
   labelProps?: TextProps
+  valueStyle?: StyleProp<TextStyle>
   errorProps?: TextProps
   sheetProps?: Partial<BottomModalType>
+  hideClose?: boolean
+  buttonScale?: number
 }
 
 function isGrouped<T>(options: any): options is GroupedOption<T>[] {
@@ -40,6 +44,7 @@ function isGrouped<T>(options: any): options is GroupedOption<T>[] {
 export default function Select<T>(props: SelectProps<T>) {
   const {
     placeholder,
+    valueStyle,
     value,
     onChange,
     label,
@@ -49,6 +54,8 @@ export default function Select<T>(props: SelectProps<T>) {
     wrapperProps,
     options,
     snapPoints,
+    hideClose,
+    buttonScale,
   } = props
   const { styles, isDark } = useThemeStyles(selectStyles)
 
@@ -74,21 +81,26 @@ export default function Select<T>(props: SelectProps<T>) {
           style={[styles.label, labelProps?.style]}
         />
       )}
-      <Pressable style={styles.input} onPress={openSelectModal}>
+      <AnimatedButton
+        style={styles.input}
+        onPress={openSelectModal}
+        scale={buttonScale ? buttonScale : 1}
+      >
         {({ pressed }) => (
           <Text
             style={[
               styles.placeholder,
               pressed && styles.inputActive,
               selected && styles.inputValue,
+              valueStyle,
             ]}
           >
             {selected?.label ?? placeholder}
           </Text>
         )}
-      </Pressable>
+      </AnimatedButton>
 
-      {selected && (
+      {!hideClose && selected && (
         <AnimatedButton
           style={styles.iconWrapper}
           onPress={() => onChange(undefined)}

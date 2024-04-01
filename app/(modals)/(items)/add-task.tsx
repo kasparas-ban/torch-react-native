@@ -143,6 +143,7 @@ const inputNames = [
   { label: "Priority", value: "priority" },
   { label: "Target date", value: "targetDate" },
   { label: "Assign goal", value: "goal" },
+  { label: "Repeating", value: "recurring" },
 ] as SelectOption<InputType>[]
 
 const getInitialTaskForm = (
@@ -278,27 +279,6 @@ export default function AddTaskModal() {
             />
           </Animated.View>
 
-          <Animated.View
-            key="task_recurring"
-            layout={LinearTransition}
-            style={{ zIndex: 1 }}
-          >
-            <Controller
-              name="recurring"
-              control={form.control}
-              render={({ field: { onChange, value } }) => (
-                <RecurringInput
-                  label="Recurring"
-                  value={value}
-                  onChange={onChange}
-                  wrapperProps={{
-                    style: { marginBottom: 12 },
-                  }}
-                />
-              )}
-            />
-          </Animated.View>
-
           {inputOrder.map(input => {
             if (input === "goal") {
               const groupedGoals = groupItemsByParent(goals || [], "GOAL")
@@ -382,6 +362,32 @@ export default function AddTaskModal() {
                         placeholder="mm/dd/yyyy"
                         onChange={onChange}
                         value={value ? new Date(value) : undefined}
+                        wrapperProps={{
+                          style: { marginBottom: 12 },
+                        }}
+                      />
+                    )}
+                  />
+                </Animated.View>
+              )
+            }
+
+            if (input === "recurring") {
+              return (
+                <Animated.View
+                  key="task_recurring"
+                  entering={FadeIn(0.8)}
+                  exiting={FadeOut(0.8)}
+                  layout={LinearTransition}
+                >
+                  <Controller
+                    name="recurring"
+                    control={form.control}
+                    render={({ field: { onChange, value } }) => (
+                      <RecurringInput
+                        label="Repeating"
+                        value={value || { times: 1, period: "WEEK" }}
+                        onChange={onChange}
                         wrapperProps={{
                           style: { marginBottom: 12 },
                         }}

@@ -1,13 +1,14 @@
 import Colors from "@/constants/Colors"
 import { StyleSheet, Text, TextProps, View, ViewProps } from "react-native"
-import { z } from "zod"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
-import { AnimatedButton } from "../AnimatedButton"
-import { taskFormSchema } from "../itemModal/itemForms/schemas"
+import Select from "./Select"
 import SelectTimes from "./SelectTimes"
 
-type InputValue = z.infer<typeof taskFormSchema>["recurring"]
+type InputValue = {
+  times: number
+  period: "DAY" | "WEEK" | "MONTH"
+}
 
 type InputProps = {
   label: string
@@ -21,6 +22,21 @@ const TIMES_OPTIONS = Array.from({ length: 99 }).map((_, index) => ({
   label: (index + 1).toString(),
   value: index + 1,
 }))
+
+const PERIOD_OPTIONS = [
+  {
+    label: "Day",
+    value: "DAY",
+  },
+  {
+    label: "Week",
+    value: "WEEK",
+  },
+  {
+    label: "Month",
+    value: "MONTH",
+  },
+]
 
 export default function RecurringInput(props: InputProps) {
   const { label, value, onChange, wrapperProps, labelProps } = props
@@ -39,37 +55,33 @@ export default function RecurringInput(props: InputProps) {
 
         <View style={styles.inputsWrapper}>
           <SelectTimes
-            placeholder="1"
-            title="Select recurring times"
+            title="Select number of repetitions"
             onChange={val =>
               onChange({ times: val, period: value?.period || "WEEK" })
             }
-            value={value ? value.times + 1 : 1}
+            value={value.times}
             options={TIMES_OPTIONS}
-            wrapperProps={{
-              style: { flex: 1 },
-            }}
+            wrapperProps={{ style: { flex: 1 } }}
           />
 
           <Text style={styles.infoLabel}>times per</Text>
 
-          <AnimatedButton
-            style={styles.periodBtn}
-            scale={0.96}
-            //   onPress={() => onChange("LOW")}
-          >
-            {({ pressed }) => (
-              <Text
-                style={[
-                  styles.inputValue,
-                  // pressed && styles.inputActive,
-                  // value === "LOW" && styles.inputSelected,
-                ]}
-              >
-                Week
-              </Text>
-            )}
-          </AnimatedButton>
+          <Select
+            placeholder="Select..."
+            title="Select period"
+            onChange={val =>
+              val && onChange({ times: value?.times, period: val as any })
+            }
+            value={value?.period}
+            options={PERIOD_OPTIONS}
+            wrapperProps={{
+              style: { flex: 1 },
+            }}
+            valueStyle={{ textAlign: "center" }}
+            snapPoints={["30%"]}
+            buttonScale={0.97}
+            hideClose
+          />
         </View>
       </View>
     </>
