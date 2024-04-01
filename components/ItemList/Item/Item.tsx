@@ -7,7 +7,7 @@ import { Dream, FormattedItem, Goal, ItemType, Task } from "@/types/itemTypes"
 
 import useEditItem from "../../itemModal/hooks/useEditItem"
 import useItemListConfig from "../hooks/useItemListConfig"
-import { ItemStrip } from "./ItemStrip"
+import { ItemStrip, RecurringItemStrip } from "./ItemStrip"
 import ItemSublist from "./ItemSublist"
 
 export default function Item<T extends FormattedItem>({
@@ -57,12 +57,11 @@ export default function Item<T extends FormattedItem>({
       id={`li_${item.itemID}${showSublist ? "" : "_COLLAPSED"}`}
     >
       {isRecurring ? (
-        // <RecurringItemStrip
-        //   item={item as Task}
-        //   showEditPanel={showEditPanel}
-        //   toggleEditClick={toggleEditClick}
-        // />
-        <View></View>
+        <RecurringItemStrip
+          item={item as Task}
+          showEditPanel={showEditPanel}
+          toggleEditClick={toggleEditClick}
+        />
       ) : (
         <Animated.View style={{ zIndex: (itemSublist || []).length + 1 }}>
           <ItemStrip

@@ -58,51 +58,6 @@ export const getStripBulletColor = (isActive?: boolean) => {
   return isActive ? Colors.gray[700] : Colors.gray[400]
 }
 
-export const getStripDotsColor = (
-  isEditActive: boolean,
-  isEditPanelActive: boolean,
-  itemStatus: ItemStatus,
-  isRecurring?: boolean
-) => {
-  if (itemStatus === "COMPLETED") {
-    return isEditActive
-      ? isEditPanelActive
-        ? Colors.green[100]
-        : Colors.gray[100]
-      : Colors.green[100]
-  }
-
-  if (isRecurring) {
-    if (itemStatus !== "ACTIVE") {
-      return isEditActive
-        ? isEditPanelActive
-          ? Colors.amber[100]
-          : Colors.gray[100]
-        : Colors.amber[100]
-    }
-
-    return isEditActive
-      ? isEditPanelActive
-        ? Colors.amber[200]
-        : Colors.gray[100]
-      : Colors.amber[200]
-  }
-
-  if (itemStatus !== "ACTIVE") {
-    return isEditActive
-      ? isEditPanelActive
-        ? Colors.red[100]
-        : Colors.gray[100]
-      : Colors.red[100]
-  }
-
-  return isEditActive
-    ? isEditPanelActive
-      ? Colors.red[200]
-      : Colors.gray[200]
-    : Colors.red[200]
-}
-
 export const getProgressBgColor = (
   isEditActive: boolean,
   isEditPanelActive: boolean,

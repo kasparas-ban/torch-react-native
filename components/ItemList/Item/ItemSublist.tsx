@@ -7,10 +7,10 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated"
-import { GeneralItem } from "@/types/itemTypes"
+import { GeneralItem, Task } from "@/types/itemTypes"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
 
-import { ItemStrip } from "./ItemStrip"
+import { ItemStrip, RecurringItemStrip } from "./ItemStrip"
 
 const STRIP_HEIGHT = 48
 
@@ -119,12 +119,12 @@ export default function ItemSublist({
               subitems={subitems}
             /> */}
             {isRecurring(subitem) ? (
-              //   <RecurringItemStrip
-              //     item={subitem as Task}
-              //     showEditPanel={showEditPanel(subitem)}
-              //     toggleEditClick={e => toggleEditClick(e, subitem)}
-              //   />
-              <View />
+              <RecurringItemStrip
+                item={subitem as Task}
+                showEditPanel={showEditPanel(subitem)}
+                toggleEditClick={e => toggleEditClick(e, subitem)}
+                disableClick={!showSublist}
+              />
             ) : (
               <ItemStrip
                 item={subitem}
