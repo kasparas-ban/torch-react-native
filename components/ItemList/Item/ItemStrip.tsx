@@ -1,4 +1,5 @@
 import DotsIcon from "@/assets/icons/dots.svg"
+import TimerIcon from "@/assets/icons/navigationIcons/timer.svg"
 import Colors from "@/constants/Colors"
 import { useRouter } from "expo-router"
 import { GestureResponderEvent, Text, View } from "react-native"
@@ -94,7 +95,14 @@ function ItemStrip<T extends GeneralItem>({
     <View
       //   className={cn("relative flex w-full min-w-0", containsSublist && "mb-3")}
       //   whileTap={{ scale: itemSublist ? (showEditPanel ? 1 : 0.98) : 1 }}
-      style={[{ zIndex: itemSublist?.length, maxHeight: 48 }]}
+      style={[
+        {
+          zIndex: itemSublist?.length,
+          maxHeight: 48,
+          flexDirection: "row",
+          alignItems: "center",
+        },
+      ]}
     >
       <AnimatedButton
         onPress={() => !disableClick && handleStripClick()}
@@ -109,6 +117,7 @@ function ItemStrip<T extends GeneralItem>({
           paddingLeft: 18,
           paddingRight: 4,
           overflow: "hidden",
+          flex: 1,
         }}
       >
         <ItemProgress
@@ -148,6 +157,7 @@ function ItemStrip<T extends GeneralItem>({
           }}
         >
           <AnimatedButton
+            onPress={toggleEditClick}
             style={{
               justifyContent: "center",
               alignItems: "center",
@@ -166,20 +176,24 @@ function ItemStrip<T extends GeneralItem>({
           </AnimatedButton>
         </View>
       </AnimatedButton>
-      {/* <AnimatePresence>
-        {showEditPanel && item.status === "ACTIVE" && (
-          <motion.div
-            className="my-auto ml-3 aspect-square w-12 cursor-pointer rounded-full bg-red-400"
-            whileHover={{ scale: 1.1 }}
-            onClick={handleTimerClick}
-            initial={{ width: 0, opacity: 0, marginLeft: 0 }}
-            animate={{ width: 48, opacity: 1, marginLeft: 12 }}
-            exit={{ width: 0, opacity: 0, marginLeft: 0 }}
-          >
-            <TimerIcon className="m-auto flex h-full w-6" alt="Timer icon" />
-          </motion.div>
-        )}
-      </AnimatePresence> */}
+      {showEditPanel && item.status === "ACTIVE" && (
+        <AnimatedButton
+          style={{
+            backgroundColor: Colors.red[400],
+            borderRadius: 100,
+            width: 42,
+            height: 42,
+            marginLeft: 12,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <TimerIcon
+            color={Colors.gray[600]}
+            style={{ width: 30, height: 30 }}
+          />
+        </AnimatedButton>
+      )}
     </View>
   )
 }
@@ -225,7 +239,7 @@ function RecurringItemStrip({
   )
 
   return (
-    <View style={{ maxHeight: 48 }}>
+    <View style={{ maxHeight: 48, flexDirection: "row", alignItems: "center" }}>
       <AnimatedButton
         style={{
           flexDirection: "row",
@@ -236,6 +250,7 @@ function RecurringItemStrip({
           paddingLeft: 18,
           paddingRight: 4,
           overflow: "hidden",
+          flex: 1,
         }}
         onPress={handleStripClick}
         scale={disableClick ? 1 : 0.97}
@@ -282,6 +297,7 @@ function RecurringItemStrip({
           }}
         >
           <AnimatedButton
+            onPress={toggleEditClick}
             style={{
               justifyContent: "center",
               alignItems: "center",
@@ -300,42 +316,58 @@ function RecurringItemStrip({
           </AnimatedButton>
         </View>
       </AnimatedButton>
-      {/* {isActive && (
-        <AnimatePresence>
+      {isActive && (
+        <>
           {showEditPanel && (
-            <motion.div
+            <AnimatedButton
               key="add_recurring"
-              className="my-auto flex aspect-square cursor-pointer items-center justify-center rounded-full bg-amber-400 text-xl font-bold text-gray-700"
-              whileHover={{ scale: 1.1 }}
-              initial={{ width: 0, opacity: 0, marginLeft: 0 }}
-              animate={{
-                width: isDesktop ? 48 : 64,
-                opacity: 1,
-                marginLeft: isDesktop ? 12 : 6,
+              style={{
+                backgroundColor: Colors.amber[400],
+                borderRadius: 100,
+                width: 42,
+                height: 42,
+                marginLeft: 12,
+                justifyContent: "center",
+                alignItems: "center",
               }}
-              exit={{ width: 0, opacity: 0, marginLeft: 0 }}
             >
-              -1
-            </motion.div>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "900",
+                  color: Colors.gray[700],
+                }}
+              >
+                -1
+              </Text>
+            </AnimatedButton>
           )}
           {showEditPanel && (
-            <motion.div
+            <AnimatedButton
               key="subtract_recurring"
-              className="my-auto flex aspect-square cursor-pointer items-center justify-center rounded-full bg-amber-400 text-xl font-bold text-gray-700"
-              whileHover={{ scale: 1.1 }}
-              initial={{ width: 0, opacity: 0, marginLeft: 0 }}
-              animate={{
-                width: isDesktop ? 48 : 64,
-                opacity: 1,
-                marginLeft: isDesktop ? 12 : 6,
+              style={{
+                backgroundColor: Colors.amber[400],
+                borderRadius: 100,
+                width: 42,
+                height: 42,
+                marginLeft: 12,
+                justifyContent: "center",
+                alignItems: "center",
               }}
-              exit={{ width: 0, opacity: 0, marginLeft: 0 }}
             >
-              +1
-            </motion.div>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "900",
+                  color: Colors.gray[700],
+                }}
+              >
+                +1
+              </Text>
+            </AnimatedButton>
           )}
-        </AnimatePresence>
-      )} */}
+        </>
+      )}
     </View>
   )
 }
