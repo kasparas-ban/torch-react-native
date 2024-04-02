@@ -128,6 +128,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     },
     infoLabel: {
       textAlignVertical: "center",
+      color: isDark ? Colors.gray[300] : Colors.gray[900],
     },
     inputValue: {},
   })

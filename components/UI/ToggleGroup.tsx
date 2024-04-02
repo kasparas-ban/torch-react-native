@@ -143,7 +143,7 @@ const groupStyles = ({ isDark }: ThemeStylesProps) =>
       gap: 6,
     },
     title: {
-      color: isDark ? Colors.gray[400] : Colors.gray[600],
+      color: isDark ? Colors.gray[300] : Colors.gray[600],
       height: 32,
       fontSize: 20,
       fontWeight: "700",

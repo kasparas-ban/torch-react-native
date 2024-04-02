@@ -1,5 +1,12 @@
 import React from "react"
-import { Animated, StyleProp, Text, TextStyle, ViewStyle } from "react-native"
+import {
+  Animated,
+  Appearance,
+  StyleProp,
+  Text,
+  TextStyle,
+  ViewStyle,
+} from "react-native"
 
 import styles from "./WheelPicker.styles"
 
@@ -30,6 +37,8 @@ const WheelPickerItem: React.FC<ItemProps> = ({
   scaleFunction,
   isHorizontal,
 }) => {
+  const isDark = Appearance.getColorScheme() === "dark"
+
   const relativeScrollIndex = Animated.subtract(index, currentScrollIndex)
 
   const translateY = relativeScrollIndex.interpolate({
@@ -131,7 +140,16 @@ const WheelPickerItem: React.FC<ItemProps> = ({
         },
       ]}
     >
-      <Text style={textStyle}>{option}</Text>
+      <Text
+        style={[
+          textStyle,
+          isDark && {
+            color: "white",
+          },
+        ]}
+      >
+        {option}
+      </Text>
     </Animated.View>
   )
 }

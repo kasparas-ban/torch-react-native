@@ -73,7 +73,7 @@ const selectStyles = ({ isDark }: ThemeStylesProps) =>
       width: "100%",
     },
     title: {
-      color: isDark ? Colors.gray[400] : Colors.gray[600],
+      color: isDark ? Colors.gray[300] : Colors.gray[600],
       fontSize: 20,
       height: 32,
       fontWeight: "700",

@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
+import Colors from "@/constants/Colors"
 import {
   Animated,
+  Appearance,
   FlatListProps,
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -56,6 +58,8 @@ const WheelPicker: React.FC<Props> = ({
   flatListProps = {},
   isHorizontal = false,
 }) => {
+  const isDark = Appearance.getColorScheme() === "dark"
+
   const flatListRef = useRef<FlatList>(null)
   const [scrollY] = useState(new Animated.Value(0))
 
@@ -142,6 +146,7 @@ const WheelPicker: React.FC<Props> = ({
         style={[
           isHorizontal ? styles.selectedIndicatorHor : styles.selectedIndicator,
           selectedIndicatorStyle,
+          isDark && { backgroundColor: Colors.gray[600] },
           {
             transform: [
               {
