@@ -1,8 +1,15 @@
+import { useEffect } from "react"
 import DotsIcon from "@/assets/icons/dots.svg"
 import TimerIcon from "@/assets/icons/navigationIcons/timer.svg"
+import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import { useRouter } from "expo-router"
-import { GestureResponderEvent, Text, View } from "react-native"
+import { Dimensions, GestureResponderEvent, Text, View } from "react-native"
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated"
 import {
   GeneralItem,
   Goal,
@@ -91,10 +98,28 @@ function ItemStrip<T extends GeneralItem>({
     item.status
   )
 
+  const width = useSharedValue(380)
+
+  const animatedStyles = useAnimatedStyle(() => ({
+    width: width.value,
+  }))
+
+  useEffect(() => {
+    const stripWidth = Dimensions.get("window").width - 2 * 14
+    const timerWidth = 42 + 12
+
+    width.value = withTiming(
+      showEditPanel && item.status === "ACTIVE"
+        ? stripWidth - timerWidth
+        : stripWidth,
+      {
+        duration: 200,
+      }
+    )
+  }, [showEditPanel])
+
   return (
     <View
-      //   className={cn("relative flex w-full min-w-0", containsSublist && "mb-3")}
-      //   whileTap={{ scale: itemSublist ? (showEditPanel ? 1 : 0.98) : 1 }}
       style={[
         {
           zIndex: itemSublist?.length,
@@ -108,17 +133,19 @@ function ItemStrip<T extends GeneralItem>({
         onPress={() => !disableClick && handleStripClick()}
         scale={disableClick ? 1 : 0.97}
         opacity={1}
-        style={{
-          flexDirection: "row",
-          backgroundColor: stripBgColor,
-          borderWidth: 1,
-          borderRadius: 16,
-          borderColor: stripBorderColor,
-          paddingLeft: 18,
-          paddingRight: 4,
-          overflow: "hidden",
-          flex: 1,
-        }}
+        style={[
+          {
+            flexDirection: "row",
+            backgroundColor: stripBgColor,
+            borderWidth: 1,
+            borderRadius: 16,
+            borderColor: stripBorderColor,
+            paddingLeft: 18,
+            paddingRight: 4,
+            overflow: "hidden",
+          },
+          animatedStyles,
+        ]}
       >
         <ItemProgress
           progress={item.progress || 0}
@@ -126,21 +153,14 @@ function ItemStrip<T extends GeneralItem>({
           isActive={isActive}
         />
         <Text
-          //   className={cn("z-10 select-none truncate py-3", stripTextColor)}
           style={{ paddingVertical: 14, flexGrow: 1, color: stripTextColor }}
         >
           {item.title}
         </Text>
         <View
-          // className="z-0 ml-auto flex shrink-0 items-center justify-center pl-2 lg:pr-2"
           style={{ justifyContent: "center", paddingLeft: 4, paddingRight: 4 }}
         >
           <Text
-            // layout
-            // className={cn(
-            //   "relative top-[-2px] shrink-0 text-2xl font-bold",
-            //   stripPercentageColor
-            // )}
             style={{
               fontSize: 24,
               fontWeight: "900",
@@ -186,7 +206,11 @@ function ItemStrip<T extends GeneralItem>({
             marginLeft: 12,
             justifyContent: "center",
             alignItems: "center",
+            position: "absolute",
+            right: 0,
           }}
+          entering={FadeIn(0.8)}
+          exiting={FadeOut(0.8)}
         >
           <TimerIcon
             color={Colors.gray[600]}
@@ -238,20 +262,40 @@ function RecurringItemStrip({
     true
   )
 
+  const width = useSharedValue(380)
+
+  const animatedStyles = useAnimatedStyle(() => ({
+    width: width.value,
+  }))
+
+  useEffect(() => {
+    const stripWidth = Dimensions.get("window").width - 2 * 14
+    const timerWidth = (42 + 12) * 2
+
+    width.value = withTiming(
+      showEditPanel && isActive ? stripWidth - timerWidth : stripWidth,
+      {
+        duration: 200,
+      }
+    )
+  }, [showEditPanel])
+
   return (
     <View style={{ maxHeight: 48, flexDirection: "row", alignItems: "center" }}>
       <AnimatedButton
-        style={{
-          flexDirection: "row",
-          backgroundColor: stripBgColor,
-          borderWidth: 1,
-          borderRadius: 16,
-          borderColor: stripBorderColor,
-          paddingLeft: 18,
-          paddingRight: 4,
-          overflow: "hidden",
-          flex: 1,
-        }}
+        style={[
+          {
+            flexDirection: "row",
+            backgroundColor: stripBgColor,
+            borderWidth: 1,
+            borderRadius: 16,
+            borderColor: stripBorderColor,
+            paddingLeft: 18,
+            paddingRight: 4,
+            overflow: "hidden",
+          },
+          animatedStyles,
+        ]}
         onPress={handleStripClick}
         scale={disableClick ? 1 : 0.97}
         opacity={1}
@@ -266,13 +310,7 @@ function RecurringItemStrip({
         )}
         <View style={{ flex: 1, paddingVertical: 6 }}>
           <Text style={{ color: stripTextColor }}>{item.title}</Text>
-          <Text
-            // className={cn(
-            //   "truncate text-xs text-gray-700",
-            //   isActive ? "text-gray-700" : "text-gray-400"
-            // )}
-            style={{ color: Colors.gray[700], fontSize: 12 }}
-          >
+          <Text style={{ color: Colors.gray[700], fontSize: 12 }}>
             {isActive ? "Resets tomorrow" : "Repeats every week"}
           </Text>
         </View>
@@ -316,57 +354,57 @@ function RecurringItemStrip({
           </AnimatedButton>
         </View>
       </AnimatedButton>
-      {isActive && (
-        <>
-          {showEditPanel && (
-            <AnimatedButton
-              key="add_recurring"
+      {isActive && showEditPanel && (
+        <Animated.View
+          style={{ flexDirection: "row", position: "absolute", right: 0 }}
+          entering={FadeIn(0.8)}
+          exiting={FadeOut(0.8)}
+        >
+          <AnimatedButton
+            key="add_recurring"
+            style={{
+              backgroundColor: Colors.amber[400],
+              borderRadius: 100,
+              width: 42,
+              height: 42,
+              marginLeft: 12,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text
               style={{
-                backgroundColor: Colors.amber[400],
-                borderRadius: 100,
-                width: 42,
-                height: 42,
-                marginLeft: 12,
-                justifyContent: "center",
-                alignItems: "center",
+                fontSize: 20,
+                fontWeight: "900",
+                color: Colors.gray[700],
               }}
             >
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: "900",
-                  color: Colors.gray[700],
-                }}
-              >
-                -1
-              </Text>
-            </AnimatedButton>
-          )}
-          {showEditPanel && (
-            <AnimatedButton
-              key="subtract_recurring"
+              -1
+            </Text>
+          </AnimatedButton>
+          <AnimatedButton
+            key="subtract_recurring"
+            style={{
+              backgroundColor: Colors.amber[400],
+              borderRadius: 100,
+              width: 42,
+              height: 42,
+              marginLeft: 12,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text
               style={{
-                backgroundColor: Colors.amber[400],
-                borderRadius: 100,
-                width: 42,
-                height: 42,
-                marginLeft: 12,
-                justifyContent: "center",
-                alignItems: "center",
+                fontSize: 20,
+                fontWeight: "900",
+                color: Colors.gray[700],
               }}
             >
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: "900",
-                  color: Colors.gray[700],
-                }}
-              >
-                +1
-              </Text>
-            </AnimatedButton>
-          )}
-        </>
+              +1
+            </Text>
+          </AnimatedButton>
+        </Animated.View>
       )}
     </View>
   )
