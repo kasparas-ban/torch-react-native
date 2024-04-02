@@ -5,6 +5,7 @@ import CloseIcon from "@/assets/icons/close.svg"
 import Colors from "@/constants/Colors"
 import { BottomSheetModal } from "@gorhom/bottom-sheet"
 import { ScrollView, StyleSheet, Text, View } from "react-native"
+import TextTicker from "react-native-text-ticker"
 import { ItemOptionType, ItemType } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { toPercent } from "@/utils/utils"
@@ -376,17 +377,31 @@ export default function FocusSelect() {
           style={styles.input}
           onPress={openSelectModal}
         >
-          <Text
-            style={[
-              styles.inputText,
-              focusOn && {
-                color: isDark ? Colors.gray[200] : Colors.gray[700],
-                fontWeight: "600",
-              },
-            ]}
+          <View
+            style={{
+              justifyContent: "center",
+              height: "100%",
+              marginLeft: 18,
+              marginRight: 48,
+            }}
           >
-            {focusOn?.label ?? "Select..."}
-          </Text>
+            <TextTicker
+              style={[
+                styles.inputText,
+                focusOn && {
+                  color: isDark ? Colors.gray[200] : Colors.gray[700],
+                  fontWeight: "600",
+                },
+              ]}
+              duration={6000}
+              repeatSpacer={50}
+              marqueeDelay={1500}
+              loop
+              bounce={false}
+            >
+              {focusOn?.label ?? "Select..."}
+            </TextTicker>
+          </View>
           {focusOn && (
             <AnimatedButton
               style={{
@@ -470,6 +485,7 @@ function GroupedItems({
               fontWeight: "600",
               color: isDark ? Colors.gray[400] : Colors.gray[500],
               marginBottom: 6,
+              marginLeft: 12,
             }}
           >
             {item.label}
@@ -487,6 +503,7 @@ function GroupedItems({
                     borderRadius: 12,
                     flexDirection: "row",
                     alignItems: "center",
+                    paddingRight: 12,
                   },
                   option.value === selectedItem?.value && {
                     backgroundColor: Colors.rose[400],
@@ -504,6 +521,7 @@ function GroupedItems({
                       textAlign: "right",
                       fontWeight: "700",
                       fontSize: 18,
+                      marginRight: 12,
                     },
                     option.value === selectedItem?.value && {
                       color: Colors.gray[50],
@@ -512,20 +530,22 @@ function GroupedItems({
                 >
                   {toPercent(option.progress)}
                 </Text>
-                <Text
+                <TextTicker
                   style={[
-                    {
-                      marginLeft: 12,
-                      color: isDark ? Colors.gray[300] : Colors.gray[700],
-                    },
+                    { color: isDark ? Colors.gray[300] : Colors.gray[700] },
                     option.value === selectedItem?.value && {
                       color: Colors.gray[50],
                       fontWeight: "600",
                     },
                   ]}
+                  duration={6000}
+                  repeatSpacer={50}
+                  marqueeDelay={1500}
+                  loop
+                  bounce={false}
                 >
                   {option.label}
-                </Text>
+                </TextTicker>
               </AnimatedButton>
             ))}
           </View>
@@ -612,8 +632,6 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       borderRadius: 18,
     },
     inputText: {
-      top: 14,
-      left: 18,
       fontSize: 16,
       color: isDark ? Colors.gray[400] : Colors.gray[500],
     },

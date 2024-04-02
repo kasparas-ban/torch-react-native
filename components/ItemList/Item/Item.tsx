@@ -76,16 +76,14 @@ export default function Item<T extends FormattedItem>({
       )}
       {showSublist ? (
         <>
-          {/* <AnimatePresence initial={false}>
-            {showEditPanel && (
-              <EditPanel<T>
-                key={`${itemType}_${item.itemID}_edit_panel`}
-                item={item}
-                sublistVisible={showSublist && showEditPanel}
-                showAddTask={itemType === "GOAL"}
-              />
-            )}
-          </AnimatePresence> */}
+          {/* {showEditPanel && (
+            <EditPanel<T>
+              key={`${itemType}_${item.itemID}_edit_panel`}
+              item={item}
+              sublistVisible={showSublist && showEditPanel}
+              showAddTask={itemType === "GOAL"}
+            />
+          )} */}
           {containsSublist && (
             <ItemSublist
               parentID={item.itemID}

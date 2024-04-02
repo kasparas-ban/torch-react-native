@@ -10,6 +10,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated"
+import TextTicker from "react-native-text-ticker"
 import {
   GeneralItem,
   Goal,
@@ -152,13 +153,25 @@ function ItemStrip<T extends GeneralItem>({
           showEditPanel={showEditPanel}
           isActive={isActive}
         />
-        <Text
-          style={{ paddingVertical: 14, flexGrow: 1, color: stripTextColor }}
-        >
-          {item.title}
-        </Text>
+        <View style={{ paddingVertical: 14, flex: 1 }}>
+          <TextTicker
+            style={{ color: stripTextColor }}
+            duration={6000}
+            repeatSpacer={50}
+            marqueeDelay={1500}
+            loop
+            bounce={false}
+          >
+            {item.title}
+          </TextTicker>
+        </View>
         <View
-          style={{ justifyContent: "center", paddingLeft: 4, paddingRight: 4 }}
+          style={{
+            justifyContent: "center",
+            paddingLeft: 4,
+            paddingRight: 4,
+            flex: 0,
+          }}
         >
           <Text
             style={{
@@ -174,6 +187,7 @@ function ItemStrip<T extends GeneralItem>({
           style={{
             justifyContent: "center",
             alignItems: "center",
+            flex: 0,
           }}
         >
           <AnimatedButton
