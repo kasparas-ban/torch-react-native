@@ -1,11 +1,14 @@
 import React, { Fragment, useCallback, useEffect } from "react"
 import { useItemsList } from "@/api-endpoints/hooks/items/useItemsList"
 import { findItemByID } from "@/api-endpoints/utils/helpers"
-import { GestureResponderEvent, View } from "react-native"
+import RotateIcon from "@/assets/icons/rotate.svg"
+import Colors from "@/constants/Colors"
+import { Dimensions, GestureResponderEvent, View } from "react-native"
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from "react-native-reanimated"
 import { GeneralItem, Task } from "@/types/itemTypes"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
@@ -13,6 +16,8 @@ import useEditItem from "@/components/itemModal/hooks/useEditItem"
 import { ItemStrip, RecurringItemStrip } from "./ItemStrip"
 
 const STRIP_HEIGHT = 48
+
+const stripWidth = Dimensions.get("window").width - 24
 
 export default function ItemSublist({
   parentID,
@@ -44,6 +49,7 @@ export default function ItemSublist({
   const isRecurring = (item: GeneralItem) => !!item.recurring
 
   const animVal = useSharedValue(0)
+  const animWidth = useSharedValue(stripWidth)
 
   const getAnimatedStyles = useCallback(
     (idx: number) =>
@@ -61,6 +67,20 @@ export default function ItemSublist({
       }),
     []
   )
+
+  const stripStyle = useAnimatedStyle(() => {
+    return {
+      width: `${animWidth.value}%`,
+    }
+  })
+
+  useEffect(() => {
+    animWidth.value = withTiming(
+      !showSublist && isParentEditActive && !isParentArchived
+        ? ((stripWidth - 54) / stripWidth) * 100
+        : 100
+    )
+  }, [isParentEditActive])
 
   useEffect(() => {
     animVal.value = withSpring(showSublist ? 0 : 1, {
@@ -84,56 +104,42 @@ export default function ItemSublist({
       {subitems.map((subitem, idx) => (
         <Fragment key={`${parentID}_${subitem.itemID}`}>
           <Animated.View
-            // entering={FadeIn(0.8)}
-            // exiting={FadeOut(0.8)}
-            // layout
-            // className="relative flex"
-            // animate={{
-            //   scale: showSublist ? 1 : 0.98 - 0.03 * idx,
-            //   width:
-            //     !showSublist && isParentEditActive && !isParentArchived
-            //       ? scaledWidth
-            //       : "100%",
-            //   y: showSublist ? 0 : -(56 + 50 * idx + 8 * idx),
-            //   zIndex: showSublist ? 0 : subitems.length - 1 - idx,
-            //   opacity: showSublist ? 1 : idx > 1 ? 0 : 1,
-            // }}
             style={[
               {
                 position: "relative",
                 minHeight: STRIP_HEIGHT,
-
-                width:
-                  !showSublist && isParentEditActive && !isParentArchived
-                    ? "80%"
-                    : "100%",
+                flexDirection: "row",
                 zIndex: subitems.length - 1 - idx,
+                alignItems: "center",
               },
               getAnimatedStyles(idx),
+              stripStyle,
             ]}
           >
-            {/* <BulletPoint
+            <BulletPoint
               idx={idx}
               showSublist={showSublist}
               showEditPanel={showEditPanel}
               subitems={subitems}
-            /> */}
+            />
             {isRecurring(subitem) ? (
               <RecurringItemStrip
                 item={subitem as Task}
                 showEditPanel={showEditPanel(subitem)}
                 toggleEditClick={e => toggleEditClick(e, subitem)}
-                disableClick={!showSublist}
+                isSublistCollapsed={!showSublist}
+                isSublistItem
               />
             ) : (
               <ItemStrip
                 item={subitem}
                 itemType={subitemType}
                 showEditPanel={showEditPanel(subitem)}
-                toggleEditClick={(e: GestureResponderEvent) =>
+                toggleEditClick={(e: GestureResponderEvent) => {
                   toggleEditClick(e, subitem)
-                }
-                disableClick={!showSublist}
+                }}
+                isSublistCollapsed={!showSublist}
+                isSublistItem
               />
             )}
           </Animated.View>
@@ -169,60 +175,94 @@ export default function ItemSublist({
 //   )
 // }
 
-// function BulletPoint({
-//   idx,
-//   showSublist,
-//   subitems,
-// }: {
-//   idx: number
-//   showSublist: boolean
-//   showEditPanel: (subitem: GeneralItem) => boolean
-//   subitems: GeneralItem[]
-// }) {
-//   const { editItem } = useEditItem()
-//   const currentItem = subitems[idx]
-//   const isRecurring = (currentItem as Task).recurring
+function BulletPoint({
+  idx,
+  showSublist,
+  subitems,
+}: {
+  idx: number
+  showSublist: boolean
+  showEditPanel: (subitem: GeneralItem) => boolean
+  subitems: GeneralItem[]
+}) {
+  const { editItem } = useEditItem()
+  const currentItem = subitems[idx]
+  const isRecurring = (currentItem as Task).recurring
 
-//   const editItemActive =
-//     editItem?.type === currentItem.type &&
-//     editItem?.itemID === currentItem.itemID
+  const editItemActive =
+    editItem?.type === currentItem.type &&
+    editItem?.itemID === currentItem.itemID
 
-//   const bulletColor = editItem
-//     ? editItemActive && isRecurring
-//       ? "bg-amber-200"
-//       : "bg-gray-300"
-//     : isRecurring
-//       ? "bg-amber-200"
-//       : "bg-gray-300"
+  const bulletColor = editItem
+    ? editItemActive && isRecurring
+      ? Colors.amber[200]
+      : Colors.gray[300]
+    : isRecurring
+      ? Colors.amber[200]
+      : Colors.gray[300]
 
-//   return (
-//     <motion.div
-//       className="relative mr-3 flex"
-//       animate={{
-//         width: showSublist ? "auto" : 0,
-//         opacity: showSublist ? 1 : 0,
-//       }}
-//       transition={{ duration: 0.1 }}
-//     >
-//       <div
-//         className={cn(
-//           "relative z-10 my-auto aspect-square w-4 rounded-full",
-//           bulletColor
-//         )}
-//       ></div>
-//       {isRecurring && (
-//         <div className="absolute left-[-4px] top-[13px] z-[15] text-gray-500">
-//           <RotateCw />
-//         </div>
-//       )}
-//       {/* Upper line */}
-//       {idx !== 0 && (
-//         <motion.div className="h0 absolute left-[6px] h-1/2 w-1 bg-gray-300" />
-//       )}
-//       {/* Lower line */}
-//       {idx !== subitems.length - 1 && (
-//         <motion.div className="h0 absolute left-[6px] h-3/4 w-1 translate-y-3/4 bg-gray-300" />
-//       )}
-//     </motion.div>
-//   )
-// }
+  const animWidth = useSharedValue(0)
+  const animOpacity = useSharedValue(0)
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return { width: animWidth.value, opacity: animOpacity.value }
+  })
+
+  useEffect(() => {
+    animWidth.value = showSublist ? 14 + 12 : 0
+    animOpacity.value = showSublist ? 1 : 0
+  }, [showSublist])
+
+  return (
+    <Animated.View style={[{ position: "relative", width: 0 }, animatedStyle]}>
+      <View
+        style={{
+          width: 16,
+          height: 16,
+          borderRadius: 10,
+          backgroundColor: bulletColor,
+        }}
+      />
+      {isRecurring && (
+        <View
+          style={{
+            position: "absolute",
+            top: -2,
+            left: -2,
+          }}
+        >
+          <RotateIcon
+            color={Colors.gray[500]}
+            style={{ width: 20, height: 20 }}
+          />
+        </View>
+      )}
+      {/* Upper line */}
+      {idx !== 0 && (
+        <View
+          style={{
+            position: "absolute",
+            height: "50%",
+            backgroundColor: Colors.gray[300],
+            width: 4,
+            left: 6,
+            top: -STRIP_HEIGHT / 4,
+          }}
+        />
+      )}
+      {/* Lower line */}
+      {idx !== subitems.length - 1 && (
+        <View
+          style={{
+            position: "absolute",
+            height: "75%",
+            backgroundColor: Colors.gray[300],
+            width: 4,
+            left: 6,
+            transform: [{ translateY: 0.75 * 0.5 * STRIP_HEIGHT - 6 }],
+          }}
+        />
+      )}
+    </Animated.View>
+  )
+}

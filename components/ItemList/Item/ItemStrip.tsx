@@ -31,6 +31,8 @@ import {
 } from "./itemStripColors"
 import ItemProgress from "./ProgressBar"
 
+const fullStripWidth = Dimensions.get("window").width - 2 * 14
+
 function ItemStrip<T extends GeneralItem>({
   item,
   itemType,
@@ -38,7 +40,8 @@ function ItemStrip<T extends GeneralItem>({
   itemSublist,
   showEditPanel,
   toggleEditClick,
-  disableClick,
+  isSublistItem,
+  isSublistCollapsed,
 }: {
   item: T
   itemType: ItemType
@@ -46,7 +49,8 @@ function ItemStrip<T extends GeneralItem>({
   itemSublist?: GeneralItem[]
   showEditPanel: boolean
   toggleEditClick: (e: GestureResponderEvent) => void
-  disableClick?: boolean
+  isSublistItem?: boolean
+  isSublistCollapsed?: boolean
 }) {
   const { editItem, setEditItem } = useEditItem()
   const router = useRouter()
@@ -99,25 +103,33 @@ function ItemStrip<T extends GeneralItem>({
     item.status
   )
 
-  const width = useSharedValue(380)
+  const stripWidth = isSublistItem ? fullStripWidth - (14 + 12) : fullStripWidth
+  const width = useSharedValue(stripWidth)
 
   const animatedStyles = useAnimatedStyle(() => ({
-    width: width.value,
+    width: `${width.value}%`,
   }))
 
   useEffect(() => {
-    const stripWidth = Dimensions.get("window").width - 2 * 14
     const timerWidth = 42 + 12
 
-    width.value = withTiming(
-      showEditPanel && item.status === "ACTIVE"
+    const widthVal = isSublistCollapsed
+      ? fullStripWidth
+      : showEditPanel && item.status === "ACTIVE"
         ? stripWidth - timerWidth
-        : stripWidth,
+        : stripWidth
+
+    width.value = withTiming(
+      (widthVal /
+        (!isSublistCollapsed && isSublistItem
+          ? fullStripWidth - 12
+          : fullStripWidth)) *
+        100,
       {
         duration: 200,
       }
     )
-  }, [showEditPanel])
+  }, [showEditPanel, isSublistCollapsed])
 
   return (
     <View
@@ -131,8 +143,8 @@ function ItemStrip<T extends GeneralItem>({
       ]}
     >
       <AnimatedButton
-        onPress={() => !disableClick && handleStripClick()}
-        scale={disableClick ? 1 : 0.97}
+        onPress={() => !isSublistCollapsed && handleStripClick()}
+        scale={isSublistCollapsed ? 1 : 0.97}
         opacity={1}
         style={[
           {
@@ -159,8 +171,8 @@ function ItemStrip<T extends GeneralItem>({
             duration={6000}
             repeatSpacer={50}
             marqueeDelay={1500}
-            loop
             bounce={false}
+            loop
           >
             {item.title}
           </TextTicker>
@@ -240,12 +252,14 @@ function RecurringItemStrip({
   item,
   showEditPanel,
   toggleEditClick,
-  disableClick,
+  isSublistCollapsed,
+  isSublistItem,
 }: {
   item: Task
   showEditPanel: boolean
   toggleEditClick: (e: GestureResponderEvent) => void
-  disableClick?: boolean
+  isSublistCollapsed?: boolean
+  isSublistItem?: boolean
 }) {
   const { editItem, setEditItem } = useEditItem()
 
@@ -276,23 +290,33 @@ function RecurringItemStrip({
     true
   )
 
-  const width = useSharedValue(380)
+  const stripWidth = isSublistItem ? fullStripWidth - (14 + 12) : fullStripWidth
+  const width = useSharedValue(stripWidth)
 
   const animatedStyles = useAnimatedStyle(() => ({
-    width: width.value,
+    width: `${width.value}%`,
   }))
 
   useEffect(() => {
-    const stripWidth = Dimensions.get("window").width - 2 * 14
-    const timerWidth = (42 + 12) * 2
+    const timerWidth = 42 + 12
+
+    const widthVal = isSublistCollapsed
+      ? fullStripWidth
+      : showEditPanel && item.status === "ACTIVE"
+        ? stripWidth - timerWidth
+        : stripWidth
 
     width.value = withTiming(
-      showEditPanel && isActive ? stripWidth - timerWidth : stripWidth,
+      (widthVal /
+        (!isSublistCollapsed && isSublistItem
+          ? fullStripWidth - 12
+          : fullStripWidth)) *
+        100,
       {
         duration: 200,
       }
     )
-  }, [showEditPanel])
+  }, [showEditPanel, isSublistCollapsed])
 
   return (
     <View style={{ maxHeight: 48, flexDirection: "row", alignItems: "center" }}>
@@ -311,7 +335,7 @@ function RecurringItemStrip({
           animatedStyles,
         ]}
         onPress={handleStripClick}
-        scale={disableClick ? 1 : 0.97}
+        scale={isSublistCollapsed ? 1 : 0.97}
         opacity={1}
       >
         {item.status !== "COMPLETED" && (
