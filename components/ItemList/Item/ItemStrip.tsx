@@ -104,31 +104,31 @@ function ItemStrip<T extends GeneralItem>({
   )
 
   const stripWidth = isSublistItem ? fullStripWidth - (14 + 12) : fullStripWidth
-  const width = useSharedValue(stripWidth)
+  const width = useSharedValue(100)
 
   const animatedStyles = useAnimatedStyle(() => ({
     width: `${width.value}%`,
   }))
 
   useEffect(() => {
-    const timerWidth = 42 + 12
+    const timerWidth = 44 + 12
 
     const widthVal = isSublistCollapsed
       ? fullStripWidth
       : showEditPanel && item.status === "ACTIVE"
         ? stripWidth - timerWidth
-        : stripWidth
+        : stripWidth - (isSublistItem ? 12 : 0)
 
-    width.value = withTiming(
+    const widthFraction =
       (widthVal /
         (!isSublistCollapsed && isSublistItem
           ? fullStripWidth - 12
           : fullStripWidth)) *
-        100,
-      {
-        duration: 200,
-      }
-    )
+      100
+
+    width.value = withTiming(widthFraction, {
+      duration: 200,
+    })
   }, [showEditPanel, isSublistCollapsed])
 
   return (
@@ -139,6 +139,7 @@ function ItemStrip<T extends GeneralItem>({
           maxHeight: 48,
           flexDirection: "row",
           alignItems: "center",
+          width: "100%",
         },
       ]}
     >
@@ -233,7 +234,7 @@ function ItemStrip<T extends GeneralItem>({
             justifyContent: "center",
             alignItems: "center",
             position: "absolute",
-            right: 0,
+            right: isSublistItem ? 24 : 0,
           }}
           entering={FadeIn(0.8)}
           exiting={FadeOut(0.8)}
@@ -291,35 +292,41 @@ function RecurringItemStrip({
   )
 
   const stripWidth = isSublistItem ? fullStripWidth - (14 + 12) : fullStripWidth
-  const width = useSharedValue(stripWidth)
+  const width = useSharedValue(100)
 
   const animatedStyles = useAnimatedStyle(() => ({
     width: `${width.value}%`,
   }))
 
   useEffect(() => {
-    const timerWidth = 42 + 12
-
+    const countersWidth = (44 + 12) * 2
     const widthVal = isSublistCollapsed
       ? fullStripWidth
       : showEditPanel && item.status === "ACTIVE"
-        ? stripWidth - timerWidth
-        : stripWidth
+        ? stripWidth - countersWidth
+        : stripWidth - (isSublistItem ? 12 : 0)
 
-    width.value = withTiming(
+    const widthFraction =
       (widthVal /
         (!isSublistCollapsed && isSublistItem
           ? fullStripWidth - 12
           : fullStripWidth)) *
-        100,
-      {
-        duration: 200,
-      }
-    )
+      100
+
+    width.value = withTiming(widthFraction, {
+      duration: 200,
+    })
   }, [showEditPanel, isSublistCollapsed])
 
   return (
-    <View style={{ maxHeight: 48, flexDirection: "row", alignItems: "center" }}>
+    <View
+      style={{
+        maxHeight: 48,
+        flexDirection: "row",
+        alignItems: "center",
+        width: "100%",
+      }}
+    >
       <AnimatedButton
         style={[
           {
@@ -394,7 +401,11 @@ function RecurringItemStrip({
       </AnimatedButton>
       {isActive && showEditPanel && (
         <Animated.View
-          style={{ flexDirection: "row", position: "absolute", right: 0 }}
+          style={{
+            flexDirection: "row",
+            position: "absolute",
+            right: isSublistItem ? 26 : 0,
+          }}
           entering={FadeIn(0.8)}
           exiting={FadeOut(0.8)}
         >

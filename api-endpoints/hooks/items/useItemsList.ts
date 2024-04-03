@@ -1,3 +1,4 @@
+import MOCK_ITEMS from "@/data/items.json"
 import { useAuth } from "@clerk/clerk-react"
 import { useQuery } from "@tanstack/react-query"
 import { FormattedItems, ResponseItem } from "@/types/itemTypes"
@@ -38,8 +39,15 @@ export const useItemsList = () => {
 
   return {
     ...query,
-    tasks: query.data?.tasks,
-    goals: query.data?.goals,
-    dreams: query.data?.dreams,
+    data: MOCK_ITEMS as FormattedItems | undefined,
+    tasks: MOCK_ITEMS?.tasks,
+    goals: MOCK_ITEMS?.goals,
+    dreams: MOCK_ITEMS?.dreams,
   }
+  // return {
+  //   ...query,
+  //   tasks: query.data?.tasks,
+  //   goals: query.data?.goals,
+  //   dreams: query.data?.dreams,
+  // }
 }
