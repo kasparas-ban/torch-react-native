@@ -13,6 +13,7 @@ import Animated, {
 import { GeneralItem, Task } from "@/types/itemTypes"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
 
+import { ItemEditPanel } from "./ItemEditPanel"
 import { ItemStrip, RecurringItemStrip } from "./ItemStrip"
 
 const STRIP_HEIGHT = 48
@@ -143,37 +144,36 @@ export default function ItemSublist({
               />
             )}
           </Animated.View>
-          {/* <AnimatePresence initial={false}>
-            {showEditPanel(subitem) && (
-              <EditPanel idx={idx} subitem={subitem} subitems={subitems} />
-            )}
-          </AnimatePresence> */}
+          {showEditPanel(subitem) && (
+            <EditPanel idx={idx} subitem={subitem} subitems={subitems} />
+          )}
         </Fragment>
       ))}
     </Animated.View>
   )
 }
 
-// function EditPanel({
-//   idx,
-//   subitem,
-//   subitems,
-// }: {
-//   idx: number
-//   subitem: GeneralItem
-//   subitems: GeneralItem[]
-// }) {
-//   const Panel =
-//     subitem.status === "ARCHIVED" ? ArchivedItemEditPanel : ItemEditPanel
+function EditPanel({
+  idx,
+  subitem,
+  subitems,
+}: {
+  idx: number
+  subitem: GeneralItem
+  subitems: GeneralItem[]
+}) {
+  const Panel = ItemEditPanel
+  // const Panel =
+  //   subitem.status === "ARCHIVED" ? ArchivedItemEditPanel : ItemEditPanel
 
-//   return (
-//     <Panel
-//       key={`task_${subitem.itemID}_edit_panel`}
-//       item={subitem}
-//       showBulletLine={idx !== subitems.length - 1}
-//     />
-//   )
-// }
+  return (
+    <Panel
+      key={`task_${subitem.itemID}_edit_panel`}
+      item={subitem}
+      showBulletLine={idx !== subitems.length - 1}
+    />
+  )
+}
 
 function BulletPoint({
   idx,

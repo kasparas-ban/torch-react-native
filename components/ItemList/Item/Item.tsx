@@ -7,6 +7,7 @@ import { Dream, FormattedItem, Goal, ItemType, Task } from "@/types/itemTypes"
 
 import useEditItem from "../../itemModal/hooks/useEditItem"
 import useItemListConfig from "../hooks/useItemListConfig"
+import { ItemEditPanel } from "./ItemEditPanel"
 import { ItemStrip, RecurringItemStrip } from "./ItemStrip"
 import ItemSublist from "./ItemSublist"
 
@@ -47,8 +48,8 @@ export default function Item<T extends FormattedItem>({
 
   const isRecurring = itemType === "TASK" && !!(item as Task).recurring
 
-  //   const EditPanel =
-  //     item.status === "ARCHIVED" ? ArchivedItemEditPanel : ItemEditPanel
+  const EditPanel = ItemEditPanel
+  // item.status === "ARCHIVED" ? ArchivedItemEditPanel : ItemEditPanel
 
   return (
     <View
@@ -76,14 +77,14 @@ export default function Item<T extends FormattedItem>({
       )}
       {showSublist ? (
         <>
-          {/* {showEditPanel && (
+          {showEditPanel && (
             <EditPanel<T>
               key={`${itemType}_${item.itemID}_edit_panel`}
               item={item}
               sublistVisible={showSublist && showEditPanel}
               showAddTask={itemType === "GOAL"}
             />
-          )} */}
+          )}
           {containsSublist && (
             <ItemSublist
               parentID={item.itemID}
@@ -109,16 +110,14 @@ export default function Item<T extends FormattedItem>({
               isParentArchived={item.status === "ARCHIVED"}
             />
           )}
-          {/* <AnimatePresence initial={false}>
-            {showEditPanel && (
-              <EditPanel<T>
-                key={`${itemType}_${item.itemID}_edit_panel`}
-                item={item}
-                sublistVisible={showSublist && showEditPanel}
-                showAddTask={itemType === "GOAL"}
-              />
-            )}
-          </AnimatePresence> */}
+          {showEditPanel && (
+            <EditPanel<T>
+              key={`${itemType}_${item.itemID}_edit_panel`}
+              item={item}
+              sublistVisible={showSublist && showEditPanel}
+              showAddTask={itemType === "GOAL"}
+            />
+          )}
         </>
       )}
     </View>
