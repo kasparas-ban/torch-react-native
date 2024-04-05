@@ -110,6 +110,7 @@ export default function EditCard({ setCard }: CardProps) {
             paddingVertical: 12,
           }}
           scale={0.98}
+          onPress={() => setCard("REMOVE")}
         >
           <DeleteIcon color={Colors.gray[800]} style={styles.editIcon} />
           <Text style={styles.editlabel}>Remove</Text>

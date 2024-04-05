@@ -1,20 +1,46 @@
 import TimerIcon from "@/assets/icons/navigationIcons/timer.svg"
-import TimerBoldIcon from "@/assets/icons/timerBold.svg"
+import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
+import { router } from "expo-router"
 import { StyleSheet, Text, View } from "react-native"
-import { Goal } from "@/types/itemTypes"
+import Animated from "react-native-reanimated"
+import { Goal, ItemOptionType, Task } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
-import { formatTimeSpent } from "@/utils/utils"
+import { formatTimeSpent, toPercent } from "@/utils/utils"
 
 import { AnimatedButton } from "../AnimatedButton"
 import useEditItem from "../itemModal/hooks/useEditItem"
+import useTimerForm from "../Timer/hooks/useTimerForm"
 
 export default function EditItemFunction() {
   const { styles } = useThemeStyles(componentStyles)
   const { editItem } = useEditItem()
 
+  const { setFocusOn } = useTimerForm()
+
+  const handleTimerClick = () => {
+    if (!editItem) return
+
+    const itemOption: ItemOptionType = {
+      value: editItem.itemID,
+      label: editItem.title,
+      type: editItem.type,
+      progress: editItem.progress,
+      timeSpent: editItem.timeSpent,
+      duration: (editItem as Task).duration ?? undefined,
+      containsTasks: !!(editItem as Goal).tasks?.length,
+    }
+
+    setFocusOn(itemOption)
+    router.push("/(tabs)/timer")
+  }
+
   return (
-    <View style={styles.background}>
+    <Animated.View
+      style={styles.background}
+      entering={FadeIn(0.9)}
+      exiting={FadeOut(0.9)}
+    >
       <Text style={styles.itemTitle}>Learn Spanish language</Text>
       <View style={{ flexDirection: "row" }}>
         <View style={{ flexDirection: "row", gap: 2, marginRight: 12 }}>
@@ -26,7 +52,7 @@ export default function EditItemFunction() {
               color: Colors.rose[500],
             }}
           >
-            99
+            {toPercent(editItem?.progress).slice(0, -1)}
           </Text>
           <Text
             style={{
@@ -53,7 +79,7 @@ export default function EditItemFunction() {
               Total time spent:
             </Text>
           </View>
-          <View style={{ flexDirection: "row" }}>
+          {/* <View style={{ flexDirection: "row" }}>
             <Text
               style={{
                 color: Colors.gray[500],
@@ -63,7 +89,7 @@ export default function EditItemFunction() {
             >
               Time left:
             </Text>
-          </View>
+          </View> */}
         </View>
 
         {editItem && (
@@ -86,7 +112,7 @@ export default function EditItemFunction() {
                 )}
               </Text>
             </View>
-            <View
+            {/* <View
               style={{ flexDirection: "row", alignItems: "center", gap: 4 }}
             >
               <TimerBoldIcon
@@ -94,17 +120,21 @@ export default function EditItemFunction() {
                 style={{ width: 18, height: 18 }}
               />
               <Text style={{ color: Colors.gray[500] }}>0 h</Text>
-            </View>
+            </View> */}
           </View>
         )}
       </View>
 
       <View>
-        <AnimatedButton style={styles.timerBtn} scale={0.98}>
+        <AnimatedButton
+          style={styles.timerBtn}
+          scale={0.98}
+          onPress={handleTimerClick}
+        >
           <Text style={styles.timerBtnLabel}>Start timer</Text>
         </AnimatedButton>
       </View>
-    </View>
+    </Animated.View>
   )
 }
 

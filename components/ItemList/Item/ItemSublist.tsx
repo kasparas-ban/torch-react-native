@@ -3,7 +3,8 @@ import { useItemsList } from "@/api-endpoints/hooks/items/useItemsList"
 import { findItemByID } from "@/api-endpoints/utils/helpers"
 import RotateIcon from "@/assets/icons/rotate.svg"
 import Colors from "@/constants/Colors"
-import { Dimensions, GestureResponderEvent, View } from "react-native"
+import { router } from "expo-router"
+import { GestureResponderEvent, View } from "react-native"
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -16,33 +17,25 @@ import { ItemStrip, RecurringItemStrip } from "./ItemStrip"
 
 const STRIP_HEIGHT = 48
 
-const stripWidth = Dimensions.get("window").width - 24
-
 export default function ItemSublist({
   parentID,
   subitems,
   subitemType,
   showSublist,
-  isParentEditActive,
-  isParentArchived,
 }: {
   parentID: string
   subitems: GeneralItem[]
   subitemType: "TASK" | "GOAL"
   showSublist: boolean
-  isParentEditActive: boolean
-  isParentArchived: boolean
 }) {
   const { data } = useItemsList()
-  const { editItem, setEditItem } = useEditItem()
-
-  const showEditPanel = (subitem: GeneralItem) =>
-    subitem.type === editItem?.type && subitem.itemID === editItem?.itemID
+  const { setEditItem } = useEditItem()
 
   const toggleEditClick = (e: GestureResponderEvent, subitem: GeneralItem) => {
     e.stopPropagation()
     const formattedItem = findItemByID(subitem.itemID, data)
-    setEditItem(showEditPanel(subitem) ? undefined : formattedItem)
+    setEditItem(formattedItem)
+    router.push("/(modals)/(items)/edit-item")
   }
 
   const isRecurring = (item: GeneralItem) => !!item.recurring
@@ -102,13 +95,11 @@ export default function ItemSublist({
             <BulletPoint
               idx={idx}
               showSublist={showSublist}
-              showEditPanel={showEditPanel}
               subitems={subitems}
             />
             {isRecurring(subitem) ? (
               <RecurringItemStrip
                 item={subitem as Task}
-                showEditPanel={showEditPanel(subitem)}
                 toggleEditClick={e => toggleEditClick(e, subitem)}
                 isSublistCollapsed={!showSublist}
                 isSublistItem
@@ -117,7 +108,6 @@ export default function ItemSublist({
               <ItemStrip
                 item={subitem}
                 itemType={subitemType}
-                showEditPanel={showEditPanel(subitem)}
                 toggleEditClick={(e: GestureResponderEvent) => {
                   toggleEditClick(e, subitem)
                 }}
@@ -139,7 +129,6 @@ function BulletPoint({
 }: {
   idx: number
   showSublist: boolean
-  showEditPanel: (subitem: GeneralItem) => boolean
   subitems: GeneralItem[]
 }) {
   const { editItem } = useEditItem()

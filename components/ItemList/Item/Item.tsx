@@ -12,15 +12,13 @@ import { ItemStrip, RecurringItemStrip } from "./ItemStrip"
 import ItemSublist from "./ItemSublist"
 
 export default function Item<T extends FormattedItem>({
-  idx,
   itemType,
   item,
 }: {
-  idx: number
   item: T
   itemType: ItemType
 }) {
-  const { editItem, setEditItem } = useEditItem()
+  const { setEditItem } = useEditItem()
   const { isItemCollapsed, saveCollapseState } = useItemListConfig()
   const [showSublist, setShowSublist] = useState(!isItemCollapsed(item))
 
@@ -38,12 +36,9 @@ export default function Item<T extends FormattedItem>({
     saveCollapseState({ itemId: item.itemID, itemType: item.type }, !newState)
   }
 
-  const showEditPanel =
-    editItem?.type === item.type && editItem?.itemID === item.itemID
-
   const toggleEditClick = (e: GestureResponderEvent) => {
     e.stopPropagation()
-    setEditItem(showEditPanel ? undefined : item)
+    setEditItem(item)
     router.push("/(modals)/(items)/edit-item")
   }
 
@@ -54,7 +49,6 @@ export default function Item<T extends FormattedItem>({
       {isRecurring ? (
         <RecurringItemStrip
           item={item as Task}
-          showEditPanel={showEditPanel}
           toggleEditClick={toggleEditClick}
         />
       ) : (
@@ -64,7 +58,6 @@ export default function Item<T extends FormattedItem>({
             itemType={itemType}
             toggleSublist={toggleSublist}
             itemSublist={itemSublist}
-            showEditPanel={showEditPanel}
             toggleEditClick={toggleEditClick}
           />
         </Animated.View>
@@ -78,8 +71,6 @@ export default function Item<T extends FormattedItem>({
               subitems={itemSublist || []}
               subitemType={itemType === "DREAM" ? "GOAL" : "TASK"}
               showSublist={showSublist}
-              isParentEditActive={showEditPanel}
-              isParentArchived={item.status === "ARCHIVED"}
             />
           )}
         </>
@@ -92,8 +83,6 @@ export default function Item<T extends FormattedItem>({
               subitems={itemSublist || []}
               subitemType={itemType === "DREAM" ? "GOAL" : "TASK"}
               showSublist={showSublist}
-              isParentEditActive={showEditPanel}
-              isParentArchived={item.status === "ARCHIVED"}
             />
           )}
         </>

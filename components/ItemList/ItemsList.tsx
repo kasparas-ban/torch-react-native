@@ -78,9 +78,8 @@ export default function ItemsList<T extends Task | Goal | Dream>({
               )}
               {items?.length && (
                 <View style={{ gap: 12, marginBottom: 12 }}>
-                  {items.map((item, itemIdx) => (
+                  {items.map(item => (
                     <Item<T>
-                      idx={totalIndex + itemIdx}
                       key={`${groupKey}_${itemType}_${item.itemID}`}
                       item={item}
                       itemType={itemType}

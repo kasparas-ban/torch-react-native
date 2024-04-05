@@ -1,7 +1,9 @@
 import { useUpdateItemStatus } from "@/api-endpoints/hooks/items/useUpdateItemStatus"
 import InfoIcon from "@/assets/icons/info.svg"
+import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import { StyleSheet, Text, View } from "react-native"
+import Animated from "react-native-reanimated"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
 import { AnimatedButton } from "../AnimatedButton"
@@ -59,7 +61,9 @@ export default function DoneCard() {
   }
 
   return (
-    <View
+    <Animated.View
+      entering={FadeIn(0.9)}
+      exiting={FadeOut(0.9)}
       style={{
         alignItems: "center",
         maxWidth: 340,
@@ -92,7 +96,7 @@ export default function DoneCard() {
           <Text style={styles.confirmLabel}>Complete</Text>
         </AnimatedButton>
       </View>
-    </View>
+    </Animated.View>
   )
 }
 

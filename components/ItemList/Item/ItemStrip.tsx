@@ -1,27 +1,17 @@
 import { useEffect } from "react"
 import DotsIcon from "@/assets/icons/dots.svg"
-import TimerIcon from "@/assets/icons/navigationIcons/timer.svg"
-import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
-import { useRouter } from "expo-router"
 import { Dimensions, GestureResponderEvent, Text, View } from "react-native"
-import Animated, {
+import {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated"
 import TextTicker from "react-native-text-ticker"
-import {
-  GeneralItem,
-  Goal,
-  ItemOptionType,
-  ItemType,
-  Task,
-} from "@/types/itemTypes"
+import { GeneralItem, ItemType, Task } from "@/types/itemTypes"
 import { toPercent } from "@/utils/utils"
 import { AnimatedButton } from "@/components/AnimatedButton"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
-import useTimerForm from "@/components/Timer/hooks/useTimerForm"
 
 import { getStripBgColor, getStripPercentageColor } from "./itemStripColors"
 import ItemProgress from "./ProgressBar"
@@ -30,10 +20,8 @@ const fullStripWidth = Dimensions.get("window").width - 2 * 14
 
 function ItemStrip<T extends GeneralItem>({
   item,
-  itemType,
   toggleSublist,
   itemSublist,
-  showEditPanel,
   toggleEditClick,
   isSublistItem,
   isSublistCollapsed,
@@ -42,41 +30,12 @@ function ItemStrip<T extends GeneralItem>({
   itemType: ItemType
   toggleSublist?: () => void
   itemSublist?: GeneralItem[]
-  showEditPanel: boolean
   toggleEditClick: (e: GestureResponderEvent) => void
   isSublistItem?: boolean
   isSublistCollapsed?: boolean
 }) {
   const { editItem, setEditItem } = useEditItem()
-  const router = useRouter()
-  const { setFocusOn, setFocusType } = useTimerForm()
-
-  const containsSublist = !!itemSublist?.length
   const isActive = item.status === "ACTIVE"
-
-  const handleTimerClick = () => {
-    const itemOption: ItemOptionType = {
-      value: item.itemID,
-      label: item.title,
-      type: item.type,
-      progress: item.progress,
-      timeSpent: item.timeSpent,
-      duration: (editItem as Task).duration ?? undefined,
-      containsTasks: !!(editItem as Goal).tasks?.length,
-    }
-
-    setFocusType(
-      itemType === "TASK"
-        ? "TASKS"
-        : itemType === "GOAL"
-          ? "GOALS"
-          : itemType === "DREAM"
-            ? "DREAMS"
-            : "ALL"
-    )
-    setFocusOn(itemOption)
-    router.push("/(tabs)/timer")
-  }
 
   const handleStripClick = () => {
     const itemInEdit =
@@ -113,7 +72,7 @@ function ItemStrip<T extends GeneralItem>({
     width.value = withTiming(widthFraction, {
       duration: 200,
     })
-  }, [showEditPanel, isSublistCollapsed])
+  }, [isSublistCollapsed])
 
   return (
     <View
@@ -129,7 +88,7 @@ function ItemStrip<T extends GeneralItem>({
     >
       <AnimatedButton
         onPress={() => !isSublistCollapsed && handleStripClick()}
-        scale={isSublistCollapsed ? 1 : 0.97}
+        scale={isSublistCollapsed ? 1 : 0.98}
         opacity={1}
         style={[
           {
@@ -209,13 +168,11 @@ function ItemStrip<T extends GeneralItem>({
 
 function RecurringItemStrip({
   item,
-  showEditPanel,
   toggleEditClick,
   isSublistCollapsed,
   isSublistItem,
 }: {
   item: Task
-  showEditPanel: boolean
   toggleEditClick: (e: GestureResponderEvent) => void
   isSublistCollapsed?: boolean
   isSublistItem?: boolean
@@ -245,12 +202,9 @@ function RecurringItemStrip({
   }))
 
   useEffect(() => {
-    const countersWidth = (44 + 12) * 2
     const widthVal = isSublistCollapsed
       ? fullStripWidth
-      : showEditPanel && item.status === "ACTIVE"
-        ? stripWidth - countersWidth
-        : stripWidth - (isSublistItem ? 12 : 0)
+      : stripWidth - (isSublistItem ? 12 : 0)
 
     const widthFraction =
       (widthVal /
@@ -262,7 +216,7 @@ function RecurringItemStrip({
     width.value = withTiming(widthFraction, {
       duration: 200,
     })
-  }, [showEditPanel, isSublistCollapsed])
+  }, [isSublistCollapsed])
 
   return (
     <View
@@ -288,7 +242,7 @@ function RecurringItemStrip({
           animatedStyles,
         ]}
         onPress={handleStripClick}
-        scale={isSublistCollapsed ? 1 : 0.97}
+        scale={isSublistCollapsed ? 1 : 0.98}
         opacity={1}
       >
         {item.status !== "COMPLETED" && (
@@ -340,7 +294,7 @@ function RecurringItemStrip({
           </AnimatedButton>
         </View>
       </AnimatedButton>
-      {isActive && showEditPanel && (
+      {/* {isActive && showEditPanel && (
         <Animated.View
           style={{
             flexDirection: "row",
@@ -395,7 +349,7 @@ function RecurringItemStrip({
             </Text>
           </AnimatedButton>
         </Animated.View>
-      )}
+      )} */}
     </View>
   )
 }
