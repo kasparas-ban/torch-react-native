@@ -23,12 +23,7 @@ import { AnimatedButton } from "@/components/AnimatedButton"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
 import useTimerForm from "@/components/Timer/hooks/useTimerForm"
 
-import {
-  getStripBgColor,
-  getStripBorderColor,
-  getStripPercentageColor,
-  getStripTextColor,
-} from "./itemStripColors"
+import { getStripBgColor, getStripPercentageColor } from "./itemStripColors"
 import ItemProgress from "./ProgressBar"
 
 const fullStripWidth = Dimensions.get("window").width - 2 * 14
@@ -93,18 +88,8 @@ function ItemStrip<T extends GeneralItem>({
     }
   }
 
-  const stripBgColor = getStripBgColor(true, true, item.status)
-  const stripTextColor = getStripTextColor(true)
-  const stripBorderColor = getStripBorderColor(true)
-  const stripPercentageColor = getStripPercentageColor(true, true, item.status)
-  // const stripBgColor = getStripBgColor(!!editItem, showEditPanel, item.status)
-  // const stripTextColor = getStripTextColor(isActive)
-  // const stripBorderColor = getStripBorderColor(isActive)
-  // const stripPercentageColor = getStripPercentageColor(
-  //   !!editItem,
-  //   showEditPanel,
-  //   item.status
-  // )
+  const stripBgColor = getStripBgColor(item.status, false)
+  const stripPercentageColor = getStripPercentageColor(item.status)
 
   const stripWidth = isSublistItem ? fullStripWidth - (14 + 12) : fullStripWidth
   const width = useSharedValue(100)
@@ -152,7 +137,7 @@ function ItemStrip<T extends GeneralItem>({
             backgroundColor: stripBgColor,
             borderWidth: 1,
             borderRadius: 16,
-            borderColor: stripBorderColor,
+            borderColor: Colors.gray[700],
             paddingLeft: 18,
             paddingRight: 4,
             overflow: "hidden",
@@ -160,14 +145,10 @@ function ItemStrip<T extends GeneralItem>({
           animatedStyles,
         ]}
       >
-        <ItemProgress
-          progress={item.progress || 0}
-          showEditPanel={showEditPanel}
-          isActive={isActive}
-        />
+        <ItemProgress progress={item.progress || 0} />
         <View style={{ paddingVertical: 14, flex: 1 }}>
           <TextTicker
-            style={{ color: stripTextColor }}
+            style={{ color: Colors.gray[800] }}
             duration={6000}
             repeatSpacer={50}
             marqueeDelay={1500}
@@ -252,21 +233,9 @@ function RecurringItemStrip({
     if (itemInEdit) setEditItem(undefined)
   }
 
-  const stripBgColor = getStripBgColor(
-    !!editItem,
-    showEditPanel,
-    item.status,
-    true
-  )
-  const stripTextColor = getStripTextColor(isActive)
-  const stripBorderColor = getStripBorderColor(isActive)
+  const stripBgColor = getStripBgColor(item.status, true)
 
-  const stripPercentageColor = getStripPercentageColor(
-    !!editItem,
-    showEditPanel,
-    item.status,
-    true
-  )
+  const stripPercentageColor = getStripPercentageColor(item.status, true)
 
   const stripWidth = isSublistItem ? fullStripWidth - (14 + 12) : fullStripWidth
   const width = useSharedValue(100)
@@ -311,7 +280,7 @@ function RecurringItemStrip({
             backgroundColor: stripBgColor,
             borderWidth: 1,
             borderRadius: 16,
-            borderColor: stripBorderColor,
+            borderColor: Colors.gray[700],
             paddingLeft: 18,
             paddingRight: 4,
             overflow: "hidden",
@@ -323,15 +292,10 @@ function RecurringItemStrip({
         opacity={1}
       >
         {item.status !== "COMPLETED" && (
-          <ItemProgress
-            progress={itemProgress}
-            showEditPanel={showEditPanel}
-            isActive={isActive}
-            isRecurring
-          />
+          <ItemProgress progress={itemProgress} isRecurring />
         )}
         <View style={{ flex: 1, paddingVertical: 6 }}>
-          <Text style={{ color: stripTextColor }}>{item.title}</Text>
+          <Text style={{ color: Colors.gray[800] }}>{item.title}</Text>
           <Text style={{ color: Colors.gray[700], fontSize: 12 }}>
             {isActive ? "Resets tomorrow" : "Repeats every week"}
           </Text>

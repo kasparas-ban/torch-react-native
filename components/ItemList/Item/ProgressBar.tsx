@@ -1,28 +1,14 @@
+import Colors from "@/constants/Colors"
 import { View } from "react-native"
-import useEditItem from "@/components/itemModal/hooks/useEditItem"
-
-import { getProgressBgColor } from "./itemStripColors"
 
 function ItemProgress({
   progress,
-  showEditPanel,
-  isActive,
   isRecurring,
 }: {
   progress: number
-  showEditPanel: boolean
-  isActive?: boolean
   isRecurring?: boolean
 }) {
-  const { editItem } = useEditItem()
-
-  const progressColor = getProgressBgColor(true, true, true, isRecurring)
-  // const progressColor = getProgressBgColor(
-  //   !!editItem,
-  //   showEditPanel,
-  //   isActive,
-  //   isRecurring
-  // )
+  const progressColor = isRecurring ? Colors.amber[500] : Colors.red[400]
 
   return (
     <View
