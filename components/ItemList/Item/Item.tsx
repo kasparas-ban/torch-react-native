@@ -1,13 +1,13 @@
 "use client"
 
 import React, { useState } from "react"
+import { router } from "expo-router"
 import { GestureResponderEvent, View } from "react-native"
 import Animated from "react-native-reanimated"
 import { Dream, FormattedItem, Goal, ItemType, Task } from "@/types/itemTypes"
 
 import useEditItem from "../../itemModal/hooks/useEditItem"
 import useItemListConfig from "../hooks/useItemListConfig"
-import { ItemEditPanel } from "./ItemEditPanel"
 import { ItemStrip, RecurringItemStrip } from "./ItemStrip"
 import ItemSublist from "./ItemSublist"
 
@@ -44,19 +44,13 @@ export default function Item<T extends FormattedItem>({
   const toggleEditClick = (e: GestureResponderEvent) => {
     e.stopPropagation()
     setEditItem(showEditPanel ? undefined : item)
+    router.push("/(modals)/(items)/edit-item")
   }
 
   const isRecurring = itemType === "TASK" && !!(item as Task).recurring
 
-  const EditPanel = ItemEditPanel
-  // item.status === "ARCHIVED" ? ArchivedItemEditPanel : ItemEditPanel
-
   return (
-    <View
-      //   layout
-      //   ref={item_scope}
-      id={`li_${item.itemID}${showSublist ? "" : "_COLLAPSED"}`}
-    >
+    <View id={`li_${item.itemID}${showSublist ? "" : "_COLLAPSED"}`}>
       {isRecurring ? (
         <RecurringItemStrip
           item={item as Task}
@@ -77,14 +71,6 @@ export default function Item<T extends FormattedItem>({
       )}
       {showSublist ? (
         <>
-          {showEditPanel && (
-            <EditPanel<T>
-              key={`${itemType}_${item.itemID}_edit_panel`}
-              item={item}
-              sublistVisible={showSublist && showEditPanel}
-              showAddTask={itemType === "GOAL"}
-            />
-          )}
           {containsSublist && (
             <ItemSublist
               parentID={item.itemID}
@@ -108,14 +94,6 @@ export default function Item<T extends FormattedItem>({
               showSublist={showSublist}
               isParentEditActive={showEditPanel}
               isParentArchived={item.status === "ARCHIVED"}
-            />
-          )}
-          {showEditPanel && (
-            <EditPanel<T>
-              key={`${itemType}_${item.itemID}_edit_panel`}
-              item={item}
-              sublistVisible={showSublist && showEditPanel}
-              showAddTask={itemType === "GOAL"}
             />
           )}
         </>

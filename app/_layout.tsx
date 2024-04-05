@@ -128,6 +128,16 @@ function RootLayoutNav() {
                       title: "",
                     }}
                   />
+                  <Stack.Screen
+                    name="(modals)/(items)/edit-item"
+                    options={{
+                      presentation: "transparentModal",
+                      animation: "fade",
+                      headerTransparent: true,
+                      title: "",
+                      headerBackVisible: false,
+                    }}
+                  />
                 </Stack>
               </ClerkProvider>
             </NotifierWrapper>

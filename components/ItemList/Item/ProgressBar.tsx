@@ -16,12 +16,13 @@ function ItemProgress({
 }) {
   const { editItem } = useEditItem()
 
-  const progressColor = getProgressBgColor(
-    !!editItem,
-    showEditPanel,
-    isActive,
-    isRecurring
-  )
+  const progressColor = getProgressBgColor(true, true, true, isRecurring)
+  // const progressColor = getProgressBgColor(
+  //   !!editItem,
+  //   showEditPanel,
+  //   isActive,
+  //   isRecurring
+  // )
 
   return (
     <View

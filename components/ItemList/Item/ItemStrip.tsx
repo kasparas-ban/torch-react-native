@@ -93,15 +93,18 @@ function ItemStrip<T extends GeneralItem>({
     }
   }
 
-  const stripBgColor = getStripBgColor(!!editItem, showEditPanel, item.status)
-  const stripTextColor = getStripTextColor(isActive)
-  const stripBorderColor = getStripBorderColor(isActive)
-
-  const stripPercentageColor = getStripPercentageColor(
-    !!editItem,
-    showEditPanel,
-    item.status
-  )
+  const stripBgColor = getStripBgColor(true, true, item.status)
+  const stripTextColor = getStripTextColor(true)
+  const stripBorderColor = getStripBorderColor(true)
+  const stripPercentageColor = getStripPercentageColor(true, true, item.status)
+  // const stripBgColor = getStripBgColor(!!editItem, showEditPanel, item.status)
+  // const stripTextColor = getStripTextColor(isActive)
+  // const stripBorderColor = getStripBorderColor(isActive)
+  // const stripPercentageColor = getStripPercentageColor(
+  //   !!editItem,
+  //   showEditPanel,
+  //   item.status
+  // )
 
   const stripWidth = isSublistItem ? fullStripWidth - (14 + 12) : fullStripWidth
   const width = useSharedValue(100)
@@ -111,13 +114,9 @@ function ItemStrip<T extends GeneralItem>({
   }))
 
   useEffect(() => {
-    const timerWidth = 44 + 12
-
     const widthVal = isSublistCollapsed
       ? fullStripWidth
-      : showEditPanel && item.status === "ACTIVE"
-        ? stripWidth - timerWidth
-        : stripWidth - (isSublistItem ? 12 : 0)
+      : stripWidth - (isSublistItem ? 12 : 0)
 
     const widthFraction =
       (widthVal /
@@ -223,28 +222,6 @@ function ItemStrip<T extends GeneralItem>({
           </AnimatedButton>
         </View>
       </AnimatedButton>
-      {showEditPanel && item.status === "ACTIVE" && (
-        <AnimatedButton
-          style={{
-            backgroundColor: Colors.red[400],
-            borderRadius: 100,
-            width: 42,
-            height: 42,
-            marginLeft: 12,
-            justifyContent: "center",
-            alignItems: "center",
-            position: "absolute",
-            right: isSublistItem ? 24 : 0,
-          }}
-          entering={FadeIn(0.8)}
-          exiting={FadeOut(0.8)}
-        >
-          <TimerIcon
-            color={Colors.gray[600]}
-            style={{ width: 30, height: 30 }}
-          />
-        </AnimatedButton>
-      )}
     </View>
   )
 }

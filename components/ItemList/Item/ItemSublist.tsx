@@ -8,12 +8,10 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  withTiming,
 } from "react-native-reanimated"
 import { GeneralItem, Task } from "@/types/itemTypes"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
 
-import { ItemEditPanel } from "./ItemEditPanel"
 import { ItemStrip, RecurringItemStrip } from "./ItemStrip"
 
 const STRIP_HEIGHT = 48
@@ -50,7 +48,6 @@ export default function ItemSublist({
   const isRecurring = (item: GeneralItem) => !!item.recurring
 
   const animVal = useSharedValue(0)
-  const animWidth = useSharedValue(stripWidth)
 
   const getAnimatedStyles = useCallback(
     (idx: number) =>
@@ -68,20 +65,6 @@ export default function ItemSublist({
       }),
     []
   )
-
-  const stripStyle = useAnimatedStyle(() => {
-    return {
-      width: `${animWidth.value}%`,
-    }
-  })
-
-  useEffect(() => {
-    animWidth.value = withTiming(
-      !showSublist && isParentEditActive && !isParentArchived
-        ? ((stripWidth - 54) / stripWidth) * 100
-        : 100
-    )
-  }, [isParentEditActive])
 
   useEffect(() => {
     animVal.value = withSpring(showSublist ? 0 : 1, {
@@ -114,7 +97,6 @@ export default function ItemSublist({
                 alignItems: "center",
               },
               getAnimatedStyles(idx),
-              stripStyle,
             ]}
           >
             <BulletPoint
@@ -144,34 +126,9 @@ export default function ItemSublist({
               />
             )}
           </Animated.View>
-          {showEditPanel(subitem) && (
-            <EditPanel idx={idx} subitem={subitem} subitems={subitems} />
-          )}
         </Fragment>
       ))}
     </Animated.View>
-  )
-}
-
-function EditPanel({
-  idx,
-  subitem,
-  subitems,
-}: {
-  idx: number
-  subitem: GeneralItem
-  subitems: GeneralItem[]
-}) {
-  const Panel = ItemEditPanel
-  // const Panel =
-  //   subitem.status === "ARCHIVED" ? ArchivedItemEditPanel : ItemEditPanel
-
-  return (
-    <Panel
-      key={`task_${subitem.itemID}_edit_panel`}
-      item={subitem}
-      showBulletLine={idx !== subitems.length - 1}
-    />
   )
 }
 
