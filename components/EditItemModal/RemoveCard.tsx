@@ -366,14 +366,9 @@ export default function RemoveCard() {
         </Text>
       </View>
 
-      <View style={{ flexDirection: "row", gap: 10, marginTop: 12 }}>
-        <AnimatedButton style={styles.btn} scale={0.96}>
-          <Text style={styles.cancelLabel}>Cancel</Text>
-        </AnimatedButton>
-        <AnimatedButton style={[styles.btn, styles.confirmBtn]} scale={0.96}>
-          <Text style={styles.confirmLabel}>Confirm</Text>
-        </AnimatedButton>
-      </View>
+      <AnimatedButton style={styles.confirmBtn} scale={0.96}>
+        <Text style={styles.confirmLabel}>Confirm</Text>
+      </AnimatedButton>
     </Animated.View>
   )
 }
@@ -411,19 +406,13 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     activeSelectionText: {
       color: Colors.gray[800],
     },
-    btn: {
+    confirmBtn: {
       borderRadius: 8,
       width: 100,
       paddingVertical: 8,
-      backgroundColor: Colors.slate[200],
       alignItems: "center",
-    },
-    confirmBtn: {
       backgroundColor: Colors.gray[700],
-    },
-    cancelLabel: {
-      fontWeight: "700",
-      color: Colors.gray[600],
+      marginTop: 12,
     },
     confirmLabel: {
       fontWeight: "700",

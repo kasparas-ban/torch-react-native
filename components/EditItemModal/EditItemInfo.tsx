@@ -16,6 +16,8 @@ export default function EditItemFunction() {
   const { styles } = useThemeStyles(componentStyles)
   const { editItem } = useEditItem()
 
+  const isRecurring = !!editItem?.recurring
+
   const { setFocusOn } = useTimerForm()
 
   const handleTimerClick = () => {
@@ -42,29 +44,33 @@ export default function EditItemFunction() {
       exiting={FadeOut(0.9)}
     >
       <Text style={styles.itemTitle}>Learn Spanish language</Text>
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: "row", paddingHorizontal: 6 }}>
         <View style={{ flexDirection: "row", gap: 2, marginRight: 12 }}>
           <Text
             style={{
               fontWeight: "900",
               fontSize: 42,
               textAlignVertical: "bottom",
-              color: Colors.rose[500],
+              color: isRecurring ? Colors.amber[400] : Colors.rose[500],
             }}
           >
-            {toPercent(editItem?.progress).slice(0, -1)}
+            {isRecurring
+              ? `${editItem.recurring?.progress || 0}/${editItem.recurring?.times}`
+              : toPercent(editItem?.progress).slice(0, -1)}
           </Text>
-          <Text
-            style={{
-              fontWeight: "900",
-              fontSize: 34,
-              textAlignVertical: "bottom",
-              marginBottom: 2,
-              color: Colors.rose[500],
-            }}
-          >
-            %
-          </Text>
+          {!isRecurring && (
+            <Text
+              style={{
+                fontWeight: "900",
+                fontSize: 34,
+                textAlignVertical: "bottom",
+                marginBottom: 2,
+                color: Colors.rose[500],
+              }}
+            >
+              %
+            </Text>
+          )}
         </View>
 
         <View style={{ justifyContent: "center", gap: 3, flexGrow: 1 }}>
@@ -76,7 +82,7 @@ export default function EditItemFunction() {
                 marginLeft: "auto",
               }}
             >
-              Total time spent:
+              {isRecurring ? "Total times repeated:" : "Total time spent:"}
             </Text>
           </View>
           {/* <View style={{ flexDirection: "row" }}>
@@ -102,14 +108,18 @@ export default function EditItemFunction() {
             <View
               style={{ flexDirection: "row", alignItems: "center", gap: 4 }}
             >
-              <TimerIcon
-                color={Colors.gray[500]}
-                style={{ width: 16, height: 16 }}
-              />
+              {!isRecurring && (
+                <TimerIcon
+                  color={Colors.gray[500]}
+                  style={{ width: 16, height: 16 }}
+                />
+              )}
               <Text style={{ color: Colors.gray[500] }}>
-                {formatTimeSpent(
-                  (editItem as Goal).totalTimeSpent || editItem.timeSpent
-                )}
+                {isRecurring
+                  ? editItem.recurring?.progress
+                  : formatTimeSpent(
+                      (editItem as Goal).totalTimeSpent || editItem.timeSpent
+                    )}
               </Text>
             </View>
             {/* <View
@@ -125,15 +135,68 @@ export default function EditItemFunction() {
         )}
       </View>
 
-      <View>
-        <AnimatedButton
-          style={styles.timerBtn}
-          scale={0.98}
-          onPress={handleTimerClick}
+      {isRecurring ? (
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 8,
+            marginTop: 4,
+          }}
         >
-          <Text style={styles.timerBtnLabel}>Start timer</Text>
-        </AnimatedButton>
-      </View>
+          <AnimatedButton
+            key="add_recurring"
+            style={{
+              backgroundColor: Colors.amber[400],
+              borderRadius: 100,
+              height: 36,
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: "900",
+                color: Colors.gray[700],
+              }}
+            >
+              -1
+            </Text>
+          </AnimatedButton>
+          <AnimatedButton
+            key="subtract_recurring"
+            style={{
+              backgroundColor: Colors.amber[400],
+              borderRadius: 100,
+              height: 36,
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: "900",
+                color: Colors.gray[700],
+              }}
+            >
+              +1
+            </Text>
+          </AnimatedButton>
+        </View>
+      ) : (
+        <View>
+          <AnimatedButton
+            style={styles.timerBtn}
+            scale={0.98}
+            onPress={handleTimerClick}
+          >
+            <Text style={styles.timerBtnLabel}>Start timer</Text>
+          </AnimatedButton>
+        </View>
+      )}
     </Animated.View>
   )
 }

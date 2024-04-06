@@ -9,12 +9,17 @@ import { StyleSheet, Text, View } from "react-native"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { AnimatedButton } from "@/components/AnimatedButton"
 
+import useEditItem from "../itemModal/hooks/useEditItem"
+
 type CardProps = {
   setCard: React.Dispatch<React.SetStateAction<"DONE" | "REMOVE" | undefined>>
 }
 
 export default function EditCard({ setCard }: CardProps) {
   const { styles } = useThemeStyles(componentStyles)
+  const { editItem } = useEditItem()
+
+  const showAddTask = editItem?.type === "GOAL"
 
   return (
     <View
@@ -52,7 +57,24 @@ export default function EditCard({ setCard }: CardProps) {
 
         <View style={styles.separator} />
 
-        {/* {showAddTask && ( */}
+        {showAddTask && (
+          <AnimatedButton
+            style={{
+              alignItems: "center",
+              flexDirection: "row",
+              gap: 8,
+              paddingVertical: 12,
+            }}
+            scale={0.98}
+          >
+            <AddItemIcon color={Colors.gray[800]} style={styles.editIcon} />
+            <Text style={styles.editlabel}>Add task</Text>
+            <ArrowIcon color={Colors.gray[800]} style={styles.arrowIcon} />
+          </AnimatedButton>
+        )}
+
+        {/* <View style={styles.separator} />
+
         <AnimatedButton
           style={{
             alignItems: "center",
@@ -60,29 +82,14 @@ export default function EditCard({ setCard }: CardProps) {
             gap: 8,
             paddingVertical: 12,
           }}
-          scale={0.98}
+          scale={1}
         >
-          <AddItemIcon color={Colors.gray[800]} style={styles.editIcon} />
-          <Text style={styles.editlabel}>Add task</Text>
-          <ArrowIcon color={Colors.gray[800]} style={styles.arrowIcon} />
-        </AnimatedButton>
-        {/* )} */}
-
-        <View style={styles.separator} />
-
-        <AnimatedButton
-          style={{
-            alignItems: "center",
-            flexDirection: "row",
-            gap: 8,
-            paddingVertical: 12,
-          }}
-          scale={0.98}
-        >
-          <StatsIcon color={Colors.gray[800]} style={styles.editIcon} />
-          <Text style={styles.editlabel}>Stats</Text>
-          <ArrowIcon color={Colors.gray[800]} style={styles.arrowIcon} />
-        </AnimatedButton>
+          <StatsIcon color={Colors.gray[300]} style={styles.editIcon} />
+          <Text style={[styles.editlabel, { color: Colors.gray[300] }]}>
+            Stats
+          </Text>
+          <ArrowIcon color={Colors.gray[300]} style={styles.arrowIcon} />
+        </AnimatedButton> */}
 
         <View style={styles.separator} />
 
