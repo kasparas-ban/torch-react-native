@@ -1,9 +1,8 @@
-"use client"
-
-import React, { useState } from "react"
+import React, { useCallback, useMemo, useState } from "react"
 import { router } from "expo-router"
 import { GestureResponderEvent, View } from "react-native"
 import Animated from "react-native-reanimated"
+import { genericMemo } from "@/types/generalTypes"
 import { Dream, FormattedItem, Goal, ItemType, Task } from "@/types/itemTypes"
 
 import useEditItem from "../../itemModal/hooks/useEditItem"
@@ -11,7 +10,7 @@ import useItemListConfig from "../hooks/useItemListConfig"
 import { ItemStrip, RecurringItemStrip } from "./ItemStrip"
 import ItemSublist from "./ItemSublist"
 
-export default function Item<T extends FormattedItem>({
+function Item<T extends FormattedItem>({
   itemType,
   item,
 }: {
@@ -19,16 +18,9 @@ export default function Item<T extends FormattedItem>({
   itemType: ItemType
 }) {
   const { setEditItem } = useEditItem()
-  const { isItemCollapsed, saveCollapseState } = useItemListConfig()
+  const isItemCollapsed = useItemListConfig.use.isItemCollapsed()
+  const saveCollapseState = useItemListConfig.use.saveCollapseState()
   const [showSublist, setShowSublist] = useState(!isItemCollapsed(item))
-
-  const itemSublist =
-    itemType === "GOAL"
-      ? (item as Goal).tasks
-      : item.type === "DREAM"
-        ? (item as Dream).goals
-        : undefined
-  const containsSublist = !!itemSublist?.length
 
   const toggleSublist = () => {
     const newState = !showSublist
@@ -36,16 +28,28 @@ export default function Item<T extends FormattedItem>({
     saveCollapseState({ itemId: item.itemID, itemType: item.type }, !newState)
   }
 
-  const toggleEditClick = (e: GestureResponderEvent) => {
-    e.stopPropagation()
-    setEditItem(item)
-    router.push("/(modals)/(items)/edit-item")
-  }
+  const itemSublist = useMemo(() => {
+    return itemType === "GOAL"
+      ? (item as Goal).tasks
+      : item.type === "DREAM"
+        ? (item as Dream).goals
+        : undefined
+  }, [itemType])
+  const containsSublist = !!itemSublist?.length
+
+  const toggleEditClick = useCallback(
+    (e: GestureResponderEvent) => {
+      e.stopPropagation()
+      setEditItem(item)
+      router.push("/(modals)/(items)/edit-item")
+    },
+    [setEditItem]
+  )
 
   const isRecurring = itemType === "TASK" && !!(item as Task).recurring
 
   return (
-    <View id={`li_${item.itemID}${showSublist ? "" : "_COLLAPSED"}`}>
+    <View>
       {isRecurring ? (
         <RecurringItemStrip
           item={item as Task}
@@ -56,7 +60,7 @@ export default function Item<T extends FormattedItem>({
           <ItemStrip
             item={item}
             itemType={itemType}
-            toggleSublist={toggleSublist}
+            toggleSublist={itemSublist?.length ? toggleSublist : undefined}
             itemSublist={itemSublist}
             toggleEditClick={toggleEditClick}
           />
@@ -90,3 +94,7 @@ export default function Item<T extends FormattedItem>({
     </View>
   )
 }
+
+const ItemMemo = genericMemo(Item)
+
+export default ItemMemo

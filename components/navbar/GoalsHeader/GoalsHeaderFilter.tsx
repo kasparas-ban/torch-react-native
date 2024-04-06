@@ -10,12 +10,10 @@ import ToggleButton from "@/components/UI/ToggleButton"
 export function ListFilterSection({ showFilters }: { showFilters: boolean }) {
   const { styles } = useThemeStyles(componentStyles)
 
-  const {
-    showCompletedItems,
-    setShowCompletedItems,
-    showArchivedItems,
-    setShowArchivedItems,
-  } = useItemListConfig()
+  const showCompletedItems = useItemListConfig.use.showCompletedItems()
+  const setShowCompletedItems = useItemListConfig.use.setShowCompletedItems()
+  const showArchivedItems = useItemListConfig.use.showArchivedItems()
+  const setShowArchivedItems = useItemListConfig.use.setShowArchivedItems()
   const { setEditItem } = useEditItem()
 
   const handleCompleteToggle = (pressed: boolean) => {

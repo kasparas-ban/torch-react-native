@@ -22,7 +22,7 @@ export default function ItemsList<T extends Task | Goal | Dream>({
 }) {
   const { styles, isDark } = useThemeStyles(componentStyles)
   const { setEditItem } = useEditItem()
-  const { isFiltersOpen } = useItemListConfig()
+  const isFiltersOpen = useItemListConfig.use.isFiltersOpen()
 
   const addItemHref =
     itemType === "TASK"

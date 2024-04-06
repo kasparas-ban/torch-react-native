@@ -9,8 +9,9 @@ import useItemListConfig from "./hooks/useItemListConfig"
 import ItemsList from "./ItemsList"
 
 export default function ItemListWrapper() {
-  const { itemType, showArchivedItems, showCompletedItems } =
-    useItemListConfig()
+  const itemType = useItemListConfig.use.itemType()
+  const showArchivedItems = useItemListConfig.use.showArchivedItems()
+  const showCompletedItems = useItemListConfig.use.showCompletedItems()
   const { data, error, isLoading } = useItemsList()
 
   const items =

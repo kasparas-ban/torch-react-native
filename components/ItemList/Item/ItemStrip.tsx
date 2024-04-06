@@ -8,6 +8,7 @@ import {
   withTiming,
 } from "react-native-reanimated"
 import TextTicker from "react-native-text-ticker"
+import { genericMemo } from "@/types/generalTypes"
 import { GeneralItem, ItemType, Task } from "@/types/itemTypes"
 import { toPercent } from "@/utils/utils"
 import { AnimatedButton } from "@/components/AnimatedButton"
@@ -34,18 +35,7 @@ function ItemStrip<T extends GeneralItem>({
   isSublistItem?: boolean
   isSublistCollapsed?: boolean
 }) {
-  const { editItem, setEditItem } = useEditItem()
   const isActive = item.status === "ACTIVE"
-
-  const handleStripClick = () => {
-    const itemInEdit =
-      item.itemID === editItem?.itemID && item.type === editItem?.type
-    if (itemInEdit) {
-      setEditItem(undefined)
-    } else if (!editItem && toggleSublist) {
-      toggleSublist()
-    }
-  }
 
   const stripBgColor = getStripBgColor(item.status, false)
   const stripPercentageColor = getStripPercentageColor(item.status)
@@ -76,18 +66,16 @@ function ItemStrip<T extends GeneralItem>({
 
   return (
     <View
-      style={[
-        {
-          zIndex: itemSublist?.length,
-          maxHeight: 48,
-          flexDirection: "row",
-          alignItems: "center",
-          width: "100%",
-        },
-      ]}
+      style={{
+        zIndex: itemSublist?.length,
+        maxHeight: 48,
+        flexDirection: "row",
+        alignItems: "center",
+        width: "100%",
+      }}
     >
       <AnimatedButton
-        onPress={() => !isSublistCollapsed && handleStripClick()}
+        onPress={() => toggleSublist?.()}
         scale={isSublistCollapsed ? 1 : 0.98}
         opacity={1}
         style={[
@@ -294,64 +282,10 @@ function RecurringItemStrip({
           </AnimatedButton>
         </View>
       </AnimatedButton>
-      {/* {isActive && showEditPanel && (
-        <Animated.View
-          style={{
-            flexDirection: "row",
-            position: "absolute",
-            right: isSublistItem ? 26 : 0,
-          }}
-          entering={FadeIn(0.8)}
-          exiting={FadeOut(0.8)}
-        >
-          <AnimatedButton
-            key="add_recurring"
-            style={{
-              backgroundColor: Colors.amber[400],
-              borderRadius: 100,
-              width: 42,
-              height: 42,
-              marginLeft: 12,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: "900",
-                color: Colors.gray[700],
-              }}
-            >
-              -1
-            </Text>
-          </AnimatedButton>
-          <AnimatedButton
-            key="subtract_recurring"
-            style={{
-              backgroundColor: Colors.amber[400],
-              borderRadius: 100,
-              width: 42,
-              height: 42,
-              marginLeft: 12,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: "900",
-                color: Colors.gray[700],
-              }}
-            >
-              +1
-            </Text>
-          </AnimatedButton>
-        </Animated.View>
-      )} */}
     </View>
   )
 }
 
-export { ItemStrip, RecurringItemStrip }
+const ItemMemo = genericMemo(ItemStrip)
+
+export { ItemMemo as ItemStrip, RecurringItemStrip }

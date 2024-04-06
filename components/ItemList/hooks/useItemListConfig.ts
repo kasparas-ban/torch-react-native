@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
 import { GeneralItem, ItemType } from "@/types/itemTypes"
+import { createSelectors } from "@/utils/zustandUtils"
 
 type CollapsedItemState = {
   itemId: string
@@ -27,7 +28,7 @@ interface ItemListConfigState {
   setShowCompletedItems: (val: boolean) => void
 }
 
-const useItemListConfig = create<ItemListConfigState>()(
+const useItemListConfigState = create<ItemListConfigState>()(
   persist(
     (set, get) => ({
       // Collaped items
@@ -69,5 +70,7 @@ const useItemListConfig = create<ItemListConfigState>()(
     }
   )
 )
+
+const useItemListConfig = createSelectors(useItemListConfigState)
 
 export default useItemListConfig

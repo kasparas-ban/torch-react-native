@@ -25,7 +25,8 @@ import { ListFilterSection } from "./GoalsHeaderFilter"
 export default function GoalsHeader() {
   const { isDark } = useThemeStyles(componentStyles)
 
-  const { isFiltersOpen, setIsFiltersOpen } = useItemListConfig()
+  const isFiltersOpen = useItemListConfig.use.isFiltersOpen()
+  const setIsFiltersOpen = useItemListConfig.use.setIsFiltersOpen()
 
   return (
     <View
@@ -130,7 +131,8 @@ export default function GoalsHeader() {
 
 function ItemTypeSelector() {
   const [isOpen, setIsOpen] = useState(false)
-  const { itemType, saveItemType } = useItemListConfig()
+  const itemType = useItemListConfig.use.itemType()
+  const saveItemType = useItemListConfig.use.saveItemType()
   const { styles, isDark } = useThemeStyles(componentStyles)
 
   const [position, setPosition] = useState({ x: 0, y: 0, width: 0, height: 0 })
