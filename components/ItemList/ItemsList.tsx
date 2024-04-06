@@ -10,6 +10,7 @@ import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
 import { AnimatedButton } from "../AnimatedButton"
 import useEditItem from "../itemModal/hooks/useEditItem"
+import useItemListConfig from "./hooks/useItemListConfig"
 import Item from "./Item/Item"
 
 export default function ItemsList<T extends Task | Goal | Dream>({
@@ -21,6 +22,7 @@ export default function ItemsList<T extends Task | Goal | Dream>({
 }) {
   const { styles, isDark } = useThemeStyles(componentStyles)
   const { setEditItem } = useEditItem()
+  const { isFiltersOpen } = useItemListConfig()
 
   const addItemHref =
     itemType === "TASK"
@@ -44,13 +46,16 @@ export default function ItemsList<T extends Task | Goal | Dream>({
       })
     : undefined
 
-  useEffect(() => () => setEditItem(undefined), [setEditItem])
+  useEffect(() => {
+    return () => setEditItem(undefined)
+  }, [setEditItem])
 
   return groupedItems && sortedItems && !isListEmpty ? (
     <ScrollView
       style={{
         width: "100%",
         height: "100%",
+        paddingTop: isFiltersOpen ? 28 : 0,
       }}
     >
       <View

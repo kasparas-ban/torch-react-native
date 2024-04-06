@@ -17,12 +17,15 @@ import Animated, {
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { capitalize, rgbToRGBA } from "@/utils/utils"
 
-import { AnimatedButton } from "../AnimatedButton"
-import useItemListConfig from "../ItemList/hooks/useItemListConfig"
-import Link from "../UI/Link"
+import { AnimatedButton } from "../../AnimatedButton"
+import useItemListConfig from "../../ItemList/hooks/useItemListConfig"
+import Link from "../../UI/Link"
+import { ListFilterSection } from "./GoalsHeaderFilter"
 
 export default function GoalsHeader() {
   const { isDark } = useThemeStyles(componentStyles)
+
+  const { isFiltersOpen, setIsFiltersOpen } = useItemListConfig()
 
   return (
     <View
@@ -43,9 +46,9 @@ export default function GoalsHeader() {
       >
         <LinearGradient
           colors={[isDark ? Colors.gray[900] : "white", "transparent"]}
-          locations={[0.75, 1]}
+          locations={isFiltersOpen ? [0.85, 1] : [0.75, 1]}
           style={{
-            height: 150,
+            height: isFiltersOpen ? 180 : 150,
             position: "absolute",
             right: 0,
             left: 0,
@@ -77,10 +80,17 @@ export default function GoalsHeader() {
             }}
           >
             <AnimatedButton
-              style={{
-                marginTop: 14,
-                padding: 8,
-              }}
+              style={[
+                {
+                  marginTop: 14,
+                  padding: 8,
+                  borderRadius: 100,
+                },
+                isFiltersOpen && {
+                  backgroundColor: Colors.rose[300],
+                },
+              ]}
+              onPress={() => setIsFiltersOpen(!isFiltersOpen)}
             >
               <FilterIcon
                 color={isDark ? Colors.gray[300] : Colors.gray[600]}
@@ -112,6 +122,8 @@ export default function GoalsHeader() {
           </View>
         </View>
       </View>
+
+      <ListFilterSection showFilters={isFiltersOpen} />
     </View>
   )
 }

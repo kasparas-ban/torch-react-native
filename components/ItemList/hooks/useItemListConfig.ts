@@ -17,6 +17,8 @@ interface ItemListConfigState {
   // Item type header
   itemType: ItemType
   saveItemType: (type: ItemType) => void
+  isFiltersOpen: boolean
+  setIsFiltersOpen: (val: boolean) => void
 
   // Item status
   showArchivedItems: boolean
@@ -52,6 +54,8 @@ const useItemListConfig = create<ItemListConfigState>()(
       // Item type header
       itemType: "GOAL",
       saveItemType: (type: ItemType) => set({ itemType: type }),
+      isFiltersOpen: false,
+      setIsFiltersOpen: (val: boolean) => set({ isFiltersOpen: val }),
 
       // Item status filter
       showArchivedItems: false,

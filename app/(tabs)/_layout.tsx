@@ -4,7 +4,7 @@ import { BlurView } from "expo-blur"
 import { ImageBackground } from "expo-image"
 import { Tabs } from "expo-router"
 import { Platform } from "react-native"
-import GoalsHeader from "@/components/navbar/GoalsHeader"
+import GoalsHeader from "@/components/navbar/GoalsHeader/GoalsHeader"
 import {
   BottomTabBarItems,
   BottomTabBarWrapper,
