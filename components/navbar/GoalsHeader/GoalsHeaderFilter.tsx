@@ -4,7 +4,6 @@ import { StyleSheet, Text, View } from "react-native"
 import Animated from "react-native-reanimated"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import useItemListConfig from "@/components/ItemList/hooks/useItemListConfig"
-import useEditItem from "@/components/itemModal/hooks/useEditItem"
 import ToggleButton from "@/components/UI/ToggleButton"
 
 export function ListFilterSection({ showFilters }: { showFilters: boolean }) {
@@ -14,17 +13,12 @@ export function ListFilterSection({ showFilters }: { showFilters: boolean }) {
   const setShowCompletedItems = useItemListConfig.use.setShowCompletedItems()
   const showArchivedItems = useItemListConfig.use.showArchivedItems()
   const setShowArchivedItems = useItemListConfig.use.setShowArchivedItems()
-  const { setEditItem } = useEditItem()
 
-  const handleCompleteToggle = (pressed: boolean) => {
-    setEditItem(undefined)
+  const handleCompleteToggle = (pressed: boolean) =>
     setShowCompletedItems(pressed)
-  }
 
-  const handleArchiveToggle = (pressed: boolean) => {
-    setEditItem(undefined)
+  const handleArchiveToggle = (pressed: boolean) =>
     setShowArchivedItems(pressed)
-  }
 
   return (
     <>
@@ -102,10 +96,10 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       backgroundColor: Colors.rose[400],
     },
     optionLabel: {
-      fontWeight: "700",
-      color: Colors.gray[400],
+      fontWeight: "500",
+      color: Colors.gray[500],
     },
     selectedOptionLabel: {
-      color: Colors.gray[100],
+      color: "white",
     },
   })

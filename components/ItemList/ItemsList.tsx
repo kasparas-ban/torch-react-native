@@ -3,8 +3,12 @@ import PlusIcon from "@/assets/icons/plus.svg"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import { Link } from "expo-router"
-import { ScrollView, StyleSheet, Text, View } from "react-native"
-import Animated from "react-native-reanimated"
+import { StyleSheet, Text, View } from "react-native"
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated"
 import { Dream, Goal, GroupedItems, ItemType, Task } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
@@ -50,13 +54,27 @@ export default function ItemsList<T extends Task | Goal | Dream>({
     return () => setEditItem(undefined)
   }, [setEditItem])
 
+  const animVal = useSharedValue(0)
+
+  useEffect(() => {
+    animVal.value = withTiming(isFiltersOpen ? 28 : 0)
+  }, [isFiltersOpen])
+
+  const viewStyle = useAnimatedStyle(() => {
+    return {
+      paddingTop: animVal.value,
+    }
+  })
+
   return groupedItems && sortedItems && !isListEmpty ? (
-    <ScrollView
-      style={{
-        width: "100%",
-        height: "100%",
-        paddingTop: isFiltersOpen ? 28 : 0,
-      }}
+    <Animated.ScrollView
+      style={[
+        {
+          width: "100%",
+          height: "100%",
+        },
+        viewStyle,
+      ]}
     >
       <View
         style={{
@@ -96,7 +114,7 @@ export default function ItemsList<T extends Task | Goal | Dream>({
           )
         })}
       </View>
-    </ScrollView>
+    </Animated.ScrollView>
   ) : (
     <Animated.View
       entering={FadeIn(0.9)}

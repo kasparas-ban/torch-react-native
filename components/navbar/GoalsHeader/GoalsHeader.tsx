@@ -13,6 +13,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from "react-native-reanimated"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { capitalize, rgbToRGBA } from "@/utils/utils"
@@ -22,11 +23,23 @@ import useItemListConfig from "../../ItemList/hooks/useItemListConfig"
 import Link from "../../UI/Link"
 import { ListFilterSection } from "./GoalsHeaderFilter"
 
+const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient)
+
 export default function GoalsHeader() {
   const { isDark } = useThemeStyles(componentStyles)
 
   const isFiltersOpen = useItemListConfig.use.isFiltersOpen()
   const setIsFiltersOpen = useItemListConfig.use.setIsFiltersOpen()
+
+  const animHeight = useSharedValue(150)
+
+  useEffect(() => {
+    animHeight.value = withTiming(isFiltersOpen ? 180 : 150)
+  }, [isFiltersOpen])
+
+  const animStyle = useAnimatedStyle(() => {
+    return { height: animHeight.value }
+  })
 
   return (
     <View
@@ -45,16 +58,18 @@ export default function GoalsHeader() {
         }}
         pointerEvents="none"
       >
-        <LinearGradient
+        <AnimatedLinearGradient
           colors={[isDark ? Colors.gray[900] : "white", "transparent"]}
           locations={isFiltersOpen ? [0.85, 1] : [0.75, 1]}
-          style={{
-            height: isFiltersOpen ? 180 : 150,
-            position: "absolute",
-            right: 0,
-            left: 0,
-            top: 0,
-          }}
+          style={[
+            {
+              position: "absolute",
+              right: 0,
+              left: 0,
+              top: 0,
+            },
+            animStyle,
+          ]}
         />
         <Image
           source={require("@/assets/images/header_background.png")}
