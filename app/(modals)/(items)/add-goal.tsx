@@ -4,6 +4,7 @@ import { useUpsertItem } from "@/api-endpoints/hooks/items/useUpsertItem"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useLocalSearchParams } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
 import { StyleSheet, Text, View } from "react-native"
 import Animated, { LinearTransition } from "react-native-reanimated"
@@ -33,13 +34,20 @@ const inputNames = [
   { label: "Assign dream", value: "dream" },
 ] as SelectOption<InputType>[]
 
-const getInitialGoalForm = (initialGoal: Goal): GoalFormType => ({
+const getInitialGoalForm = (
+  initialGoal?: Goal,
+  parentID?: string
+): GoalFormType => ({
   title: initialGoal?.title || "",
   priority: initialGoal?.priority,
   targetDate: initialGoal?.targetDate,
   tasks:
     initialGoal?.tasks?.map(task => ({ ...task, itemID: task.itemID })) || [],
-  dream: initialGoal?.dream ? initialGoal.dream.itemID : undefined,
+  dream: parentID
+    ? parentID
+    : initialGoal?.dream
+      ? initialGoal.dream.itemID
+      : undefined,
 })
 
 export default function AddGoalModal() {
@@ -52,7 +60,12 @@ export default function AddGoalModal() {
   const { mutateAsync, reset, isPending, isError, isSuccess } =
     useUpsertItem("GOAL")
 
-  const defaultGoal = getInitialGoalForm(editItem as Goal)
+  const params = useLocalSearchParams()
+  const parentID = params.parentID as string
+  const defaultGoal = getInitialGoalForm(
+    parentID ? undefined : (editItem as Goal),
+    parentID
+  )
 
   const defaultInputOrder = (Object.keys(defaultGoal) as InputType[]).filter(
     key => !!defaultGoal[key]

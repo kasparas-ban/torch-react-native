@@ -20,7 +20,7 @@ type CardProps = {
 
 export default function EditCard({ setCard }: CardProps) {
   const { styles } = useThemeStyles(componentStyles)
-  const { editItem } = useEditItem()
+  const { editItem, setEditItem } = useEditItem()
 
   const handleEdit = () => {
     if (editItem?.type === "TASK") {
@@ -31,6 +31,26 @@ export default function EditCard({ setCard }: CardProps) {
     }
     if (editItem?.type === "DREAM") {
       router.replace("/(modals)/(items)/add-dream")
+    }
+  }
+
+  const handleAddSubitem = () => {
+    const parentID = editItem?.itemID
+    if (!parentID) return
+
+    setEditItem(undefined)
+
+    if (editItem?.type === "GOAL") {
+      router.replace({
+        pathname: "/(modals)/(items)/add-task",
+        params: { parentID },
+      })
+    }
+    if (editItem?.type === "DREAM") {
+      router.replace({
+        pathname: "/(modals)/(items)/add-goal",
+        params: { parentID },
+      })
     }
   }
 
@@ -72,7 +92,7 @@ export default function EditCard({ setCard }: CardProps) {
 
         <View style={styles.separator} />
 
-        {editItem?.type === "GOAL" && (
+        {(editItem?.type === "GOAL" || editItem?.type === "DREAM") && (
           <AnimatedButton
             style={{
               alignItems: "center",
@@ -81,10 +101,12 @@ export default function EditCard({ setCard }: CardProps) {
               paddingVertical: 12,
             }}
             scale={0.98}
-            onPress={handleEdit}
+            onPress={handleAddSubitem}
           >
             <AddItemIcon color={Colors.gray[800]} style={styles.editIcon} />
-            <Text style={styles.editlabel}>Add task</Text>
+            <Text style={styles.editlabel}>
+              {editItem?.type === "GOAL" ? "Add task" : "Add goal"}
+            </Text>
             <ArrowIcon color={Colors.gray[800]} style={styles.arrowIcon} />
           </AnimatedButton>
         )}

@@ -5,12 +5,13 @@ import { groupItemsByParent } from "@/api-endpoints/utils/helpers"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useLocalSearchParams } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
 import { StyleSheet, Text, View } from "react-native"
 import Animated, { LinearTransition } from "react-native-reanimated"
 import { z } from "zod"
 import { SelectOption } from "@/types/generalTypes"
-import { Goal, Task } from "@/types/itemTypes"
+import { Task } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import useKeyboard from "@/utils/useKeyboard"
 import { pruneObject } from "@/utils/utils"
@@ -39,15 +40,15 @@ const inputNames = [
 
 const getInitialTaskForm = (
   initialTask?: Task,
-  parentItem?: Goal
+  parentID?: string
 ): TaskFormType => ({
   title: initialTask?.title || "",
   duration: initialTask?.duration || 30 * 60,
   priority: initialTask?.priority,
   targetDate: initialTask?.targetDate,
   recurring: initialTask?.recurring,
-  goal: parentItem
-    ? parentItem.itemID
+  goal: parentID
+    ? parentID
     : initialTask?.goal
       ? initialTask.goal.itemID
       : undefined,
@@ -59,15 +60,15 @@ export default function AddTaskModal() {
 
   const { goals } = useItemsList()
   const { editItem } = useEditItem()
-  // const { closeModal, parentItem } = useItemModal()
-  const parentItem = undefined
 
   const { mutateAsync, reset, isPending, isError, isSuccess } =
     useUpsertItem("TASK")
 
+  const params = useLocalSearchParams()
+  const parentID = params.parentID as string
   const defaultTask = getInitialTaskForm(
-    parentItem ? undefined : (editItem as Task),
-    parentItem as Goal | undefined
+    parentID ? undefined : (editItem as Task),
+    parentID
   )
 
   const defaultInputOrder = Object.keys(defaultTask).filter(
@@ -85,7 +86,7 @@ export default function AddTaskModal() {
     const { goal, ...rest } = data
     const newTask = {
       ...pruneObject(rest),
-      ...(editItem && !parentItem ? { itemID: editItem.itemID } : {}),
+      ...(editItem && !parentID ? { itemID: editItem.itemID } : {}),
       ...(goal ? { parentID: goal } : {}),
     }
 
