@@ -4,8 +4,9 @@ import { findItemByID } from "@/api-endpoints/utils/helpers"
 import RotateIcon from "@/assets/icons/rotate.svg"
 import Colors from "@/constants/Colors"
 import { router } from "expo-router"
-import { GestureResponderEvent, View } from "react-native"
+import { GestureResponderEvent, useColorScheme, View } from "react-native"
 import Animated, {
+  interpolate,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -131,32 +132,25 @@ function BulletPoint({
   showSublist: boolean
   subitems: GeneralItem[]
 }) {
-  const { editItem } = useEditItem()
-  const currentItem = subitems[idx]
-  const isRecurring = (currentItem as Task).recurring
+  const colorScheme = useColorScheme()
+  const isDark = colorScheme === "dark"
 
-  const editItemActive =
-    editItem?.type === currentItem.type &&
-    editItem?.itemID === currentItem.itemID
+  const isRecurring = (subitems[idx] as Task).recurring
 
-  const bulletColor = editItem
-    ? editItemActive && isRecurring
-      ? Colors.amber[200]
-      : Colors.gray[300]
-    : isRecurring
-      ? Colors.amber[200]
-      : Colors.gray[300]
+  const bulletColor =
+    isRecurring && !isDark ? Colors.amber[200] : Colors.gray[isDark ? 400 : 300]
 
-  const animWidth = useSharedValue(0)
-  const animOpacity = useSharedValue(0)
+  const animVal = useSharedValue(0)
 
   const animatedStyle = useAnimatedStyle(() => {
-    return { width: animWidth.value, opacity: animOpacity.value }
+    return {
+      width: interpolate(animVal.value, [0, 1], [0, 14 + 12]),
+      opacity: animVal.value,
+    }
   })
 
   useEffect(() => {
-    animWidth.value = showSublist ? 14 + 12 : 0
-    animOpacity.value = showSublist ? 1 : 0
+    animVal.value = showSublist ? 1 : 0
   }, [showSublist])
 
   return (
@@ -178,7 +172,7 @@ function BulletPoint({
           }}
         >
           <RotateIcon
-            color={Colors.gray[500]}
+            color={isDark ? "white" : Colors.gray[500]}
             style={{ width: 20, height: 20 }}
           />
         </View>
@@ -189,7 +183,7 @@ function BulletPoint({
           style={{
             position: "absolute",
             height: "50%",
-            backgroundColor: Colors.gray[300],
+            backgroundColor: Colors.gray[isDark ? 400 : 300],
             width: 4,
             left: 6,
             top: -STRIP_HEIGHT / 4,
@@ -202,7 +196,7 @@ function BulletPoint({
           style={{
             position: "absolute",
             height: "75%",
-            backgroundColor: Colors.gray[300],
+            backgroundColor: Colors.gray[isDark ? 400 : 300],
             width: 4,
             left: 6,
             transform: [{ translateY: 0.75 * 0.5 * STRIP_HEIGHT - 6 }],

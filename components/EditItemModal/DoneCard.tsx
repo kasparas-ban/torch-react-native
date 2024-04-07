@@ -27,7 +27,7 @@ const selectOptions = {
 }
 
 export default function DoneCard() {
-  const { styles } = useThemeStyles(componentStyles)
+  const { styles, isDark } = useThemeStyles(componentStyles)
 
   // const { toast } = useToast()
   const { editItem, setEditItem } = useEditItem()
@@ -64,15 +64,7 @@ export default function DoneCard() {
     <Animated.View
       entering={FadeIn(0.9)}
       exiting={FadeOut(0.9)}
-      style={{
-        alignItems: "center",
-        maxWidth: 340,
-        width: "100%",
-        backgroundColor: "white",
-        paddingVertical: 12,
-        paddingHorizontal: 30,
-        borderRadius: 14,
-      }}
+      style={styles.card}
     >
       <Text style={styles.title}>{`Mark ${
         editItem?.type.toLowerCase() ?? ""
@@ -81,7 +73,7 @@ export default function DoneCard() {
       {itemType && (
         <View style={styles.section}>
           <InfoIcon
-            color={Colors.amber[400]}
+            color={isDark ? Colors.amber[500] : Colors.amber[400]}
             style={{ width: 28, height: 28 }}
           />
           <Text style={styles.sectionText}>{selectOptions[itemType].info}</Text>
@@ -97,9 +89,22 @@ export default function DoneCard() {
 
 const componentStyles = ({ isDark }: ThemeStylesProps) =>
   StyleSheet.create({
+    card: {
+      alignItems: "center",
+      maxWidth: 340,
+      width: "100%",
+      backgroundColor: isDark ? Colors.gray[600] : "white",
+      paddingVertical: 12,
+      paddingHorizontal: 30,
+      borderRadius: 14,
+      ...(isDark && {
+        borderWidth: 1,
+        borderColor: Colors.gray[500],
+      }),
+    },
     title: {
       fontFamily: "GabaritoSemibold",
-      color: Colors.gray[700],
+      color: isDark ? Colors.gray[100] : Colors.gray[700],
       fontSize: 20,
       textAlign: "center",
       marginBottom: 12,
@@ -122,7 +127,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       width: 100,
       paddingVertical: 8,
       alignItems: "center",
-      backgroundColor: Colors.gray[700],
+      backgroundColor: isDark ? Colors.rose[500] : Colors.gray[700],
       marginTop: 12,
     },
     confirmLabel: {

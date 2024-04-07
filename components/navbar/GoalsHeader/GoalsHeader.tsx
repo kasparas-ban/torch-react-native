@@ -103,13 +103,17 @@ export default function GoalsHeader() {
                   borderRadius: 100,
                 },
                 isFiltersOpen && {
-                  backgroundColor: Colors.rose[300],
+                  backgroundColor: isDark ? Colors.rose[400] : Colors.rose[300],
                 },
               ]}
               onPress={() => setIsFiltersOpen(!isFiltersOpen)}
             >
               <FilterIcon
-                color={isDark ? Colors.gray[300] : Colors.gray[600]}
+                color={
+                  isDark
+                    ? Colors.gray[isFiltersOpen ? 50 : 300]
+                    : Colors.gray[600]
+                }
                 strokeWidth={2}
                 style={{ width: 24, height: 24 }}
               />

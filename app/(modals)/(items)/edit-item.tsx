@@ -19,8 +19,9 @@ const CARD_COMPONENTS = {
 }
 
 export default function EditItemModal() {
+  const { styles, isDark } = useThemeStyles(componentStyles)
+
   const { setEditItem } = useEditItem()
-  const { styles } = useThemeStyles(componentStyles)
   const [selectedCard, setSelectedCard] = useState<
     keyof typeof CARD_COMPONENTS | undefined
   >()
@@ -42,7 +43,7 @@ export default function EditItemModal() {
             onPress={() => setSelectedCard(undefined)}
           >
             <BackIcon
-              color={Colors.gray[700]}
+              color={isDark ? "white" : Colors.gray[700]}
               style={{ width: 30, height: 30 }}
             />
           </AnimatedButton>
@@ -56,7 +57,7 @@ export default function EditItemModal() {
           }}
         >
           <CloseIcon
-            color={Colors.gray[700]}
+            color={isDark ? "white" : Colors.gray[700]}
             style={{ width: 30, height: 30 }}
           />
         </AnimatedButton>
@@ -75,8 +76,12 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       gap: 16,
     },
     navBtn: {
-      backgroundColor: "white",
+      backgroundColor: isDark ? Colors.gray[500] : "white",
       borderRadius: 100,
       padding: 8,
+      ...(isDark && {
+        borderWidth: 1,
+        borderColor: Colors.gray[400],
+      }),
     },
   })

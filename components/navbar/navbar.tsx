@@ -130,7 +130,7 @@ export function BottomTabBarWrapper({ children }: { children: ReactNode }) {
           display: "flex",
           flexDirection: "row",
           backgroundColor: isDark
-            ? "rgba(80, 80, 80, 0.5)"
+            ? "rgba(110, 110, 110, 0.5)"
             : "rgba(156, 163, 175, 0.3)",
           marginHorizontal: 20,
           borderRadius: 16,

@@ -177,6 +177,6 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       marginBottom: 8,
       marginLeft: 12,
       fontWeight: "600",
-      color: isDark ? Colors.gray[500] : Colors.gray[500],
+      color: isDark ? Colors.gray[300] : Colors.gray[500],
     },
   })

@@ -3,6 +3,7 @@ import Colors from "@/constants/Colors"
 import { StyleSheet, Text, View } from "react-native"
 import Animated from "react-native-reanimated"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
+import { rgbToRGBA } from "@/utils/utils"
 import useItemListConfig from "@/components/ItemList/hooks/useItemListConfig"
 import ToggleButton from "@/components/UI/ToggleButton"
 
@@ -35,11 +36,7 @@ export function ListFilterSection({ showFilters }: { showFilters: boolean }) {
           entering={FadeIn(0.9)}
           exiting={FadeOut(0.9)}
         >
-          <Text
-            style={{ color: Colors.gray[400], fontSize: 14, fontWeight: "700" }}
-          >
-            Filters:
-          </Text>
+          <Text style={styles.sectionTitle}>Filters:</Text>
           <View style={{ flexDirection: "row", gap: 8 }}>
             <ToggleButton
               scale={0.98}
@@ -86,18 +83,23 @@ export function ListFilterSection({ showFilters }: { showFilters: boolean }) {
 
 const componentStyles = ({ isDark }: ThemeStylesProps) =>
   StyleSheet.create({
+    sectionTitle: {
+      color: isDark ? rgbToRGBA(Colors.slate[200], 0.8) : Colors.gray[400],
+      fontSize: 14,
+      fontWeight: "700",
+    },
     filterOption: {
       borderRadius: 10,
       paddingVertical: 4,
       paddingHorizontal: 12,
-      backgroundColor: Colors.gray[200],
+      backgroundColor: isDark ? Colors.gray[600] : Colors.gray[200],
     },
     selectedOption: {
       backgroundColor: Colors.rose[400],
     },
     optionLabel: {
       fontWeight: "500",
-      color: Colors.gray[500],
+      color: isDark ? Colors.gray[200] : Colors.gray[500],
     },
     selectedOptionLabel: {
       color: "white",

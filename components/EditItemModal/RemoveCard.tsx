@@ -88,7 +88,7 @@ type ActionType = "archive" | "delete"
 type SelectionType = "one" | "all"
 
 export default function RemoveCard() {
-  const { styles } = useThemeStyles(componentStyles)
+  const { styles, isDark } = useThemeStyles(componentStyles)
   const { editItem, setEditItem } = useEditItem()
 
   const [action, setAction] = useState<ActionType>(
@@ -161,15 +161,7 @@ export default function RemoveCard() {
     <Animated.View
       entering={FadeIn(0.9)}
       exiting={FadeOut(0.9)}
-      style={{
-        alignItems: "center",
-        maxWidth: 340,
-        width: "auto",
-        backgroundColor: "white",
-        paddingVertical: 12,
-        paddingHorizontal: 16,
-        borderRadius: 14,
-      }}
+      style={styles.card}
     >
       <Text style={styles.title}>{`Remove ${
         editItem?.type.toLowerCase() ?? ""
@@ -178,7 +170,7 @@ export default function RemoveCard() {
       <View
         style={{
           flexDirection: "row",
-          backgroundColor: Colors.slate[200],
+          backgroundColor: isDark ? Colors.slate[500] : Colors.slate[200],
           borderRadius: 8,
           padding: 4,
           marginBottom: 8,
@@ -204,7 +196,7 @@ export default function RemoveCard() {
             <Text
               style={[
                 {
-                  color: Colors.slate[400],
+                  color: isDark ? Colors.gray[300] : Colors.gray[500],
                   fontSize: 16,
                   fontWeight: "700",
                 },
@@ -214,11 +206,14 @@ export default function RemoveCard() {
               Archive
             </Text>
             <Text
-              style={{
-                color: Colors.gray[500],
-                fontSize: 12,
-                fontWeight: "500",
-              }}
+              style={[
+                {
+                  color: isDark ? Colors.gray[100] : Colors.gray[500],
+                  fontSize: 12,
+                  fontWeight: "500",
+                },
+                action === "archive" && isDark && { color: Colors.slate[500] },
+              ]}
             >
               Locks & hides the {itemType?.toLowerCase()}
             </Text>
@@ -243,7 +238,7 @@ export default function RemoveCard() {
           <Text
             style={[
               {
-                color: Colors.slate[400],
+                color: isDark ? Colors.gray[300] : Colors.gray[500],
                 fontSize: 16,
                 fontWeight: "700",
               },
@@ -253,11 +248,14 @@ export default function RemoveCard() {
             Delete
           </Text>
           <Text
-            style={{
-              color: Colors.gray[500],
-              fontSize: 12,
-              fontWeight: "500",
-            }}
+            style={[
+              {
+                color: isDark ? Colors.gray[100] : Colors.gray[500],
+                fontSize: 12,
+                fontWeight: "500",
+              },
+              action === "delete" && isDark && { color: Colors.slate[500] },
+            ]}
           >
             Deletes all info
           </Text>
@@ -268,7 +266,7 @@ export default function RemoveCard() {
         <View
           style={{
             flexDirection: "row",
-            backgroundColor: Colors.slate[200],
+            backgroundColor: isDark ? Colors.slate[500] : Colors.slate[200],
             borderRadius: 8,
             alignSelf: "stretch",
             padding: 4,
@@ -293,7 +291,7 @@ export default function RemoveCard() {
             <Text
               style={[
                 {
-                  color: Colors.slate[400],
+                  color: isDark ? Colors.gray[300] : Colors.gray[500],
                   fontSize: 16,
                   fontWeight: "700",
                 },
@@ -303,11 +301,14 @@ export default function RemoveCard() {
               {selectOptions[itemType].oneSelection.title}
             </Text>
             <Text
-              style={{
-                color: Colors.gray[500],
-                fontSize: 12,
-                fontWeight: "500",
-              }}
+              style={[
+                {
+                  color: isDark ? Colors.gray[100] : Colors.gray[500],
+                  fontSize: 12,
+                  fontWeight: "500",
+                },
+                selItems === "one" && isDark && { color: Colors.slate[500] },
+              ]}
             >
               {selectOptions[itemType].oneSelection.description[action]}
             </Text>
@@ -330,7 +331,7 @@ export default function RemoveCard() {
             <Text
               style={[
                 {
-                  color: Colors.slate[400],
+                  color: isDark ? Colors.gray[300] : Colors.gray[500],
                   fontSize: 16,
                   fontWeight: "700",
                 },
@@ -340,11 +341,14 @@ export default function RemoveCard() {
               {selectOptions[itemType].allSelection.title}
             </Text>
             <Text
-              style={{
-                color: Colors.gray[500],
-                fontSize: 12,
-                fontWeight: "500",
-              }}
+              style={[
+                {
+                  color: isDark ? Colors.gray[100] : Colors.gray[500],
+                  fontSize: 12,
+                  fontWeight: "500",
+                },
+                selItems === "all" && isDark && { color: Colors.slate[500] },
+              ]}
             >
               {selectOptions[itemType].allSelection.description[action]}
             </Text>
@@ -355,7 +359,7 @@ export default function RemoveCard() {
       <View style={styles.section}>
         <View style={{ width: 30 }}>
           <InfoIcon
-            color={Colors.amber[400]}
+            color={isDark ? Colors.amber[500] : Colors.amber[400]}
             style={{ width: 28, height: 28 }}
           />
         </View>
@@ -375,9 +379,22 @@ export default function RemoveCard() {
 
 const componentStyles = ({ isDark }: ThemeStylesProps) =>
   StyleSheet.create({
+    card: {
+      alignItems: "center",
+      maxWidth: 340,
+      width: "auto",
+      backgroundColor: isDark ? Colors.gray[600] : "white",
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      borderRadius: 14,
+      ...(isDark && {
+        borderWidth: 1,
+        borderColor: Colors.gray[500],
+      }),
+    },
     title: {
       fontFamily: "GabaritoSemibold",
-      color: Colors.gray[700],
+      color: isDark ? Colors.gray[100] : Colors.gray[700],
       fontSize: 20,
       textAlign: "center",
       marginBottom: 12,
@@ -401,17 +418,17 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       flexShrink: 1,
     },
     activeSelection: {
-      backgroundColor: "white",
+      backgroundColor: isDark ? Colors.gray[200] : "white",
     },
     activeSelectionText: {
-      color: Colors.gray[800],
+      color: isDark ? Colors.gray[600] : Colors.gray[800],
     },
     confirmBtn: {
       borderRadius: 8,
       width: 100,
       paddingVertical: 8,
       alignItems: "center",
-      backgroundColor: Colors.gray[700],
+      backgroundColor: isDark ? Colors.rose[500] : Colors.gray[700],
       marginTop: 12,
     },
     confirmLabel: {

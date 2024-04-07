@@ -13,7 +13,7 @@ import useEditItem from "../itemModal/hooks/useEditItem"
 import useTimerForm from "../Timer/hooks/useTimerForm"
 
 export default function EditItemFunction() {
-  const { styles } = useThemeStyles(componentStyles)
+  const { styles, isDark } = useThemeStyles(componentStyles)
   const { editItem } = useEditItem()
 
   const isRecurring = !!editItem?.recurring
@@ -77,7 +77,7 @@ export default function EditItemFunction() {
           <View style={{ flexDirection: "row" }}>
             <Text
               style={{
-                color: Colors.gray[500],
+                color: isDark ? Colors.gray[300] : Colors.gray[500],
                 marginRight: 4,
                 marginLeft: "auto",
               }}
@@ -110,11 +110,13 @@ export default function EditItemFunction() {
             >
               {!isRecurring && (
                 <TimerIcon
-                  color={Colors.gray[500]}
+                  color={isDark ? Colors.gray[300] : Colors.gray[500]}
                   style={{ width: 16, height: 16 }}
                 />
               )}
-              <Text style={{ color: Colors.gray[500] }}>
+              <Text
+                style={{ color: isDark ? Colors.gray[300] : Colors.gray[500] }}
+              >
                 {isRecurring
                   ? editItem.recurring?.progress
                   : formatTimeSpent(
@@ -204,16 +206,20 @@ export default function EditItemFunction() {
 const componentStyles = ({ isDark }: ThemeStylesProps) =>
   StyleSheet.create({
     background: {
-      backgroundColor: "white",
+      backgroundColor: isDark ? Colors.gray[600] : "white",
       width: "auto",
       borderRadius: 12,
       paddingHorizontal: 20,
       paddingVertical: 10,
       minWidth: 280,
+      ...(isDark && {
+        borderWidth: 1,
+        borderColor: Colors.gray[500],
+      }),
     },
     itemTitle: {
       fontWeight: "700",
-      color: Colors.gray[600],
+      color: isDark ? Colors.gray[100] : Colors.gray[600],
       fontSize: 18,
       textAlign: "center",
     },

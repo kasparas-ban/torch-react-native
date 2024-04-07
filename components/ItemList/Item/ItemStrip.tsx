@@ -38,7 +38,7 @@ function ItemStrip<T extends GeneralItem>({
   const isActive = item.status === "ACTIVE"
 
   const stripBgColor = getStripBgColor(item.status, false)
-  const stripPercentageColor = getStripPercentageColor(item.status)
+  const stripPercentageColor = getStripPercentageColor(item.status, false)
 
   const stripWidth = isSublistItem ? fullStripWidth - (14 + 12) : fullStripWidth
   const width = useSharedValue(100)
