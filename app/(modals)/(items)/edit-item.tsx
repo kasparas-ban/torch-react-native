@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import BackIcon from "@/assets/icons/arrowRight.svg"
 import CloseIcon from "@/assets/icons/close.svg"
 import Colors from "@/constants/Colors"
@@ -25,10 +25,6 @@ export default function EditItemModal() {
     keyof typeof CARD_COMPONENTS | undefined
   >()
 
-  useEffect(() => {
-    return () => setEditItem(undefined)
-  }, [])
-
   const CardComponent = !!selectedCard && CARD_COMPONENTS[selectedCard]
 
   return (
@@ -54,7 +50,10 @@ export default function EditItemModal() {
         <AnimatedButton
           style={styles.navBtn}
           scale={0.96}
-          onPress={() => router.back()}
+          onPress={() => {
+            setEditItem(undefined)
+            router.back()
+          }}
         >
           <CloseIcon
             color={Colors.gray[700]}

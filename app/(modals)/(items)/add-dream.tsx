@@ -99,7 +99,9 @@ export default function AddDreamModal() {
             marginBottom: 20,
           }}
         >
-          <Text style={styles.title}>New Dream</Text>
+          <Text style={styles.title}>
+            {editItem ? "Edit Dream" : "New Dream"}
+          </Text>
         </View>
 
         <View style={{ width: "100%", gap: 8 }}>

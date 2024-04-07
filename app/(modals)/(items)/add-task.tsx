@@ -28,115 +28,6 @@ import RecurringInput from "@/components/UI/RecuringInput"
 import Select from "@/components/UI/Select"
 import TextInput from "@/components/UI/TextInput"
 
-const GOALS_MOCK = [
-  {
-    label: "Other",
-    options: [
-      {
-        label: "Make a todo/timer app",
-        value: "4bax1usfu2uk",
-      },
-      {
-        label: "Learn chess",
-        value: "5bax1usfu2uk",
-      },
-      {
-        label: 'Read "Demons" by Dostoevsky',
-        value: "13ax1usfu2uk",
-      },
-      {
-        label: 'Read "The Shape of Space"',
-        value: "14ax1usfu2uk",
-      },
-    ],
-  },
-  {
-    label: "Learn Spanish",
-    options: [
-      {
-        label: "Learn Spanish vocabulary",
-        value: "6bax1usfu2uk",
-      },
-      {
-        label: "Learn Spanish grammar",
-        value: "7bax1usfu2uk",
-      },
-      {
-        label: "Spanish language comprehension",
-        value: "8bax1usfu2uk",
-      },
-      {
-        label: "Spanish writing",
-        value: "9bax1usfu2uk",
-      },
-    ],
-  },
-  {
-    label: "Learn Spanish111",
-    options: [
-      {
-        label: "Learn Spanish vocabulary",
-        value: "6bax1usfu2u1",
-      },
-      {
-        label: "Learn Spanish grammar",
-        value: "7bax1usfu2u1",
-      },
-      {
-        label: "Spanish language comprehension",
-        value: "8bax1usfu2u1",
-      },
-      {
-        label: "Spanish writing",
-        value: "9bax1usfu2u1",
-      },
-    ],
-  },
-  {
-    label: "Learn Spanish222",
-    options: [
-      {
-        label: "Learn Spanish vocabulary",
-        value: "6bax1usfu2u2",
-      },
-      {
-        label: "Learn Spanish grammar",
-        value: "7bax1usfu2u2",
-      },
-      {
-        label: "Spanish language comprehension",
-        value: "8bax1usfu2u2",
-      },
-      {
-        label: "Spanish writing",
-        value: "9bax1usfu2u2",
-      },
-    ],
-  },
-  {
-    label: "Get fit",
-    options: [
-      {
-        label: "Build muscle",
-        value: "10ax1usfu2uk",
-      },
-    ],
-  },
-  {
-    label: "Get good at math",
-    options: [
-      {
-        label: "Learn Linear Algebra",
-        value: "11ax1usfu2uk",
-      },
-      {
-        label: "Learn Calculus",
-        value: "12ax1usfu2uk",
-      },
-    ],
-  },
-]
-
 type InputType = keyof z.infer<typeof taskFormSchema>
 
 const inputNames = [
@@ -156,9 +47,9 @@ const getInitialTaskForm = (
   targetDate: initialTask?.targetDate,
   recurring: initialTask?.recurring,
   goal: parentItem
-    ? { label: parentItem.title, value: parentItem.itemID }
+    ? parentItem.itemID
     : initialTask?.goal
-      ? { label: initialTask.goal.title, value: initialTask.goal.itemID }
+      ? initialTask.goal.itemID
       : undefined,
 })
 
@@ -195,7 +86,7 @@ export default function AddTaskModal() {
     const newTask = {
       ...pruneObject(rest),
       ...(editItem && !parentItem ? { itemID: editItem.itemID } : {}),
-      ...(goal ? { parentID: goal.value } : {}),
+      ...(goal ? { parentID: goal } : {}),
     }
 
     console.log("New Task", newTask)
@@ -230,7 +121,9 @@ export default function AddTaskModal() {
             marginBottom: 20,
           }}
         >
-          <Text style={styles.title}>New Task</Text>
+          <Text style={styles.title}>
+            {editItem ? "Edit Task" : "New Task"}
+          </Text>
         </View>
 
         <View style={{ width: "100%", gap: 8 }}>
@@ -281,6 +174,8 @@ export default function AddTaskModal() {
 
           {inputOrder.map(input => {
             if (input === "goal") {
+              // TODO: Fix the next line
+              // @ts-ignore:next-line
               const groupedGoals = groupItemsByParent(goals || [], "GOAL")
               const goalOptions = Object.keys(groupedGoals).map(dreamId => ({
                 label: groupedGoals[dreamId].parentLabel || "Other",

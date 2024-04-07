@@ -4,8 +4,11 @@ import DeleteIcon from "@/assets/icons/delete.svg"
 import EditIcon from "@/assets/icons/edit.svg"
 import StatsIcon from "@/assets/icons/stats.svg"
 import TickIcon from "@/assets/icons/tick.svg"
+import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
+import { router } from "expo-router"
 import { StyleSheet, Text, View } from "react-native"
+import Animated from "react-native-reanimated"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { AnimatedButton } from "@/components/AnimatedButton"
 
@@ -19,10 +22,22 @@ export default function EditCard({ setCard }: CardProps) {
   const { styles } = useThemeStyles(componentStyles)
   const { editItem } = useEditItem()
 
-  const showAddTask = editItem?.type === "GOAL"
+  const handleEdit = () => {
+    if (editItem?.type === "TASK") {
+      router.replace("/(modals)/(items)/add-task")
+    }
+    if (editItem?.type === "GOAL") {
+      router.replace("/(modals)/(items)/add-goal")
+    }
+    if (editItem?.type === "DREAM") {
+      router.replace("/(modals)/(items)/add-dream")
+    }
+  }
 
   return (
-    <View
+    <Animated.View
+      entering={FadeIn(0.9)}
+      exiting={FadeOut(0.9)}
       style={{
         alignItems: "center",
         maxWidth: 240,
@@ -57,7 +72,7 @@ export default function EditCard({ setCard }: CardProps) {
 
         <View style={styles.separator} />
 
-        {showAddTask && (
+        {editItem?.type === "GOAL" && (
           <AnimatedButton
             style={{
               alignItems: "center",
@@ -66,6 +81,7 @@ export default function EditCard({ setCard }: CardProps) {
               paddingVertical: 12,
             }}
             scale={0.98}
+            onPress={handleEdit}
           >
             <AddItemIcon color={Colors.gray[800]} style={styles.editIcon} />
             <Text style={styles.editlabel}>Add task</Text>
@@ -101,6 +117,7 @@ export default function EditCard({ setCard }: CardProps) {
             paddingVertical: 12,
           }}
           scale={0.98}
+          onPress={handleEdit}
         >
           <EditIcon color={Colors.gray[800]} style={styles.editIcon} />
           <Text style={styles.editlabel}>Edit</Text>
@@ -124,7 +141,7 @@ export default function EditCard({ setCard }: CardProps) {
           <ArrowIcon color={Colors.gray[800]} style={styles.arrowIcon} />
         </AnimatedButton>
       </View>
-    </View>
+    </Animated.View>
   )
 }
 

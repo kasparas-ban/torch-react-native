@@ -39,9 +39,7 @@ const getInitialGoalForm = (initialGoal: Goal): GoalFormType => ({
   targetDate: initialGoal?.targetDate,
   tasks:
     initialGoal?.tasks?.map(task => ({ ...task, itemID: task.itemID })) || [],
-  dream: initialGoal?.dream
-    ? { label: initialGoal.dream.title, value: initialGoal.dream.itemID }
-    : undefined,
+  dream: initialGoal?.dream ? initialGoal.dream.itemID : undefined,
 })
 
 export default function AddGoalModal() {
@@ -72,7 +70,7 @@ export default function AddGoalModal() {
     const newGoal = {
       ...pruneObject(rest),
       ...(editItem ? { itemID: editItem.itemID } : {}),
-      ...(dream ? { parentID: dream.value } : {}),
+      ...(dream ? { parentID: dream } : {}),
       type: "GOAL" as const,
     }
 
@@ -108,7 +106,9 @@ export default function AddGoalModal() {
             marginBottom: 20,
           }}
         >
-          <Text style={styles.title}>New Goal</Text>
+          <Text style={styles.title}>
+            {editItem ? "Edit Goal" : "New Goal"}
+          </Text>
         </View>
 
         <View style={{ width: "100%", gap: 8 }}>
