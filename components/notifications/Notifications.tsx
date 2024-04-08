@@ -24,6 +24,7 @@ const SingleLineComponent =
       </SafeAreaView>
     )
   }
+
 const MultiLineComponent =
   (type: NotificationType) =>
   ({ title, description }: { title: ReactNode; description: ReactNode }) => {
@@ -31,7 +32,7 @@ const MultiLineComponent =
       <SafeAreaView style={{ backgroundColor: getBackgroundColor(type) }}>
         <View style={styles.container}>
           <NotificationIcon type={type} />
-          <View>
+          <View style={{ marginRight: 40 }}>
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.description}>{description}</Text>
           </View>
@@ -61,6 +62,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     paddingTop: 40,
+    paddingRight: 40,
     flexDirection: "row",
     gap: 12,
     alignItems: "center",

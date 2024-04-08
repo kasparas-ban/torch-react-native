@@ -138,7 +138,7 @@ function BulletPoint({
   const isRecurring = (subitems[idx] as Task).recurring
 
   const bulletColor =
-    isRecurring && !isDark ? Colors.amber[200] : Colors.gray[isDark ? 400 : 300]
+    isRecurring && !isDark ? Colors.amber[200] : Colors.gray[300]
 
   const animVal = useSharedValue(0)
 
@@ -183,7 +183,7 @@ function BulletPoint({
           style={{
             position: "absolute",
             height: "50%",
-            backgroundColor: Colors.gray[isDark ? 400 : 300],
+            backgroundColor: Colors.gray[300],
             width: 4,
             left: 6,
             top: -STRIP_HEIGHT / 4,
@@ -196,7 +196,7 @@ function BulletPoint({
           style={{
             position: "absolute",
             height: "75%",
-            backgroundColor: Colors.gray[isDark ? 400 : 300],
+            backgroundColor: Colors.gray[300],
             width: 4,
             left: 6,
             transform: [{ translateY: 0.75 * 0.5 * STRIP_HEIGHT - 6 }],

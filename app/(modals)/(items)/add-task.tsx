@@ -5,7 +5,7 @@ import { groupItemsByParent } from "@/api-endpoints/utils/helpers"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useLocalSearchParams } from "expo-router"
+import { router, useLocalSearchParams } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
 import { StyleSheet, Text, View } from "react-native"
 import Animated, { LinearTransition } from "react-native-reanimated"
@@ -21,6 +21,7 @@ import {
   taskFormSchema,
   TaskFormType,
 } from "@/components/itemModal/itemForms/schemas"
+import { notify } from "@/components/notifications/Notifications"
 import Button from "@/components/UI/Button"
 import DateInput from "@/components/UI/DateInput"
 import DurationInput from "@/components/UI/DurationInput"
@@ -90,26 +91,24 @@ export default function AddTaskModal() {
       ...(goal ? { parentID: goal } : {}),
     }
 
-    console.log("New Task", newTask)
-
-    // mutateAsync(newTask)
-    //   .then(() => {
-    //     setTimeout(() => {
-    //       router.replace("/(tabs)/goals")
-    //     }, 2000)
-    //   })
-    //   .catch(() => {
-    //     setTimeout(
-    //       () =>
-    //         toast({
-    //           title: "Failed to save",
-    //           description:
-    //             "Your task has not been saved. Please try adding it again later.",
-    //         }),
-    //       100
-    //     )
-    //     setTimeout(() => reset(), 2500)
-    //   })
+    mutateAsync(newTask)
+      .then(() => {
+        router.replace("/(tabs)/goals")
+        notify({
+          title: editItem
+            ? "Task updated successfully"
+            : "Task created successfully",
+        })
+      })
+      .catch(() => {
+        notify({
+          title: "Failed to save",
+          description:
+            "Your task has not been saved. Please try adding it again later.",
+          type: "ERROR",
+        })
+        setTimeout(() => reset(), 2500)
+      })
   }
 
   return (
