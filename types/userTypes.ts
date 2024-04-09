@@ -6,7 +6,9 @@ export type ProfileResp = {
   gender: GenderType | null
   createdAt: string
   countryCode: string
+  city: string
   focusTime: number
+  description: string
 }
 
 type GenderType = "MALE" | "FEMALE" | "OTHER"
@@ -23,9 +25,11 @@ export type AddUserReq = {
 
 export type UpdateProfileReq = {
   username: string
-  birthday?: string
-  gender?: string
-  countryCode?: string
+  birthday: string | null
+  gender: string | null
+  countryCode: string | null
+  city: string | null
+  description: string | null
 }
 
 export type UpdateUserTime = {

@@ -1,9 +1,13 @@
+import { useMemo } from "react"
+import useUserInfo from "@/api-endpoints/hooks/user/useUser"
 import Colors from "@/constants/Colors"
 import { useAuth, useUser } from "@clerk/clerk-expo"
+import dayjs from "dayjs"
 import { Image, ImageStyle } from "expo-image"
 import { useRouter } from "expo-router"
 import { StyleSheet, Text, View } from "react-native"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
+import { capitalize, getCountry } from "@/utils/utils"
 import { AnimatedButton } from "@/components/AnimatedButton"
 import { notify } from "@/components/notifications/Notifications"
 
@@ -19,6 +23,8 @@ export default function AccountScreen() {
   const { signOut, sessionId } = useAuth()
   const { styles } = useThemeStyles(componentStyles)
 
+  const { data: userInfo } = useUserInfo()
+
   const handleLogout = () => {
     if (sessionId) {
       signOut({ sessionId }).then(() => {
@@ -27,6 +33,16 @@ export default function AccountScreen() {
       })
     }
   }
+
+  const handleEditProfile = () => {
+    router.push("/(modals)/edit-profile")
+  }
+
+  const country = useMemo(
+    () =>
+      userInfo?.countryCode ? getCountry(userInfo?.countryCode) : undefined,
+    [userInfo?.countryCode]
+  )
 
   return (
     <View style={styles.wrapper}>
@@ -40,7 +56,7 @@ export default function AccountScreen() {
         />
 
         <View>
-          <Text style={styles.username}>{user?.username}</Text>
+          <Text style={styles.username}>{userInfo?.username}</Text>
           <View style={styles.progress}>
             <Text style={styles.number}>32</Text>
             <Text style={[styles.numberLabel, { marginRight: 8 }]}>h</Text>
@@ -60,27 +76,39 @@ export default function AccountScreen() {
       <View style={{ gap: 12 }}>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.detailLabel}>Username</Text>
-          <Text style={styles.detailData}>kaspis245</Text>
+          <Text style={styles.detailData}>{userInfo?.username || "-"}</Text>
         </View>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.detailLabel}>Email</Text>
-          <Text style={styles.detailData}>kaspis245@gmail.com</Text>
+          <Text style={styles.detailData}>{userInfo?.email || "-"}</Text>
         </View>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.detailLabel}>Age</Text>
-          <Text style={styles.detailData}>27</Text>
+          <Text style={styles.detailData}>
+            {userInfo?.birthday ? dayjs().diff(userInfo.birthday, "year") : "-"}
+          </Text>
         </View>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.detailLabel}>Gender</Text>
-          <Text style={styles.detailData}>Male</Text>
+          <Text style={styles.detailData}>
+            {userInfo?.gender ? capitalize(userInfo.gender) : "-"}
+          </Text>
         </View>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.detailLabel}>Joined since</Text>
-          <Text style={styles.detailData}>March 11, 2024</Text>
+          <Text style={styles.detailData}>
+            {userInfo?.createdAt
+              ? dayjs(userInfo.createdAt).format("MMMM D, YYYY")
+              : "-"}
+          </Text>
         </View>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.detailLabel}>Location</Text>
-          <Text style={styles.detailData}>Vilnius, Lithuania 🇱🇹</Text>
+          <Text style={styles.detailData}>
+            {userInfo?.city ? userInfo?.city : ""}
+            {country ? `, ${country.name} ${country.flag}` : ""}
+            {!userInfo?.city && !country && "-"}
+          </Text>
         </View>
       </View>
 
@@ -109,7 +137,7 @@ export default function AccountScreen() {
 
         <View style={styles.separator} />
 
-        <AnimatedButton scale={0.99}>
+        <AnimatedButton scale={0.99} onPress={handleEditProfile}>
           <View
             style={{
               flexDirection: "row",

@@ -22,7 +22,7 @@ import ToggleGroup from "./ToggleGroup"
 
 export type SelectProps<T> = {
   value?: T
-  onChange: (val?: T) => void
+  onChange: (val: T | null) => void
   options: SelectOption<T>[] | GroupedOption<T>[]
   placeholder: string
   label?: string
@@ -103,7 +103,7 @@ export default function Select<T>(props: SelectProps<T>) {
       {!hideClose && selected && (
         <AnimatedButton
           style={styles.iconWrapper}
-          onPress={() => onChange(undefined)}
+          onPress={() => onChange(null)}
         >
           <CloseIcon
             color={isDark ? Colors.gray[400] : Colors.gray[600]}
@@ -158,7 +158,7 @@ export default function Select<T>(props: SelectProps<T>) {
                     <GroupedOptions
                       options={options}
                       selectedItem={selected}
-                      onSelectItem={val => onChange(val?.value)}
+                      onSelectItem={val => onChange(val?.value || null)}
                       isDark={isDark}
                     />
                   </ScrollView>

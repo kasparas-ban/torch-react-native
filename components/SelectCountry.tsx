@@ -20,8 +20,8 @@ import TextInput from "./UI/TextInput"
 import ToggleGroup from "./UI/ToggleGroup"
 
 export type SelectProps = {
-  value?: string
-  onChange: (val?: string) => void
+  value: string | null
+  onChange: (val: string | null) => void
   label?: string
   wrapperProps?: ViewProps
   labelProps?: TextProps
@@ -83,7 +83,7 @@ export default function SelectCountry(props: SelectProps) {
       {selected && (
         <AnimatedButton
           style={styles.iconWrapper}
-          onPress={() => onChange(undefined)}
+          onPress={() => onChange(null)}
         >
           <CloseIcon
             color={isDark ? Colors.gray[400] : Colors.gray[600]}

@@ -1,0 +1,334 @@
+import useUserInfo, { useUpdateUser } from "@/api-endpoints/hooks/user/useUser"
+import Colors from "@/constants/Colors"
+import { zodResolver } from "@hookform/resolvers/zod"
+import dayjs from "dayjs"
+import { LinearGradient } from "expo-linear-gradient"
+import { router } from "expo-router"
+import { Controller, useForm } from "react-hook-form"
+import { StyleSheet, View } from "react-native"
+import Animated from "react-native-reanimated"
+import { z } from "zod"
+import { UpdateProfileReq } from "@/types/userTypes"
+import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
+import useKeyboard from "@/utils/useKeyboard"
+import { formatDate } from "@/utils/utils"
+import { notify } from "@/components/notifications/Notifications"
+import {
+  AnimatedScrollView,
+  useScrollViewHeader,
+} from "@/components/ScrollViewHeader"
+import SelectCountry from "@/components/SelectCountry"
+import Button from "@/components/UI/Button"
+import DateInput from "@/components/UI/DateInput"
+import Select from "@/components/UI/Select"
+import TextInput from "@/components/UI/TextInput"
+
+const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient)
+
+const ProfileSchema = z.object({
+  username: z.string(),
+  birthday: z.string().nullable(),
+  gender: z.enum(["MALE", "FEMALE", "OTHER"]).nullable(),
+  country: z.string().nullable(),
+  city: z.string().nullable(),
+  description: z.string().nullable(),
+})
+
+type ProfileFormType = z.infer<typeof ProfileSchema>
+
+export default function EditProfileScreen() {
+  const isKeyboardOpen = useKeyboard()
+  const { styles, isDark } = useThemeStyles(componentStyles)
+
+  const {
+    mutateAsync: updateUser,
+    isPending,
+    isSuccess,
+    isError,
+  } = useUpdateUser()
+
+  const { data: userInfo } = useUserInfo()
+
+  const { scrollHandler, headerTitleStyle, headerGradientStyle } =
+    useScrollViewHeader()
+
+  const defaultValues = {
+    username: userInfo?.username,
+    birthday: userInfo?.birthday,
+    gender: userInfo?.gender,
+    country: userInfo?.countryCode,
+    city: userInfo?.city,
+    description: userInfo?.description,
+  }
+
+  const form = useForm<ProfileFormType>({
+    resolver: zodResolver(ProfileSchema),
+    shouldUnregister: true,
+    defaultValues,
+  })
+
+  const onSubmitPress = async (data: ProfileFormType) => {
+    const updatedProfile: UpdateProfileReq = {
+      username: data.username,
+      birthday: data.birthday ? formatDate(new Date(data.birthday)) : null,
+      gender: data.gender || null,
+      countryCode: data.country || null,
+      city: data.city || null,
+      description: data.description || null,
+    }
+
+    try {
+      // if (data.avatarImage)
+      //   await user?.setProfileImage({ file: data.avatarImage })
+
+      await updateUser(updatedProfile)
+      router.replace("/(tabs)/account")
+      notify({ title: "Profile info updated successfully" })
+    } catch (e) {
+      notify({
+        title: "Failed to update profile",
+        description: "Please try updating your profile again later.",
+        type: "ERROR",
+      })
+    }
+  }
+
+  return (
+    <View style={{ flex: 1 }}>
+      <AnimatedScrollView style={{ flex: 1 }} onScroll={scrollHandler}>
+        <View style={{ marginTop: 40, marginLeft: 28, position: "absolute" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              width: "100%",
+              marginBottom: 12,
+              marginTop: 40,
+              zIndex: 1,
+            }}
+          >
+            <Animated.Text style={[styles.title, headerTitleStyle]}>
+              Edit profile
+            </Animated.Text>
+          </View>
+          <AnimatedLinearGradient
+            colors={[
+              isDark ? Colors.gray[900] : Colors.default.light,
+              "transparent",
+            ]}
+            locations={[0.7, 1]}
+            style={[
+              {
+                position: "absolute",
+                top: 0,
+                left: -60,
+                right: 0,
+                height: 140,
+              },
+              headerGradientStyle,
+            ]}
+          />
+        </View>
+        <View style={styles.wrapper}>
+          <View style={styles.container}>
+            <Controller
+              name="username"
+              control={form.control}
+              rules={{ required: true }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Aa"
+                  label="Username"
+                  textContentType="username"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  errorProps={{
+                    children:
+                      form.formState.errors.username &&
+                      "Please enter your username",
+                  }}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              name="birthday"
+              control={form.control}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <DateInput
+                  placeholder={dayjs(new Date()).format("YYYY/MM/DD")}
+                  label="Birthday"
+                  onChange={onChange}
+                  value={value ? new Date(value) : undefined}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              name="gender"
+              control={form.control}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <Select
+                  placeholder="Select"
+                  label="Gender"
+                  title="Select gender"
+                  onChange={onChange}
+                  value={value}
+                  options={[
+                    { label: "Male", value: "MALE" },
+                    { label: "Female", value: "FEMALE" },
+                    { label: "Other", value: "OTHER" },
+                  ]}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              name="country"
+              control={form.control}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <SelectCountry
+                  label="Country"
+                  onChange={onChange}
+                  value={value}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              name="city"
+              control={form.control}
+              rules={{ required: true }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Aa"
+                  label="City"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value || undefined}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              name="description"
+              control={form.control}
+              rules={{ required: true }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Aa"
+                  label="About me"
+                  multiline
+                  numberOfLines={4}
+                  maxLength={30}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value || undefined}
+                  style={{
+                    height: 120,
+                    textAlignVertical: "top",
+                    paddingTop: 12,
+                  }}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
+          </View>
+        </View>
+      </AnimatedScrollView>
+
+      {!isKeyboardOpen && (
+        <View
+          style={{
+            position: "absolute",
+            bottom: 28,
+            width: "100%",
+            paddingHorizontal: 24,
+          }}
+        >
+          <LinearGradient
+            colors={[
+              "transparent",
+              isDark ? Colors.gray[900] : Colors.default.light,
+            ]}
+            locations={[0.1, 0.3]}
+            style={[
+              {
+                position: "absolute",
+                top: -20,
+                bottom: -28,
+                left: -24,
+                right: -24,
+              },
+            ]}
+          />
+
+          <Button
+            scale={0.97}
+            isLoading={isPending}
+            onPress={form.handleSubmit(onSubmitPress)}
+          >
+            Save
+          </Button>
+        </View>
+      )}
+    </View>
+  )
+}
+
+const componentStyles = ({ isDark }: ThemeStylesProps) =>
+  StyleSheet.create({
+    wrapper: {
+      flex: 1,
+      alignItems: "center",
+      height: 800,
+    },
+    container: {
+      flex: 1,
+      justifyContent: "flex-start",
+      alignItems: "center",
+      paddingHorizontal: 24,
+      maxWidth: 400,
+      width: "100%",
+    },
+    title: {
+      color: isDark ? Colors.gray[300] : Colors.gray[400],
+      fontFamily: "GabaritoSemibold",
+      fontSize: 46,
+    },
+    text: {
+      color: isDark ? Colors.gray[400] : Colors.gray[900],
+    },
+    link: {
+      marginLeft: "auto",
+      marginRight: 4,
+    },
+    optionalDivider: {
+      height: 1,
+      flex: 1,
+      backgroundColor: isDark ? Colors.gray[700] : Colors.gray[300],
+    },
+    optionalLabel: {
+      color: Colors.gray[500],
+    },
+  })

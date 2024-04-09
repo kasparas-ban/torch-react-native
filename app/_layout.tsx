@@ -138,6 +138,14 @@ function RootLayoutNav() {
                       headerBackVisible: false,
                     }}
                   />
+                  <Stack.Screen
+                    name="(modals)/edit-profile"
+                    options={{
+                      presentation: "modal",
+                      headerTransparent: true,
+                      title: "",
+                    }}
+                  />
                 </Stack>
               </ClerkProvider>
             </NotifierWrapper>

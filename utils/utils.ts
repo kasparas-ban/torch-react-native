@@ -1,3 +1,5 @@
+import COUNTRIES from "@/data/countries.json"
+
 export const hexToRGB = (hex: string, alpha: number | undefined = 1) => {
   hex = hex.toUpperCase()
 
@@ -17,6 +19,10 @@ export const rgbToRGBA = (rgb: string, alpha: number | undefined = 1) => {
 
 export function capitalize(text: string) {
   return text[0].toUpperCase() + text.substring(1).toLowerCase()
+}
+
+export const getCountry = (countryCode: string) => {
+  return COUNTRIES.find(country => country.code === countryCode)
 }
 
 export const toPercent = (input?: number) => {
