@@ -1,5 +1,4 @@
 import React from "react"
-import { useAuth } from "@clerk/clerk-expo"
 import { BlurView } from "expo-blur"
 import { ImageBackground } from "expo-image"
 import { Tabs } from "expo-router"
@@ -12,8 +11,6 @@ import {
 } from "@/components/navbar/navbar"
 
 export default function TabLayout() {
-  const { isSignedIn } = useAuth()
-
   return (
     <ImageBackground
       source={require("@/assets/images/background_gradient.png")}
@@ -58,7 +55,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="account"
           options={{ title: "Account" }}
-          initialParams={{ isPrivate: !isSignedIn }}
+          initialParams={{ isPrivate: true }}
         />
         <Tabs.Screen name="index" options={{ href: null }} />
       </Tabs>

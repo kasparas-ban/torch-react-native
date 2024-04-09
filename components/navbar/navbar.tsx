@@ -1,6 +1,7 @@
 import { ReactNode } from "react"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
+import { useAuth } from "@clerk/clerk-expo"
 import {
   BottomTabBarProps,
   BottomTabHeaderProps,
@@ -189,6 +190,7 @@ export function BottomTabBarItems({
   const { state, descriptors, navigation } = tabBarProps
   const colorScheme = useColorScheme()
   const isDark = colorScheme === "dark"
+  const { isSignedIn } = useAuth()
 
   return (
     <>
@@ -242,7 +244,7 @@ export function BottomTabBarItems({
               options={options}
               onPress={onPress}
               isFocused={isFocused}
-              isPrivate={isPrivate}
+              isPrivate={isPrivate && !isSignedIn}
             >
               <View
                 style={{
@@ -297,7 +299,7 @@ export function BottomTabBarItems({
             options={options}
             onPress={onPress}
             isFocused={isFocused}
-            isPrivate={isPrivate}
+            isPrivate={isPrivate && !isSignedIn}
           >
             {isFocused && (
               <Animated.View
