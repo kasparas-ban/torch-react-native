@@ -4,6 +4,7 @@ import { useUpsertItem } from "@/api-endpoints/hooks/items/useUpsertItem"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { router } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
 import { StyleSheet, Text, View } from "react-native"
 import Animated, { LinearTransition } from "react-native-reanimated"
@@ -19,6 +20,7 @@ import {
   dreamFormSchema,
   DreamFormType,
 } from "@/components/itemModal/itemForms/schemas"
+import { notify } from "@/components/notifications/Notifications"
 import Button from "@/components/UI/Button"
 import DateInput from "@/components/UI/DateInput"
 import PriorityInput from "@/components/UI/PriorityInput"
@@ -67,26 +69,24 @@ export default function AddDreamModal() {
       type: "DREAM" as const,
     }
 
-    console.log("data", newDream)
-
-    // mutateAsync(newDream)
-    //   .then(() => {
-    //     setTimeout(() => {
-    //       closeModal()
-    //     }, 2000)
-    //   })
-    //   .catch(() => {
-    //     setTimeout(
-    //       () =>
-    //         toast({
-    //           title: "Failed to save",
-    //           description:
-    //             "Your dream has not been saved. Please try adding it again later.",
-    //         }),
-    //       100
-    //     )
-    //     setTimeout(() => reset(), 2000)
-    //   })
+    mutateAsync(newDream)
+      .then(() => {
+        router.replace("/(tabs)/goals")
+        notify({
+          title: editItem
+            ? "Dream updated successfully"
+            : "Dream created successfully",
+        })
+      })
+      .catch(() => {
+        notify({
+          title: "Failed to save",
+          description:
+            "Your dream has not been saved. Please try adding it again later.",
+          type: "ERROR",
+        })
+        setTimeout(() => reset(), 2000)
+      })
   }
 
   return (

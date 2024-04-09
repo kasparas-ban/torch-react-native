@@ -107,7 +107,7 @@ export default function AddTaskModal() {
             "Your task has not been saved. Please try adding it again later.",
           type: "ERROR",
         })
-        setTimeout(() => reset(), 2500)
+        setTimeout(() => reset(), 2000)
       })
   }
 
