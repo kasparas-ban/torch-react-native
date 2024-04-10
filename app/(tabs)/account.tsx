@@ -38,6 +38,10 @@ export default function AccountScreen() {
     router.push("/(modals)/edit-profile")
   }
 
+  const handlePasswordChange = () => {
+    router.push("/(modals)/change-password")
+  }
+
   const country = useMemo(
     () =>
       userInfo?.countryCode ? getCountry(userInfo?.countryCode) : undefined,
@@ -158,7 +162,7 @@ export default function AccountScreen() {
 
         <View style={styles.separator} />
 
-        <AnimatedButton scale={0.99}>
+        <AnimatedButton scale={0.99} onPress={handlePasswordChange}>
           <View
             style={{
               flexDirection: "row",

@@ -146,6 +146,14 @@ function RootLayoutNav() {
                       title: "",
                     }}
                   />
+                  <Stack.Screen
+                    name="(modals)/change-password"
+                    options={{
+                      presentation: "modal",
+                      headerTransparent: true,
+                      title: "",
+                    }}
+                  />
                 </Stack>
               </ClerkProvider>
             </NotifierWrapper>

@@ -11,6 +11,8 @@ export default function PasswordInput(props: TextInputProps) {
   const { styles, isFocused, onFocus, onBlur } = useThemeStyles(inputStyles)
   const [isVisible, setIsVisible] = useState(false)
 
+  const labelVisible = !!props.label
+
   return (
     <View style={styles.wrapper}>
       <TextInput
@@ -22,13 +24,13 @@ export default function PasswordInput(props: TextInputProps) {
       />
       {isVisible ? (
         <ClosedEyeIcon
-          style={styles.eyeIcon}
+          style={[styles.eyeIcon, { top: labelVisible ? 32 : 11 }]}
           color={isFocused ? Colors.gray[700] : Colors.gray[400]}
           onPress={() => setIsVisible(false)}
         />
       ) : (
         <OpenEyeIcon
-          style={styles.eyeIcon}
+          style={[styles.eyeIcon, { top: labelVisible ? 32 : 11 }]}
           color={isFocused ? Colors.gray[700] : Colors.gray[400]}
           onPress={() => setIsVisible(true)}
         />
