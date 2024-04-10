@@ -81,3 +81,6 @@ export const getTime = (seconds?: number | null) => {
   const minutes = Math.floor((seconds % 3600) / 60)
   return { hours, minutes, seconds: 0 }
 }
+
+export const defaultProfileImage =
+  "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj["

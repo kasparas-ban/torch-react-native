@@ -7,7 +7,7 @@ import { Image, ImageStyle } from "expo-image"
 import { useRouter } from "expo-router"
 import { StyleSheet, Text, View } from "react-native"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
-import { capitalize, getCountry } from "@/utils/utils"
+import { capitalize, defaultProfileImage, getCountry } from "@/utils/utils"
 import { AnimatedButton } from "@/components/AnimatedButton"
 import { notify } from "@/components/notifications/Notifications"
 
@@ -49,8 +49,7 @@ export default function AccountScreen() {
       <View style={styles.summaryBox}>
         <Image
           style={styles.profilePicture as ImageStyle}
-          source={user?.imageUrl}
-          // placeholder={blurhash}
+          source={user?.hasImage ? user?.imageUrl : defaultProfileImage}
           contentFit="cover"
           transition={1000}
         />
@@ -106,7 +105,9 @@ export default function AccountScreen() {
           <Text style={styles.detailLabel}>Location</Text>
           <Text style={styles.detailData}>
             {userInfo?.city ? userInfo?.city : ""}
-            {country ? `, ${country.name} ${country.flag}` : ""}
+            {country
+              ? `${userInfo?.city ? ", " : ""}${country.name} ${country.flag}`
+              : ""}
             {!userInfo?.city && !country && "-"}
           </Text>
         </View>

@@ -1,11 +1,12 @@
 import useUserInfo, { useUpdateUser } from "@/api-endpoints/hooks/user/useUser"
 import Colors from "@/constants/Colors"
+import { useUser } from "@clerk/clerk-expo"
 import { zodResolver } from "@hookform/resolvers/zod"
 import dayjs from "dayjs"
 import { LinearGradient } from "expo-linear-gradient"
 import { router } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
-import { StyleSheet, View } from "react-native"
+import { Dimensions, StyleSheet, View } from "react-native"
 import Animated from "react-native-reanimated"
 import { z } from "zod"
 import { UpdateProfileReq } from "@/types/userTypes"
@@ -20,12 +21,23 @@ import {
 import SelectCountry from "@/components/SelectCountry"
 import Button from "@/components/UI/Button"
 import DateInput from "@/components/UI/DateInput"
+import PictureInput from "@/components/UI/PictureInput"
 import Select from "@/components/UI/Select"
 import TextInput from "@/components/UI/TextInput"
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient)
 
 const ProfileSchema = z.object({
+  avatarImage: z
+    .any()
+    .refine(
+      file =>
+        ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(
+          file?.mimeType
+        ),
+      ".jpg, .jpeg, .png and .webp files are accepted."
+    )
+    .nullable(),
   username: z.string(),
   birthday: z.string().nullable(),
   gender: z.enum(["MALE", "FEMALE", "OTHER"]).nullable(),
@@ -40,19 +52,16 @@ export default function EditProfileScreen() {
   const isKeyboardOpen = useKeyboard()
   const { styles, isDark } = useThemeStyles(componentStyles)
 
-  const {
-    mutateAsync: updateUser,
-    isPending,
-    isSuccess,
-    isError,
-  } = useUpdateUser()
+  const { mutateAsync: updateUser, isPending } = useUpdateUser()
 
   const { data: userInfo } = useUserInfo()
+  const { user } = useUser()
 
   const { scrollHandler, headerTitleStyle, headerGradientStyle } =
     useScrollViewHeader()
 
   const defaultValues = {
+    avatarImage: user?.hasImage ? user.imageUrl : null,
     username: userInfo?.username,
     birthday: userInfo?.birthday,
     gender: userInfo?.gender,
@@ -78,8 +87,11 @@ export default function EditProfileScreen() {
     }
 
     try {
-      // if (data.avatarImage)
-      //   await user?.setProfileImage({ file: data.avatarImage })
+      await user?.setProfileImage({
+        file: data.avatarImage
+          ? `${"data:image/png;base64,"}${data.avatarImage.base64}`
+          : null,
+      })
 
       await updateUser(updatedProfile)
       router.replace("/(tabs)/account")
@@ -87,7 +99,7 @@ export default function EditProfileScreen() {
     } catch (e) {
       notify({
         title: "Failed to update profile",
-        description: "Please try updating your profile again later.",
+        description: (e as any)?.errors?.[0]?.message,
         type: "ERROR",
       })
     }
@@ -130,6 +142,22 @@ export default function EditProfileScreen() {
         </View>
         <View style={styles.wrapper}>
           <View style={styles.container}>
+            <Controller
+              name="avatarImage"
+              control={form.control}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <PictureInput
+                  label="Picture"
+                  onChange={onChange}
+                  value={value}
+                  wrapperProps={{
+                    style: { marginBottom: 12 },
+                  }}
+                />
+              )}
+            />
+
             <Controller
               name="username"
               control={form.control}
@@ -301,7 +329,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     wrapper: {
       flex: 1,
       alignItems: "center",
-      height: 800,
+      height: Dimensions.get("window").height,
     },
     container: {
       flex: 1,
