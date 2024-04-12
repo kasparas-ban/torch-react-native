@@ -1,12 +1,30 @@
-import { getUserInfo } from "@/api-endpoints/endpoints/userAPI"
+import { getUserInfo, registerUser } from "@/api-endpoints/endpoints/userAPI"
 import { useUser } from "@clerk/clerk-expo"
 import { useAuth } from "@clerk/clerk-react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { UpdateProfileReq } from "@/types/userTypes"
+import { RegisterUserReq, UpdateProfileReq } from "@/types/userTypes"
 import { PasswordFormType } from "@/app/(modals)/change-password"
 
 import { updateUser, updateUserTime } from "../../endpoints/userAPI"
 import { CustomError, UserUpdateServerErrorMsg } from "../../utils/errorMsgs"
+
+export const useRegisterUser = () => {
+  const fetcher = async (data: RegisterUserReq) => {
+    try {
+      await registerUser(data)
+    } catch (err: any) {
+      throw new CustomError(err, {
+        title: "Registration failed",
+        description: err.data.error,
+        field: err.data.field.param_name,
+      })
+    }
+  }
+
+  return useMutation({
+    mutationFn: (data: RegisterUserReq) => fetcher(data),
+  })
+}
 
 export const useUpdateUser = () => {
   const { getToken } = useAuth()

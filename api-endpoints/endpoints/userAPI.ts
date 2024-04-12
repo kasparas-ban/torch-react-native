@@ -1,11 +1,13 @@
 import {
   AddUserReq,
   ProfileResp,
+  RegisterUserReq,
   UpdateProfileReq,
   UpdateUserTime,
 } from "@/types/userTypes"
 
 import { HOST } from "../utils/apiConfig"
+import { CustomError } from "../utils/errorMsgs"
 
 export const addUser = (token: string, user: AddUserReq) =>
   fetch(`${HOST}/add-user`, {
@@ -13,6 +15,15 @@ export const addUser = (token: string, user: AddUserReq) =>
     headers: { Authorization: `Bearer ${token}` },
     body: JSON.stringify(user),
   }).then(res => res.json() as Promise<ProfileResp>)
+
+export const registerUser = (user: RegisterUserReq) =>
+  fetch(`${HOST}/register-user`, {
+    method: "POST",
+    body: JSON.stringify(user),
+  }).then(async res => {
+    const data = await res.json()
+    if (!res.ok) throw new CustomError(data.error, data)
+  })
 
 export const updateUser = (token: string, user: UpdateProfileReq) =>
   fetch(`${HOST}/update-user`, {

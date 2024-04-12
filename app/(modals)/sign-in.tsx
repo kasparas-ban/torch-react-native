@@ -1,4 +1,4 @@
-import SignInScreen from "@/components/authScreens/SignInScreen"
+import SignInScreen from "@/components/authComponents/SignInScreen"
 
 export default function SignInModal() {
   return <SignInScreen />

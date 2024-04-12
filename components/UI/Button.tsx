@@ -15,10 +15,11 @@ type Props = Omit<ComponentProps<typeof AnimatedButton>, "children"> & {
   type?: "primary" | "base"
   textProps?: TextProps
   isLoading?: boolean
+  isDisabled?: boolean
 }
 
 export default function Button(props: Props) {
-  const { textProps, isLoading, ...buttonProps } = props
+  const { textProps, isLoading, isDisabled, ...buttonProps } = props
   const buttonStyle = buttonStyles[props.type || "primary"]
 
   return (
@@ -28,9 +29,9 @@ export default function Button(props: Props) {
         styles.button,
         buttonStyle,
         buttonProps.style,
-        isLoading && buttonStyles.loadingPrimary,
+        (isLoading || isDisabled) && buttonStyles.disabled,
       ]}
-      disabled={isLoading}
+      disabled={isLoading || isDisabled}
     >
       <View style={{ flexDirection: "row", gap: 8 }}>
         {isLoading && <ActivityIndicator color={Colors.gray[50]} />}
@@ -62,7 +63,7 @@ const buttonStyles = StyleSheet.create({
     height: 48,
     backgroundColor: Colors.rose[500],
   },
-  loadingPrimary: {
+  disabled: {
     backgroundColor: Colors.rose[300],
   },
 })

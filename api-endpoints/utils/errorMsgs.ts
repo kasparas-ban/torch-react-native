@@ -1,4 +1,7 @@
-type CustomErrorData = { title: string; description: string } | undefined | null
+export type CustomErrorData =
+  | { title: string; description: string; field?: string }
+  | undefined
+  | null
 
 export class CustomError extends Error {
   data: CustomErrorData

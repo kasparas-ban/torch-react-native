@@ -1,0 +1,131 @@
+import { useState } from "react"
+import { useRegisterUser } from "@/api-endpoints/hooks/user/useUser"
+import { CustomErrorData } from "@/api-endpoints/utils/errorMsgs"
+import Colors from "@/constants/Colors"
+import { useSignUp } from "@clerk/clerk-expo"
+import { router } from "expo-router"
+import { StyleSheet, Text, View } from "react-native"
+import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
+import useSignUpData from "@/components/authComponents/SignUpStore"
+import CodeInput from "@/components/CodeInput/CodeInput"
+import { notify } from "@/components/notifications/Notifications"
+import Button from "@/components/UI/Button"
+
+export default function SignUpConfirmModal() {
+  const { styles } = useThemeStyles(componentStyles)
+  const { userData, setUserData } = useSignUpData()
+
+  const { isLoaded, signUp, setActive } = useSignUp()
+
+  const [code, setCode] = useState("")
+  const { mutateAsync: registerUser, isPending } = useRegisterUser()
+
+  const handleConfirm = async () => {
+    if (!userData) {
+      notify({
+        title: "Registration failed",
+        description: "Internal application error",
+        type: "ERROR",
+      })
+      return
+    }
+
+    if (!isLoaded) return
+
+    try {
+      const completeSignUp = await signUp.attemptEmailAddressVerification({
+        code,
+      })
+      if (completeSignUp.createdUserId) {
+        await registerUser({
+          ...userData,
+          clerkID: completeSignUp.createdUserId,
+        })
+        await setActive({ session: completeSignUp.createdSessionId })
+      } else {
+        throw new Error("Registration failed")
+      }
+
+      router.replace("/(tabs)/account")
+      setUserData(undefined)
+    } catch (e: any) {
+      const errorData = e.data as CustomErrorData
+      notify({
+        title: errorData?.title || "",
+        description: errorData?.description || "",
+        type: "ERROR",
+        duration: 5000,
+      })
+    }
+  }
+
+  return (
+    <View style={styles.wrapper}>
+      <View style={styles.container}>
+        <View
+          style={{
+            flexDirection: "row",
+            width: "100%",
+            marginBottom: 20,
+          }}
+        >
+          <Text style={styles.title}>Verify email</Text>
+        </View>
+
+        <Text style={styles.infoText}>
+          Type in the code sent to
+          <Text
+            style={styles.emailText}
+          >{` ${userData?.email || "your email"} `}</Text>
+          to verify your registration.
+        </Text>
+
+        <CodeInput code={code} setCode={setCode} />
+
+        <View style={{ position: "absolute", bottom: 28, width: "100%" }}>
+          <Button
+            scale={0.97}
+            onPress={handleConfirm}
+            isDisabled={code.length < 6}
+            isLoading={isPending}
+          >
+            Confirm
+          </Button>
+        </View>
+      </View>
+    </View>
+  )
+}
+
+const componentStyles = ({ isDark }: ThemeStylesProps) =>
+  StyleSheet.create({
+    wrapper: {
+      flex: 1,
+      alignItems: "center",
+    },
+    container: {
+      flex: 1,
+      marginTop: 100,
+      justifyContent: "flex-start",
+      alignItems: "center",
+      paddingHorizontal: 24,
+      maxWidth: 400,
+      width: "100%",
+    },
+    title: {
+      color: isDark ? Colors.gray[300] : Colors.gray[400],
+      fontFamily: "GabaritoSemibold",
+      fontSize: 46,
+      width: "100%",
+      textAlign: "center",
+    },
+    infoText: {
+      color: Colors.gray[700],
+      width: "100%",
+      textAlign: "center",
+      lineHeight: 24,
+    },
+    emailText: {
+      fontWeight: "700",
+    },
+  })

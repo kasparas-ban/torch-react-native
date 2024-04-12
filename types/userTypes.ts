@@ -23,6 +23,21 @@ export type AddUserReq = {
   email: string
 }
 
+export type SignUpUserData = {
+  username: string
+  email: string
+  password: string
+  birthday: string | null
+  gender: GenderType | null
+  countryCode: string | null
+  city: string | null
+  description: string | null
+}
+
+export type RegisterUserReq = SignUpUserData & {
+  clerkID: string
+}
+
 export type UpdateProfileReq = {
   username: string
   birthday: string | null

@@ -5,8 +5,15 @@ import ErrorIcon from "@/assets/icons/xCircle.svg"
 import Colors from "@/constants/Colors"
 import { SafeAreaView, StyleSheet, Text, View } from "react-native"
 import { Notifier } from "react-native-notifier"
+import { ShowNotificationParams } from "react-native-notifier/lib/typescript/types"
 
 type NotificationType = "SUCCESS" | "ALERT" | "ERROR"
+
+type NotificationParams = ShowNotificationParams & {
+  title: string
+  description?: string
+  type?: NotificationType
+}
 
 const SingleLineComponent =
   (type: NotificationType) =>
@@ -79,11 +86,7 @@ export const notify = ({
   title,
   description,
   type = "SUCCESS",
-}: {
-  title: string
-  description?: string
-  type?: NotificationType
-}) =>
+}: NotificationParams) =>
   Notifier.showNotification({
     title,
     description,

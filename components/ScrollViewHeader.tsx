@@ -1,6 +1,7 @@
 import { ReactNode } from "react"
 import { StyleProp, ViewStyle } from "react-native"
 import Animated, {
+  AnimatedScrollViewProps,
   AnimatedStyle,
   clamp,
   ScrollHandlerProcessed,
@@ -9,7 +10,7 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated"
 
-type AnimatedScrollViewProps = {
+type CustomAnimatedScrollViewProps = AnimatedScrollViewProps & {
   style: StyleProp<AnimatedStyle<StyleProp<ViewStyle>>>
   onScroll: ScrollHandlerProcessed<Record<string, unknown>>
   children: ReactNode
@@ -19,9 +20,11 @@ export function AnimatedScrollView({
   style,
   onScroll,
   children,
-}: AnimatedScrollViewProps) {
+  ...rest
+}: CustomAnimatedScrollViewProps) {
   return (
     <Animated.ScrollView
+      {...rest}
       style={style}
       stickyHeaderIndices={[0]}
       onScroll={onScroll}

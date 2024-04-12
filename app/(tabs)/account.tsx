@@ -42,6 +42,10 @@ export default function AccountScreen() {
     router.push("/(modals)/change-password")
   }
 
+  const handleDeleteAccount = () => {
+    router.push("/(modals)/delete-account")
+  }
+
   const country = useMemo(
     () =>
       userInfo?.countryCode ? getCountry(userInfo?.countryCode) : undefined,
@@ -182,7 +186,7 @@ export default function AccountScreen() {
 
         <View style={styles.separator} />
 
-        <AnimatedButton scale={0.99}>
+        <AnimatedButton scale={0.99} onPress={handleDeleteAccount}>
           <View
             style={{
               flexDirection: "row",

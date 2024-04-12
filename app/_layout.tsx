@@ -81,6 +81,14 @@ function RootLayoutNav() {
                     }}
                   />
                   <Stack.Screen
+                    name="(modals)/sign-up-confirm"
+                    options={{
+                      presentation: "modal",
+                      headerTransparent: true,
+                      title: "",
+                    }}
+                  />
+                  <Stack.Screen
                     name="(modals)/forgot-password"
                     options={{
                       presentation: "modal",
@@ -148,6 +156,14 @@ function RootLayoutNav() {
                   />
                   <Stack.Screen
                     name="(modals)/change-password"
+                    options={{
+                      presentation: "modal",
+                      headerTransparent: true,
+                      title: "",
+                    }}
+                  />
+                  <Stack.Screen
+                    name="(modals)/delete-account"
                     options={{
                       presentation: "modal",
                       headerTransparent: true,

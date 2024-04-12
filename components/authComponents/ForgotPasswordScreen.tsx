@@ -22,7 +22,6 @@ export default function ForgotPasswordScreen() {
 
   const form = useForm<ForgotPasswordFormType>({
     resolver: zodResolver(ForgotPasswordSchema),
-    // defaultValues: { email: "" },
     shouldUnregister: true,
   })
 
