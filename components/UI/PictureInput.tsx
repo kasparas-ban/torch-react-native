@@ -65,7 +65,7 @@ export default function PictureInput(props: PictureInputProps) {
             onPress={() => onChange(null)}
           >
             <CloseIcon
-              color={isDark ? Colors.gray[400] : Colors.gray[600]}
+              color={isDark ? Colors.gray[100] : Colors.gray[600]}
               style={styles.closeIcon}
             />
           </AnimatedButton>
@@ -93,7 +93,9 @@ const inputStyles = ({ isDark }: ThemeStylesProps) =>
       color: isDark ? Colors.gray[300] : Colors.gray[500],
     },
     removeBtn: {
-      backgroundColor: Colors.gray[300],
+      backgroundColor: isDark
+        ? "rgba(80, 80, 80, 0.6)"
+        : "rgba(20, 15, 38, 0.15)",
       borderRadius: 100,
       alignSelf: "center",
       padding: 8,

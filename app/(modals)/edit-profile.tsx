@@ -266,7 +266,6 @@ export default function EditProfileScreen() {
                   label="About me"
                   multiline
                   numberOfLines={4}
-                  maxLength={30}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value || undefined}
