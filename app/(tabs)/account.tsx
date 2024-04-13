@@ -11,6 +11,7 @@ import { capitalize, defaultProfileImage, getCountry } from "@/utils/utils"
 import { AnimatedButton } from "@/components/AnimatedButton"
 import useGlobalLoading from "@/components/GlobalLoadingScreen/useGlobalLoading"
 import { notify } from "@/components/notifications/Notifications"
+import { queryClient } from "@/components/providers/QueryProvider"
 
 import RightIcon from "../../assets/icons/chevronRight.svg"
 import DeleteIcon from "../../assets/icons/delete.svg"
@@ -32,6 +33,7 @@ export default function AccountScreen() {
       showGlobalLoading("Logging out...")
       signOut({ sessionId })
         .then(() => {
+          queryClient.invalidateQueries({ queryKey: ["user"] })
           router.replace("/(tabs)/timer")
           notify({ title: "Logout successful!" })
         })

@@ -10,7 +10,7 @@ onlineManager.setEventListener(setOnline => {
   })
 })
 
-const queryClient = new QueryClient({
+export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       gcTime: 1000 * 60 * 60 * 24,
