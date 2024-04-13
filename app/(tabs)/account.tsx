@@ -7,7 +7,12 @@ import { Image, ImageStyle } from "expo-image"
 import { useRouter } from "expo-router"
 import { StyleSheet, Text, View } from "react-native"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
-import { capitalize, defaultProfileImage, getCountry } from "@/utils/utils"
+import {
+  capitalize,
+  defaultProfileImage,
+  getCountry,
+  rgbToRGBA,
+} from "@/utils/utils"
 import { AnimatedButton } from "@/components/AnimatedButton"
 import useGlobalLoading from "@/components/GlobalLoadingScreen/useGlobalLoading"
 import { notify } from "@/components/notifications/Notifications"
@@ -234,14 +239,27 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       paddingHorizontal: 24,
     },
     summaryBox: {
-      backgroundColor: isDark ? Colors.gray[700] : Colors.gray[300],
+      backgroundColor: isDark
+        ? rgbToRGBA(Colors.gray[700], 0.8)
+        : rgbToRGBA(Colors.gray[300], 1),
       width: "100%",
       borderRadius: 16,
       paddingHorizontal: 16,
       paddingVertical: 12,
       flexDirection: "row",
       gap: 16,
-      ...(isDark && { borderWidth: 1, borderColor: Colors.gray[600] }),
+      borderWidth: 0.5,
+      borderColor: isDark ? Colors.gray[600] : rgbToRGBA(Colors.gray[400], 0.2),
+      // iOS shadows
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 3,
+      },
+      shadowOpacity: 0.27,
+      shadowRadius: 4.65,
+      // Android shadows
+      elevation: 6,
     },
     profilePicture: {
       height: 100,
@@ -264,15 +282,15 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     },
     number: {
       fontSize: 42,
-      fontWeight: "900",
+      fontFamily: "GabaritoBold",
       color: isDark ? Colors.gray[100] : Colors.gray[900],
       marginRight: 2,
     },
     numberLabel: {
       fontSize: 30,
-      fontWeight: "900",
+      fontFamily: "GabaritoBold",
       color: isDark ? Colors.gray[100] : Colors.gray[900],
-      marginTop: 13,
+      marginTop: 11,
     },
     // Membership
     membershipContainer: {
@@ -282,11 +300,12 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       paddingHorizontal: 28,
       paddingVertical: 2,
       borderRadius: 8,
-      ...(isDark && { borderWidth: 1, borderColor: Colors.gray[300] }),
+      borderWidth: 1,
+      borderColor: isDark ? Colors.gray[300] : rgbToRGBA(Colors.gray[500], 0.5),
     },
     membershipLabel: {
       color: isDark ? Colors.gray[800] : Colors.gray[900],
-      fontWeight: "600",
+      fontFamily: "GabaritoSemibold",
     },
     // Section titles
     sectionTitle: {

@@ -38,6 +38,8 @@ export default function SignUpConfirmModal() {
       const completeSignUp = await signUp.attemptEmailAddressVerification({
         code,
       })
+
+      // MARK: Is there any way to undo Clerk sign up if the following fails?
       if (completeSignUp.createdUserId) {
         await registerUser({
           ...userData,
@@ -49,12 +51,16 @@ export default function SignUpConfirmModal() {
       }
 
       router.replace("/(tabs)/account")
+      notify({
+        title: `Welcome to the app, ${userData.username}!`,
+      })
       setUserData(undefined)
     } catch (e: any) {
       const errorData = e.data as CustomErrorData
       notify({
-        title: errorData?.title || "",
-        description: errorData?.description || "",
+        title: errorData?.title || "Verification failed",
+        description:
+          errorData?.description || "Code is either incorrect or expired",
         type: "ERROR",
         duration: 5000,
       })

@@ -33,7 +33,14 @@ const SignUpSchema = z
   .object({
     username: z.string(),
     email: z.string().email(),
-    password: z.string(),
+    password: z
+      .string()
+      .min(8, { message: "Password must contain at least 8 characters" })
+      .max(30, { message: "Password must be less than 30 characters" })
+      .regex(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?!.* ).*$/, {
+        message:
+          "Password must contain at least one number and both lowercase and uppercase characters",
+      }),
     confirmPassword: z.string(),
     birthday: z.string().nullable(),
     gender: z.enum(["MALE", "FEMALE", "OTHER"]).nullable(),
@@ -74,6 +81,7 @@ export default function SignUpModal() {
   })
 
   const onSignUpPress = async (data: SignUpFormType) => {
+    Keyboard.dismiss()
     setIsLoading(true)
 
     const userData = {
@@ -96,9 +104,7 @@ export default function SignUpModal() {
       await signUp?.prepareEmailAddressVerification({ strategy: "email_code" })
       setUserData(userData)
       router.push("/(modals)/sign-up-confirm")
-      Keyboard.dismiss()
     } catch (e: any) {
-      console.log("ERROR", e)
       const errorData = e.errors
         ? { title: "Registration failed", description: e.errors[0].message }
         : (e.data as CustomErrorData)
@@ -213,9 +219,7 @@ export default function SignUpModal() {
                   onChangeText={onChange}
                   value={value}
                   errorProps={{
-                    children:
-                      form.formState.errors.email &&
-                      "Please enter your password",
+                    children: form.formState.errors.password?.message,
                   }}
                   wrapperProps={{
                     style: { marginBottom: 12 },
@@ -236,9 +240,7 @@ export default function SignUpModal() {
                   onChangeText={onChange}
                   value={value}
                   errorProps={{
-                    children:
-                      form.formState.errors.email &&
-                      "Please enter your password",
+                    children: form.formState.errors.confirmPassword?.message,
                   }}
                   wrapperProps={{
                     style: { marginBottom: 12 },

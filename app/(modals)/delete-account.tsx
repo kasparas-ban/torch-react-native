@@ -6,14 +6,13 @@ import { useAuth } from "@clerk/clerk-expo"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
-import { StyleSheet, Text, View } from "react-native"
+import { Keyboard, StyleSheet, Text, View } from "react-native"
 import { z } from "zod"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { notify } from "@/components/notifications/Notifications"
+import { queryClient } from "@/components/providers/QueryProvider"
 import Button from "@/components/UI/Button"
 import TextInput from "@/components/UI/TextInput"
-
-const altText = "delete my account"
 
 const getDeleteAccountFormSchema = (username: string) =>
   z.object({
@@ -29,7 +28,7 @@ export default function DeleteAccountScreen() {
   const { data } = useUserInfo()
   const [isLoading, setIsLoading] = useState(false)
 
-  const defaultCheckText = data?.username ?? altText
+  const defaultCheckText = `delete ${data?.username ?? "my"} account`
   const deleteAccountSchema = getDeleteAccountFormSchema(defaultCheckText)
 
   const form = useForm<z.infer<typeof deleteAccountSchema>>({
@@ -38,6 +37,7 @@ export default function DeleteAccountScreen() {
   })
 
   const handleDeleteAccount = async () => {
+    Keyboard.dismiss()
     setIsLoading(true)
 
     const token = await getToken()
@@ -46,6 +46,7 @@ export default function DeleteAccountScreen() {
     deleteAccount(token)
       .then(() => {
         signOut()
+        queryClient.invalidateQueries({ queryKey: ["user"] })
         router.push("/")
         notify({ title: "Account deleted successfully" })
       })

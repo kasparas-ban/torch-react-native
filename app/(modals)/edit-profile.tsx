@@ -1,3 +1,4 @@
+import { useState } from "react"
 import useUserInfo, { useUpdateUser } from "@/api-endpoints/hooks/user/useUser"
 import Colors from "@/constants/Colors"
 import { useUser } from "@clerk/clerk-expo"
@@ -52,8 +53,8 @@ export default function EditProfileScreen() {
   const isKeyboardOpen = useKeyboard()
   const { styles, isDark } = useThemeStyles(componentStyles)
 
-  const { mutateAsync: updateUser, isPending } = useUpdateUser()
-
+  const { mutateAsync: updateUser } = useUpdateUser()
+  const [isLoading, setIsLoading] = useState(false)
   const { data: userInfo } = useUserInfo()
   const { user } = useUser()
 
@@ -77,6 +78,7 @@ export default function EditProfileScreen() {
   })
 
   const onSubmitPress = async (data: ProfileFormType) => {
+    setIsLoading(true)
     const updatedProfile: UpdateProfileReq = {
       username: data.username,
       birthday: data.birthday ? formatDate(new Date(data.birthday)) : null,
@@ -87,11 +89,13 @@ export default function EditProfileScreen() {
     }
 
     try {
-      await user?.setProfileImage({
-        file: data.avatarImage
-          ? `${"data:image/png;base64,"}${data.avatarImage.base64}`
-          : null,
-      })
+      if (data?.avatarImage?.base64) {
+        await user?.setProfileImage({
+          file: data.avatarImage
+            ? `${"data:image/png;base64,"}${data.avatarImage.base64}`
+            : null,
+        })
+      }
 
       await updateUser(updatedProfile)
       router.replace("/(tabs)/account")
@@ -102,6 +106,8 @@ export default function EditProfileScreen() {
         description: (e as any)?.errors?.[0]?.message,
         type: "ERROR",
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -312,7 +318,7 @@ export default function EditProfileScreen() {
 
           <Button
             scale={0.97}
-            isLoading={isPending}
+            isLoading={isLoading}
             onPress={form.handleSubmit(onSubmitPress)}
           >
             Save
