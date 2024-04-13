@@ -4,7 +4,7 @@ import { useSignIn } from "@clerk/clerk-expo"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
-import { StyleSheet, Text, View } from "react-native"
+import { Keyboard, StyleSheet, Text, View } from "react-native"
 import { z } from "zod"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
@@ -34,6 +34,7 @@ export default function SignInScreen() {
 
   const onSignInPress = async (data: SignInFormType) => {
     if (!signIn) return
+    Keyboard.dismiss()
 
     try {
       setIsLoading(true)

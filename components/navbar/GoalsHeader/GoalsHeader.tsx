@@ -259,8 +259,8 @@ function ItemTypeSelector() {
                 borderWidth: 1,
                 borderColor: isDark ? Colors.gray[600] : "#dde1e7",
               }}
-              entering={FadeIn(0.9, 100)}
-              exiting={FadeOut(0.9, 100)}
+              entering={FadeIn(0.9, 1, 100)}
+              exiting={FadeOut(0.9, 0, 100)}
             >
               <Pressable
                 onPress={() => {

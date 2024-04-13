@@ -7,7 +7,7 @@ import dayjs from "dayjs"
 import { LinearGradient } from "expo-linear-gradient"
 import { router } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
-import { Dimensions, StyleSheet, Text, View } from "react-native"
+import { Dimensions, Keyboard, StyleSheet, Text, View } from "react-native"
 import Animated from "react-native-reanimated"
 import { z } from "zod"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
@@ -35,11 +35,11 @@ const SignUpSchema = z
     email: z.string().email(),
     password: z.string(),
     confirmPassword: z.string(),
-    birthday: z.date().nullable(),
+    birthday: z.string().nullable(),
     gender: z.enum(["MALE", "FEMALE", "OTHER"]).nullable(),
     country: z.string().nullable(),
     city: z.string().nullable(),
-    description: z.string().nullable(),
+    description: z.string().max(300).nullable(),
   })
   .refine(data => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -74,6 +74,8 @@ export default function SignUpModal() {
   })
 
   const onSignUpPress = async (data: SignUpFormType) => {
+    setIsLoading(true)
+
     const userData = {
       username: data.username,
       email: data.email,
@@ -94,6 +96,7 @@ export default function SignUpModal() {
       await signUp?.prepareEmailAddressVerification({ strategy: "email_code" })
       setUserData(userData)
       router.push("/(modals)/sign-up-confirm")
+      Keyboard.dismiss()
     } catch (e: any) {
       console.log("ERROR", e)
       const errorData = e.errors
@@ -266,7 +269,7 @@ export default function SignUpModal() {
                   placeholder={dayjs(new Date()).format("YYYY/MM/DD")}
                   label="Birthday"
                   onChange={onChange}
-                  value={value || undefined}
+                  value={value ? new Date(value) : undefined}
                   wrapperProps={{
                     style: { marginBottom: 12 },
                   }}
@@ -337,7 +340,6 @@ export default function SignUpModal() {
                   label="About me"
                   multiline
                   numberOfLines={4}
-                  maxLength={30}
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value || undefined}
@@ -412,7 +414,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     wrapper: {
       flex: 1,
       alignItems: "center",
-      height: Dimensions.get("window").height,
+      height: Dimensions.get("window").height + 200,
     },
     container: {
       flex: 1,

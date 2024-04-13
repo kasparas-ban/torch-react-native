@@ -43,7 +43,7 @@ const ProfileSchema = z.object({
   gender: z.enum(["MALE", "FEMALE", "OTHER"]).nullable(),
   country: z.string().nullable(),
   city: z.string().nullable(),
-  description: z.string().nullable(),
+  description: z.string().max(300).nullable(),
 })
 
 type ProfileFormType = z.infer<typeof ProfileSchema>

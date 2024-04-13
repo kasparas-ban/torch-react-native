@@ -29,9 +29,8 @@ export default function DeleteAccountScreen() {
   const { data } = useUserInfo()
   const [isLoading, setIsLoading] = useState(false)
 
-  const deleteAccountSchema = getDeleteAccountFormSchema(
-    data?.username ?? altText
-  )
+  const defaultCheckText = data?.username ?? altText
+  const deleteAccountSchema = getDeleteAccountFormSchema(defaultCheckText)
 
   const form = useForm<z.infer<typeof deleteAccountSchema>>({
     resolver: zodResolver(deleteAccountSchema),
@@ -97,7 +96,7 @@ export default function DeleteAccountScreen() {
         >
           Please type{" "}
           <Text style={{ fontWeight: "700", color: Colors.gray[800] }}>
-            kaspis245
+            {defaultCheckText}
           </Text>{" "}
           to confirm.
         </Text>

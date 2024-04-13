@@ -9,6 +9,7 @@ import { StyleSheet, Text, View } from "react-native"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { capitalize, defaultProfileImage, getCountry } from "@/utils/utils"
 import { AnimatedButton } from "@/components/AnimatedButton"
+import useGlobalLoading from "@/components/GlobalLoadingScreen/useGlobalLoading"
 import { notify } from "@/components/notifications/Notifications"
 
 import RightIcon from "../../assets/icons/chevronRight.svg"
@@ -18,19 +19,23 @@ import LogoutIcon from "../../assets/icons/logout.svg"
 import UserIcon from "../../assets/icons/userCircle.svg"
 
 export default function AccountScreen() {
-  const { user } = useUser()
-  const router = useRouter()
-  const { signOut, sessionId } = useAuth()
   const { styles } = useThemeStyles(componentStyles)
+  const { showGlobalLoading, hideGlobalLoading } = useGlobalLoading()
 
+  const router = useRouter()
+  const { user } = useUser()
+  const { signOut, sessionId } = useAuth()
   const { data: userInfo } = useUserInfo()
 
   const handleLogout = () => {
     if (sessionId) {
-      signOut({ sessionId }).then(() => {
-        router.replace("/(tabs)/timer")
-        notify({ title: "Logout successful!" })
-      })
+      showGlobalLoading("Logging out...")
+      signOut({ sessionId })
+        .then(() => {
+          router.replace("/(tabs)/timer")
+          notify({ title: "Logout successful!" })
+        })
+        .finally(() => hideGlobalLoading())
     }
   }
 
@@ -59,7 +64,7 @@ export default function AccountScreen() {
           style={styles.profilePicture as ImageStyle}
           source={user?.hasImage ? user?.imageUrl : defaultProfileImage}
           contentFit="cover"
-          transition={1000}
+          transition={800}
         />
 
         <View>

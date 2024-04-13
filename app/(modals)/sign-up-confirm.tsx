@@ -18,19 +18,21 @@ export default function SignUpConfirmModal() {
   const { isLoaded, signUp, setActive } = useSignUp()
 
   const [code, setCode] = useState("")
-  const { mutateAsync: registerUser, isPending } = useRegisterUser()
+  const { mutateAsync: registerUser } = useRegisterUser()
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleConfirm = async () => {
-    if (!userData) {
+    setIsLoading(true)
+
+    if (!isLoaded || !userData) {
       notify({
         title: "Registration failed",
         description: "Internal application error",
         type: "ERROR",
       })
+      setIsLoading(false)
       return
     }
-
-    if (!isLoaded) return
 
     try {
       const completeSignUp = await signUp.attemptEmailAddressVerification({
@@ -56,6 +58,8 @@ export default function SignUpConfirmModal() {
         type: "ERROR",
         duration: 5000,
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -87,7 +91,7 @@ export default function SignUpConfirmModal() {
             scale={0.97}
             onPress={handleConfirm}
             isDisabled={code.length < 6}
-            isLoading={isPending}
+            isLoading={isLoading}
           >
             Confirm
           </Button>
