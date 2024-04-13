@@ -4,7 +4,7 @@ import Colors from "@/constants/Colors"
 import { useAuth, useUser } from "@clerk/clerk-expo"
 import dayjs from "dayjs"
 import { Image, ImageStyle } from "expo-image"
-import { useRouter } from "expo-router"
+import { Redirect, useRouter } from "expo-router"
 import { StyleSheet, Text, View } from "react-native"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import {
@@ -28,21 +28,29 @@ export default function AccountScreen() {
   const { styles, isDark } = useThemeStyles(componentStyles)
   const { showGlobalLoading, hideGlobalLoading } = useGlobalLoading()
 
+  const { signOut, sessionId, isSignedIn } = useAuth()
+
   const router = useRouter()
   const { user } = useUser()
-  const { signOut, sessionId } = useAuth()
   const { data: userInfo } = useUserInfo()
 
-  const handleLogout = () => {
-    if (sessionId) {
-      showGlobalLoading("Logging out...")
-      signOut({ sessionId })
-        .then(() => {
-          queryClient.invalidateQueries({ queryKey: ["user"] })
-          router.replace("/(tabs)/timer")
-          notify({ title: "Logout successful!" })
-        })
-        .finally(() => hideGlobalLoading())
+  const handleLogout = async () => {
+    showGlobalLoading("Logging out...")
+    try {
+      if (!sessionId) throw new Error("Logout failed")
+
+      await signOut({ sessionId })
+      queryClient.invalidateQueries({ queryKey: ["user"] })
+      router.replace("/(tabs)/timer")
+      notify({ title: "Logout successful!" })
+    } catch (e) {
+      notify({
+        title: "Logout failed",
+        description: "Try logging out later",
+        type: "ERROR",
+      })
+    } finally {
+      hideGlobalLoading()
     }
   }
 
@@ -63,6 +71,8 @@ export default function AccountScreen() {
       userInfo?.countryCode ? getCountry(userInfo?.countryCode) : undefined,
     [userInfo?.countryCode]
   )
+
+  if (!isSignedIn) return <Redirect href="/(modals)/sign-in" />
 
   return (
     <View style={styles.wrapper}>

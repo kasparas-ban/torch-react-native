@@ -1,5 +1,8 @@
 # TODO
 
+- [x] Change password flow
+- [ ] Forgot password flow
+- [ ] Change email flow
 - [ ] Separate Date input components to Android and iOS
 - [ ] Add user description to account page
 - [ ] Improve country select performance

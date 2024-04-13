@@ -1,9 +1,7 @@
 import { getUserInfo, registerUser } from "@/api-endpoints/endpoints/userAPI"
-import { useUser } from "@clerk/clerk-expo"
 import { useAuth } from "@clerk/clerk-react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { RegisterUserReq, UpdateProfileReq } from "@/types/userTypes"
-import { PasswordFormType } from "@/app/(modals)/change-password"
 
 import { updateUser, updateUserTime } from "../../endpoints/userAPI"
 import { CustomError, UserUpdateServerErrorMsg } from "../../utils/errorMsgs"
@@ -44,34 +42,6 @@ export const useUpdateUser = () => {
 
   return useMutation({
     mutationFn: (data: UpdateProfileReq) => fetcher(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] })
-    },
-  })
-}
-
-export const useUpdateUserPassword = () => {
-  const { user } = useUser()
-  const queryClient = useQueryClient()
-
-  const fetcher = async (data: PasswordFormType) => {
-    try {
-      if (!user) throw new Error("User not found")
-      await user.updatePassword({
-        newPassword: data.newPassword,
-        currentPassword: data.currentPassword,
-        signOutOfOtherSessions: true,
-      })
-    } catch (err) {
-      throw new CustomError(err as string, {
-        title: "Failed to update password",
-        description: (err as any)?.errors?.[0].message,
-      })
-    }
-  }
-
-  return useMutation({
-    mutationFn: (data: PasswordFormType) => fetcher(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] })
     },

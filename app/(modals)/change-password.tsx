@@ -1,11 +1,15 @@
-import { useUpdateUserPassword } from "@/api-endpoints/hooks/user/useUser"
+import { useState } from "react"
+import InfoIcon from "@/assets/icons/info.svg"
 import Colors from "@/constants/Colors"
+import { useAuth, useUser } from "@clerk/clerk-expo"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import { router } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
-import { StyleSheet, Text, View } from "react-native"
+import { Keyboard, StyleSheet, Text, View } from "react-native"
 import { z } from "zod"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
+import useKeyboard from "@/utils/useKeyboard"
 import { notify } from "@/components/notifications/Notifications"
 import PasswordInput from "@/components/PasswordInput"
 import Button from "@/components/UI/Button"
@@ -38,9 +42,13 @@ const passwordFormSchema = z
 export type PasswordFormType = z.infer<typeof passwordFormSchema>
 
 export default function ChangePasswordScreen() {
+  const isKeyboardOpen = useKeyboard()
   const { styles } = useThemeStyles(componentStyles)
 
-  const { mutateAsync, reset, isPending } = useUpdateUserPassword()
+  const { user } = useUser()
+  const queryClient = useQueryClient()
+  const { signOut, sessionId } = useAuth()
+  const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<PasswordFormType>({
     resolver: zodResolver(passwordFormSchema),
@@ -53,20 +61,31 @@ export default function ChangePasswordScreen() {
   })
 
   const onSubmitPress = async (data: PasswordFormType) => {
-    console.log("data", data)
-    mutateAsync(data)
-      .then(() => {
-        router.replace("/(tabs)/account")
-        notify({ title: "Password updated successfully" })
+    setIsLoading(true)
+
+    try {
+      if (!user || !sessionId) throw new Error("User not found")
+
+      await user.updatePassword({
+        newPassword: data.newPassword,
+        currentPassword: data.currentPassword,
+        signOutOfOtherSessions: true,
       })
-      .catch(e => {
-        notify({
-          title: "Failed to update password",
-          description: e.data.description,
-          type: "ERROR",
-        })
-        reset()
+      await signOut({ sessionId })
+      queryClient.invalidateQueries({ queryKey: ["user"] })
+
+      router.back()
+      notify({ title: "Password updated successfully" })
+    } catch (e: any) {
+      notify({
+        title: "Password change failed",
+        description:
+          e?.errors?.[0]?.message || "Try changing your password later",
+        type: "ERROR",
       })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -80,6 +99,20 @@ export default function ChangePasswordScreen() {
           }}
         >
           <Text style={styles.title}>Change password</Text>
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 12,
+            alignItems: "center",
+            marginBottom: 20,
+          }}
+        >
+          <InfoIcon style={styles.infoIcon} color={Colors.amber[500]} />
+          <Text style={styles.infoText}>
+            Changing the password will log you out of all your devices.
+          </Text>
         </View>
 
         <Controller
@@ -148,21 +181,23 @@ export default function ChangePasswordScreen() {
           )}
         />
 
-        <View
-          style={{
-            position: "absolute",
-            bottom: 28,
-            width: "100%",
-          }}
-        >
-          <Button
-            scale={0.97}
-            onPress={form.handleSubmit(onSubmitPress)}
-            isLoading={isPending}
+        {!isKeyboardOpen && (
+          <View
+            style={{
+              position: "absolute",
+              bottom: 28,
+              width: "100%",
+            }}
           >
-            Save
-          </Button>
-        </View>
+            <Button
+              scale={0.97}
+              onPress={form.handleSubmit(onSubmitPress)}
+              isLoading={isLoading}
+            >
+              Save
+            </Button>
+          </View>
+        )}
       </View>
     </View>
   )
@@ -187,5 +222,13 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       color: isDark ? Colors.gray[300] : Colors.gray[400],
       fontFamily: "GabaritoSemibold",
       fontSize: 45,
+    },
+    infoIcon: {
+      width: 26,
+      height: 26,
+    },
+    infoText: {
+      fontWeight: "500",
+      color: Colors.gray[600],
     },
   })
