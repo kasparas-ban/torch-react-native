@@ -2,12 +2,12 @@ import { useState } from "react"
 import Colors from "@/constants/Colors"
 import { StyleSheet, Text, View } from "react-native"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
-import ForgotPasswordConfirmation from "@/components/ForgotPasswordScreens/ForgotPasswordConfirmation"
-import ForgotPasswordForm from "@/components/ForgotPasswordScreens/ForgotPasswordForm"
-import ForgotPasswordRequest from "@/components/ForgotPasswordScreens/ForgotPasswordRequest"
+import PasswordResetConfirmation from "@/components/PasswordResetScreens/PasswordResetConfirmation"
+import PasswordResetForm from "@/components/PasswordResetScreens/PasswordResetForm"
+import PasswordResetRequest from "@/components/PasswordResetScreens/PasswordResetRequest"
 import StepIndicator from "@/components/StepIndicator/StepIndicator"
 
-export default function ForgotPasswordModal() {
+export default function PasswordResetModal() {
   const { styles } = useThemeStyles(componentStyles)
   const [step, setStep] = useState(1)
   const [code, setCode] = useState("")
@@ -32,15 +32,15 @@ export default function ForgotPasswordModal() {
           <StepIndicator numSteps={3} activeStep={step} />
         </View>
 
-        {step === 1 && <ForgotPasswordRequest goNextStep={goNextStep} />}
+        {step === 1 && <PasswordResetRequest goNextStep={goNextStep} />}
         {step === 2 && (
-          <ForgotPasswordConfirmation
+          <PasswordResetConfirmation
             code={code}
             setCode={setCode}
             goNextStep={goNextStep}
           />
         )}
-        {step === 3 && <ForgotPasswordForm code={code} />}
+        {step === 3 && <PasswordResetForm code={code} />}
       </View>
     </View>
   )

@@ -6,7 +6,7 @@ import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import CodeInput from "../CodeInput/CodeInput"
 import Button from "../UI/Button"
 
-type ForgotPasswordProps = {
+type PasswordResetProps = {
   code: string
   setCode: React.Dispatch<React.SetStateAction<string>>
   goNextStep: () => void
@@ -14,11 +14,11 @@ type ForgotPasswordProps = {
 
 const CODE_LENGTH = 6
 
-export default function ForgotPasswordConfirmation({
+export default function PasswordResetConfirmation({
   code,
   setCode,
   goNextStep,
-}: ForgotPasswordProps) {
+}: PasswordResetProps) {
   const { styles } = useThemeStyles(componentStyles)
 
   return (

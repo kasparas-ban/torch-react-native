@@ -113,7 +113,7 @@ export default function SignInScreen() {
           )}
         />
 
-        <Link href="/(modals)/forgot-password" style={styles.link}>
+        <Link href="/(modals)/password-reset" style={styles.link}>
           Forgot password?
         </Link>
 

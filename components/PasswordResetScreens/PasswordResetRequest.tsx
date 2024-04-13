@@ -11,13 +11,13 @@ import { notify } from "../notifications/Notifications"
 import Button from "../UI/Button"
 import TextInput from "../UI/TextInput"
 
-const ForgotPasswordSchema = z.object({
+const PasswordResetSchema = z.object({
   email: z.string().email(),
 })
 
-type ForgotPasswordFormType = z.infer<typeof ForgotPasswordSchema>
+type PasswordResetFormType = z.infer<typeof PasswordResetSchema>
 
-export default function ForgotPasswordRequest({
+export default function PasswordResetRequest({
   goNextStep,
 }: {
   goNextStep: () => void
@@ -27,12 +27,12 @@ export default function ForgotPasswordRequest({
   const { signIn } = useSignIn()
   const [isLoading, setIsLoading] = useState(false)
 
-  const form = useForm<ForgotPasswordFormType>({
-    resolver: zodResolver(ForgotPasswordSchema),
+  const form = useForm<PasswordResetFormType>({
+    resolver: zodResolver(PasswordResetSchema),
     shouldUnregister: true,
   })
 
-  const onConfirmPress = async (data: ForgotPasswordFormType) => {
+  const onConfirmPress = async (data: PasswordResetFormType) => {
     Keyboard.dismiss()
     setIsLoading(true)
     try {

@@ -91,7 +91,7 @@ function RootLayoutNav() {
                       }}
                     />
                     <Stack.Screen
-                      name="(modals)/forgot-password"
+                      name="(modals)/password-reset"
                       options={{
                         presentation: "modal",
                         headerTransparent: true,

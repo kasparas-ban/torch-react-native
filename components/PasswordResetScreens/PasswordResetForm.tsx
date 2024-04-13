@@ -34,7 +34,7 @@ const passwordFormSchema = z
 
 export type PasswordFormType = z.infer<typeof passwordFormSchema>
 
-export default function ForgotPasswordForm({ code }: { code: string }) {
+export default function PasswordResetForm({ code }: { code: string }) {
   const isKeyboardOpen = useKeyboard()
   const { styles } = useThemeStyles(componentStyles)
 
