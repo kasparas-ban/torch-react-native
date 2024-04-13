@@ -44,7 +44,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       bottom: 0,
       left: 0,
       right: 0,
-      backgroundColor: "white",
+      backgroundColor: isDark ? Colors.gray[800] : "white",
     },
     wrapper: {
       flexDirection: "row",
@@ -57,6 +57,6 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       textAlign: "center",
       fontSize: 20,
       fontWeight: "600",
-      color: Colors.gray[800],
+      color: isDark ? Colors.gray[100] : Colors.gray[800],
     },
   })

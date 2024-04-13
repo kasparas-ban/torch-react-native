@@ -19,7 +19,7 @@ import LogoutIcon from "../../assets/icons/logout.svg"
 import UserIcon from "../../assets/icons/userCircle.svg"
 
 export default function AccountScreen() {
-  const { styles } = useThemeStyles(componentStyles)
+  const { styles, isDark } = useThemeStyles(componentStyles)
   const { showGlobalLoading, hideGlobalLoading } = useGlobalLoading()
 
   const router = useRouter()
@@ -139,10 +139,13 @@ export default function AccountScreen() {
               paddingVertical: 12,
             }}
           >
-            <LogoutIcon color={Colors.gray[700]} style={styles.settingsIcon} />
+            <LogoutIcon
+              color={isDark ? Colors.gray[200] : Colors.gray[700]}
+              style={styles.settingsIcon}
+            />
             <Text style={styles.settingsLabel}>Logout</Text>
             <RightIcon
-              color={Colors.gray[700]}
+              color={isDark ? Colors.gray[200] : Colors.gray[700]}
               style={styles.arrowIcon}
               strokeWidth={2.5}
             />
@@ -159,10 +162,13 @@ export default function AccountScreen() {
               paddingVertical: 12,
             }}
           >
-            <UserIcon color={Colors.gray[700]} style={styles.settingsIcon} />
+            <UserIcon
+              color={isDark ? Colors.gray[200] : Colors.gray[700]}
+              style={styles.settingsIcon}
+            />
             <Text style={styles.settingsLabel}>Edit account info</Text>
             <RightIcon
-              color={Colors.gray[700]}
+              color={isDark ? Colors.gray[200] : Colors.gray[700]}
               style={styles.arrowIcon}
               strokeWidth={2.5}
             />
@@ -179,10 +185,13 @@ export default function AccountScreen() {
               paddingVertical: 12,
             }}
           >
-            <LockIcon color={Colors.gray[700]} style={styles.settingsIcon} />
+            <LockIcon
+              color={isDark ? Colors.gray[200] : Colors.gray[700]}
+              style={styles.settingsIcon}
+            />
             <Text style={styles.settingsLabel}>Change password</Text>
             <RightIcon
-              color={Colors.gray[700]}
+              color={isDark ? Colors.gray[200] : Colors.gray[700]}
               style={styles.arrowIcon}
               strokeWidth={2.5}
             />
@@ -199,10 +208,13 @@ export default function AccountScreen() {
               paddingVertical: 12,
             }}
           >
-            <DeleteIcon color={Colors.gray[700]} style={styles.settingsIcon} />
+            <DeleteIcon
+              color={isDark ? Colors.gray[200] : Colors.gray[700]}
+              style={styles.settingsIcon}
+            />
             <Text style={styles.settingsLabel}>Delete account</Text>
             <RightIcon
-              color={Colors.gray[700]}
+              color={isDark ? Colors.gray[200] : Colors.gray[700]}
               style={styles.arrowIcon}
               strokeWidth={2.5}
             />
@@ -220,13 +232,14 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       paddingHorizontal: 24,
     },
     summaryBox: {
-      backgroundColor: Colors.gray[300],
+      backgroundColor: isDark ? Colors.gray[700] : Colors.gray[300],
       width: "100%",
       borderRadius: 16,
       paddingHorizontal: 16,
       paddingVertical: 12,
       flexDirection: "row",
       gap: 16,
+      ...(isDark && { borderWidth: 1, borderColor: Colors.gray[600] }),
     },
     profilePicture: {
       height: 100,
@@ -235,7 +248,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     },
     username: {
       fontWeight: "700",
-      color: Colors.gray[900],
+      color: isDark ? Colors.gray[200] : Colors.gray[900],
       fontSize: 18,
       fontFamily: "GabaritoSemibold",
       position: "absolute",
@@ -250,13 +263,13 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     number: {
       fontSize: 42,
       fontWeight: "900",
-      color: Colors.gray[900],
+      color: isDark ? Colors.gray[100] : Colors.gray[900],
       marginRight: 2,
     },
     numberLabel: {
       fontSize: 30,
       fontWeight: "900",
-      color: Colors.gray[900],
+      color: isDark ? Colors.gray[100] : Colors.gray[900],
       marginTop: 13,
     },
     // Membership
@@ -267,24 +280,25 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       paddingHorizontal: 28,
       paddingVertical: 2,
       borderRadius: 8,
+      ...(isDark && { borderWidth: 1, borderColor: Colors.gray[300] }),
     },
     membershipLabel: {
-      color: Colors.gray[900],
+      color: isDark ? Colors.gray[800] : Colors.gray[900],
       fontWeight: "600",
     },
     // Section titles
     sectionTitle: {
-      color: Colors.gray[700],
+      color: isDark ? Colors.gray[200] : Colors.gray[700],
       fontWeight: "700",
       fontSize: 20,
     },
     // Account details
     detailLabel: {
       width: 130,
-      color: Colors.gray[500],
+      color: isDark ? Colors.gray[300] : Colors.gray[500],
     },
     detailData: {
-      color: Colors.gray[700],
+      color: isDark ? Colors.gray[200] : Colors.gray[700],
       fontWeight: "700",
     },
     // Settings
@@ -295,7 +309,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     },
     settingsLabel: {
       fontWeight: "700",
-      color: Colors.gray[700],
+      color: isDark ? Colors.gray[200] : Colors.gray[700],
       flex: 1,
     },
     arrowIcon: {
@@ -306,7 +320,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     separator: {
       width: "100%",
       height: 1,
-      backgroundColor: Colors.gray[400],
+      backgroundColor: isDark ? Colors.gray[400] : Colors.gray[400],
       opacity: 0.6,
       margin: 0,
     },
