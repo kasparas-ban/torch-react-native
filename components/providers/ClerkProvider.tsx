@@ -22,10 +22,7 @@ const tokenCache = {
 }
 
 export function ClerkProvider({ children }: { children: ReactNode }) {
-  if (!CLERK_KEY) {
-    // TODO: show notification that data will not be saved remotely
-    return children
-  }
+  if (!CLERK_KEY) throw new Error("Failed to load Clerk key")
 
   return (
     <Provider publishableKey={CLERK_KEY} tokenCache={tokenCache}>

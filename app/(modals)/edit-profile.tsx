@@ -33,9 +33,11 @@ const ProfileSchema = z.object({
     .any()
     .refine(
       file =>
-        ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(
-          file?.mimeType
-        ),
+        file?.mimeType
+          ? ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(
+            file.mimeType
+          )
+          : true,
       ".jpg, .jpeg, .png and .webp files are accepted."
     )
     .nullable(),
