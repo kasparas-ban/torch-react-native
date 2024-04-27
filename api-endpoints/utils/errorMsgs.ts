@@ -11,6 +11,8 @@ export class CustomError extends Error {
   }
 }
 
+export type ErrorResp = { error: string }
+
 // User
 
 export const UserUpdateServerErrorMsg = {

@@ -55,7 +55,7 @@ export default function EditProfileScreen() {
   const isKeyboardOpen = useKeyboard()
   const { styles, isDark } = useThemeStyles(componentStyles)
 
-  const { mutateAsync: updateUser } = useUpdateUser()
+  const { mutate: updateUser } = useUpdateUser()
   const [isLoading, setIsLoading] = useState(false)
   const { data: userInfo } = useUserInfo()
   const { user } = useUser()
@@ -99,7 +99,7 @@ export default function EditProfileScreen() {
         })
       }
 
-      await updateUser(updatedProfile)
+      updateUser(updatedProfile)
       router.replace("/(tabs)/account")
       notify({ title: "Profile info updated successfully" })
     } catch (e) {

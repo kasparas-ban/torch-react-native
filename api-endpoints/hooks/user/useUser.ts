@@ -1,7 +1,11 @@
 import { getUserInfo, registerUser } from "@/api-endpoints/endpoints/userAPI"
 import { useAuth } from "@clerk/clerk-react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { RegisterUserReq, UpdateProfileReq } from "@/types/userTypes"
+import {
+  ProfileResp,
+  RegisterUserReq,
+  UpdateProfileReq,
+} from "@/types/userTypes"
 
 import { updateUser, updateUserTime } from "../../endpoints/userAPI"
 import { CustomError, UserUpdateServerErrorMsg } from "../../utils/errorMsgs"
@@ -34,17 +38,34 @@ export const useUpdateUser = () => {
       if (!token) throw new Error("Token not found")
       const updatedUser = await updateUser(token, data)
 
-      return updatedUser
+      return {
+        ...updatedUser,
+        updatedAt: new Date().toISOString(),
+        isSynced: true,
+      }
     } catch (err) {
       throw new CustomError(err as string, UserUpdateServerErrorMsg)
     }
   }
 
   return useMutation({
+    networkMode: "always",
     mutationFn: (data: UpdateProfileReq) => fetcher(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] })
+    onMutate: async (data: UpdateProfileReq) => {
+      await queryClient.cancelQueries({ queryKey: ["user"] })
+
+      const oldData = queryClient.getQueryData(["user"]) as
+        | ProfileResp
+        | undefined
+
+      queryClient.setQueryData(["user"], {
+        ...oldData,
+        ...data,
+        updatedAt: new Date().toISOString(),
+        isSynced: false,
+      })
     },
+    onSuccess: data => queryClient.setQueryData(["user"], data),
   })
 }
 

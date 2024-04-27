@@ -53,13 +53,13 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme()
 
   return (
-    <QueryProvider>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <BottomSheetModalProvider>
-            <NotifierWrapper>
-              <StorageProvider />
-              <ClerkProvider>
+    <ClerkProvider>
+      <QueryProvider>
+        <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <BottomSheetModalProvider>
+              <NotifierWrapper>
+                <StorageProvider />
                 <GlobalLoadingScreen>
                   <Stack>
                     <Stack.Screen
@@ -174,11 +174,11 @@ function RootLayoutNav() {
                     />
                   </Stack>
                 </GlobalLoadingScreen>
-              </ClerkProvider>
-            </NotifierWrapper>
-          </BottomSheetModalProvider>
-        </GestureHandlerRootView>
-      </ThemeProvider>
-    </QueryProvider>
+              </NotifierWrapper>
+            </BottomSheetModalProvider>
+          </GestureHandlerRootView>
+        </ThemeProvider>
+      </QueryProvider>
+    </ClerkProvider>
   )
 }
