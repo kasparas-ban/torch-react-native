@@ -62,7 +62,7 @@ export default function AddTaskModal() {
   const { goals } = useItemsList()
   const { editItem } = useEditItem()
 
-  const { mutateAsync, reset, isPending, isError, isSuccess } =
+  const { mutate, reset, isPending, isError, isSuccess } =
     useUpsertItem("TASK")
 
   const params = useLocalSearchParams()
@@ -91,24 +91,18 @@ export default function AddTaskModal() {
       ...(goal ? { parentID: goal } : {}),
     }
 
-    mutateAsync(newTask)
-      .then(() => {
-        router.replace("/(tabs)/goals")
-        notify({
-          title: editItem
-            ? "Task updated successfully"
-            : "Task created successfully",
-        })
+    try {
+      mutate(newTask)
+      router.replace("/(tabs)/goals")
+      notify({
+        title: editItem
+          ? "Task updated successfully"
+          : "Task created successfully",
       })
-      .catch(() => {
-        notify({
-          title: "Failed to save",
-          description:
-            "Your task has not been saved. Please try adding it again later.",
-          type: "ERROR",
-        })
-        setTimeout(() => reset(), 2000)
-      })
+    } catch (e) {
+      console.log(e)
+      reset()
+    }
   }
 
   return (

@@ -32,6 +32,8 @@ export default function ItemListWrapper() {
     ? groupItemsByParent(itemsWithStatus, itemType)
     : {}
 
+  console.log('groupedItems', data, groupedItems)
+
   return (
     <ItemsList<Task | Goal | Dream>
       groupedItems={groupedItems}

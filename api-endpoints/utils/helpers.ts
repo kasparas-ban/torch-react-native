@@ -14,6 +14,8 @@ import {
 } from "@/types/itemTypes"
 import { FocusType } from "@/components/Timer/hooks/useTimerForm"
 
+import { ErrorResp } from "./errorMsgs"
+
 export const groupItemsByParent = (
   items: GeneralItem[],
   itemType: ItemType
@@ -218,3 +220,18 @@ export const filterItemsByStatus = (
 
 //   return formattedData
 // }
+
+export const handleFetch = async <T>(res: Response, errorMsg?: string) => {
+  try {
+    const data = (await res.json()) as T | ErrorResp
+    if (!res.ok) {
+      throw new Error(
+        (data as ErrorResp)?.error || errorMsg || "Failed to reach the server"
+      )
+    }
+
+    return data
+  } catch (e) {
+    throw new Error(e as string)
+  }
+}

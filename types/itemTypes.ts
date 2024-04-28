@@ -1,5 +1,7 @@
 // === Items ===
 
+import { SyncMetadata } from "./generalTypes"
+
 export type ResponseItem = {
   itemID: string
   title: string
@@ -48,7 +50,7 @@ export type FormattedItems = {
   tasks: Task[]
   goals: Goal[]
   dreams: Dream[]
-  rawItems: ResponseItem[]
+  rawItems: SyncMetadata<ResponseItem>[]
 }
 
 export type ItemTypeLabel = "Tasks" | "Goals" | "Dreams"

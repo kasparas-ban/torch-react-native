@@ -1,3 +1,4 @@
+import { SyncMetadata } from "@/types/generalTypes"
 import { Dream, Goal, ItemStatus, ResponseItem, Task } from "@/types/itemTypes"
 
 const formatTaskResponse = (tasks: ResponseItem[]) => {
@@ -59,7 +60,7 @@ const formatDreamResponse = (
   })
 }
 
-export const formatItemResponse = (response: ResponseItem[]) => {
+export const formatItemResponse = (response: SyncMetadata<ResponseItem>[]) => {
   const tasksResp = response.filter(item => item.type === "TASK")
   const goalsResp = response.filter(item => item.type === "GOAL")
   const dreamsResp = response.filter(item => item.type === "DREAM")

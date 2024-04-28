@@ -7,22 +7,8 @@ import {
 } from "@/types/userTypes"
 
 import { HOST } from "../utils/apiConfig"
-import { CustomError, ErrorResp } from "../utils/errorMsgs"
-
-const handleFetch = async <T>(res: Response, errorMsg?: string) => {
-  try {
-    const data = (await res.json()) as T | ErrorResp
-    if (!res.ok) {
-      throw new Error(
-        (data as ErrorResp)?.error || errorMsg || "Failed to reach the server"
-      )
-    }
-
-    return data
-  } catch (e) {
-    throw new Error(e as string)
-  }
-}
+import { CustomError } from "../utils/errorMsgs"
+import { handleFetch } from "../utils/helpers"
 
 export const addUser = (token: string, user: AddUserReq) =>
   fetch(`${HOST}/add-user`, {

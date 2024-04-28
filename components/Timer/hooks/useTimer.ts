@@ -1,7 +1,13 @@
+import { useCallback, useEffect } from "react"
+import { useUpdateItemProgress } from "@/api-endpoints/hooks/items/useUpdateItemProgress"
+import { useUpdateUserTime } from "@/api-endpoints/hooks/user/useUser"
+import dayjs from "dayjs"
 import { create } from "zustand"
 import { subscribeWithSelector } from "zustand/middleware"
 import { TimerState } from "@/types/itemTypes"
 import { createSelectors } from "@/utils/zustandUtils"
+
+import useTimerForm from "./useTimerForm"
 
 type TimerStoreState = {
   time: number
@@ -143,53 +149,53 @@ const useTimerStore = createSelectors(useTimerStoreBase)
 
 const UPDATE_PERIOD = 60 // seconds
 
-// export const useTimerListener = () => {
-//   const { focusOn } = useTimerForm()
-//   const { mutateAsync: updateItemTime } = useUpdateItemProgress()
-//   const { mutateAsync: updateUserTime } = useUpdateUserTime()
+export const useTimerListener = () => {
+  const { focusOn } = useTimerForm()
+  const { mutateAsync: updateItemTime } = useUpdateItemProgress()
+  const { mutateAsync: updateUserTime } = useUpdateUserTime()
 
-//   const updateTime = useCallback(
-//     (timeSpent: number, itemID?: string) =>
-//       itemID
-//         ? updateItemTime({ timeSpent, itemID })
-//         : updateUserTime(timeSpent),
-//     [updateItemTime, updateUserTime]
-//   )
+  const updateTime = useCallback(
+    (timeSpent: number, itemID?: string) =>
+      itemID
+        ? updateItemTime({ timeSpent, itemID })
+        : updateUserTime(timeSpent),
+    [updateItemTime, updateUserTime]
+  )
 
-//   useEffect(() => {
-//     const timerStateListener = useTimerStore.subscribe(
-//       state => state,
-//       state => {
-//         // Update progress every minute
-//         if (
-//           state.time % UPDATE_PERIOD === 0 &&
-//           state.time !== state.initialTime
-//         ) {
-//           let diff = UPDATE_PERIOD
-//           if (state.sessionStartTime && state.sessionEndTime) {
-//             const newDiff = dayjs().diff(
-//               dayjs(state.sessionStartTime),
-//               "second"
-//             )
-//             if (newDiff < diff) diff = newDiff
-//           }
-//           updateTime(diff, focusOn?.value)
-//         }
+  useEffect(() => {
+    const timerStateListener = useTimerStore.subscribe(
+      state => state,
+      state => {
+        // Update progress every minute
+        if (
+          state.time % UPDATE_PERIOD === 0 &&
+          state.time !== state.initialTime
+        ) {
+          let diff = UPDATE_PERIOD
+          if (state.sessionStartTime && state.sessionEndTime) {
+            const newDiff = dayjs().diff(
+              dayjs(state.sessionStartTime),
+              "second"
+            )
+            if (newDiff < diff) diff = newDiff
+          }
+          updateTime(diff, focusOn?.value)
+        }
 
-//         // Update progress when the timer is stopped
-//         if (
-//           state.timerState === "paused" &&
-//           state.sessionStartTime &&
-//           state.sessionEndTime
-//         ) {
-//           const elapsedTime = (state.initialTime - state.time) % UPDATE_PERIOD
-//           updateTime(elapsedTime, focusOn?.value)
-//         }
-//       }
-//     )
+        // Update progress when the timer is stopped
+        if (
+          state.timerState === "paused" &&
+          state.sessionStartTime &&
+          state.sessionEndTime
+        ) {
+          const elapsedTime = (state.initialTime - state.time) % UPDATE_PERIOD
+          updateTime(elapsedTime, focusOn?.value)
+        }
+      }
+    )
 
-//     return () => timerStateListener()
-//   }, [focusOn?.value, updateTime])
-// }
+    return () => timerStateListener()
+  }, [focusOn?.value, updateTime])
+}
 
 export default useTimerStore

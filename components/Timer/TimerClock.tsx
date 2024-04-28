@@ -2,13 +2,13 @@ import Colors from "@/constants/Colors"
 import { StyleSheet, Text, View } from "react-native"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
-import useTimerStore from "./hooks/useTimer"
+import useTimerStore, { useTimerListener } from "./hooks/useTimer"
 import TimerActionButtons from "./TimerActionButtons"
 import TimerSettingsButton from "./TimerSettingsButton"
 import TimerShape from "./TimerShape"
 
 export default function TimerClock() {
-  //   useTimerListener()
+  useTimerListener()
 
   const { styles } = useThemeStyles(componentStyles)
 
