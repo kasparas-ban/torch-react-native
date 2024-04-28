@@ -65,7 +65,7 @@ const useItemListConfigState = create<ItemListConfigState>()(
       setShowCompletedItems: (val: boolean) => set({ showCompletedItems: val }),
     }),
     {
-      name: "item-list-storage",
+      name: "item-list-config-storage",
       storage: createJSONStorage(() => AsyncStorage),
     }
   )

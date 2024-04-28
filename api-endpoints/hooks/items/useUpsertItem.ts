@@ -1,3 +1,4 @@
+import { UpsertItem } from "@/api-endpoints/endpoints/itemAPI"
 import { HOST } from "@/api-endpoints/utils/apiConfig"
 import { CustomError, PostFetchErrorMsg } from "@/api-endpoints/utils/errorMsgs"
 import { formatItemResponse } from "@/api-endpoints/utils/responseFormatters"
@@ -6,22 +7,7 @@ import { GetToken } from "@clerk/types/dist"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { FormattedItems, ItemType, ResponseItem } from "@/types/itemTypes"
 import { getRandomId } from "@/utils/randomId"
-import {
-  NewDreamType,
-  NewGoalType,
-  NewTaskType,
-  UpdateDreamType,
-  UpdateGoalType,
-  UpdateTaskType,
-} from "@/components/itemModal/itemForms/schemas"
-
-export type UpsertItem =
-  | NewTaskType
-  | NewGoalType
-  | NewDreamType
-  | UpdateTaskType
-  | UpdateGoalType
-  | UpdateDreamType
+import { UpdateTaskType } from "@/components/itemModal/itemForms/schemas"
 
 export const useUpsertItem = (type: ItemType) => {
   const { getToken } = useAuth()

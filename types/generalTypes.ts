@@ -18,3 +18,7 @@ export type SyncMetadata<T> = T & {
   isSynced: boolean
   isNew?: boolean
 }
+
+export type Stringified<T> = {
+  [Property in keyof T]-?: T[Property]
+}

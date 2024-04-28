@@ -1,3 +1,4 @@
+import { UpdateItemProgressReq } from "@/api-endpoints/endpoints/itemAPI"
 import { getItemsByType } from "@/api-endpoints/utils/helpers"
 import { formatItemResponse } from "@/api-endpoints/utils/responseFormatters"
 import { useAuth } from "@clerk/clerk-react"
@@ -7,11 +8,6 @@ import useTimerForm from "@/components/Timer/hooks/useTimerForm"
 
 import { HOST } from "../../utils/apiConfig"
 import { CustomError, ItemLoadFetchErrorMsg } from "../../utils/errorMsgs"
-
-export type UpdateItemProgressReq = {
-  itemID: string
-  timeSpent: number
-}
 
 export const useUpdateItemProgress = () => {
   const { getToken } = useAuth()
