@@ -1,6 +1,4 @@
 import { useState } from "react"
-import { useItemsList } from "@/api-endpoints/hooks/items/useItemsList"
-import { useUpsertItem } from "@/api-endpoints/hooks/items/useUpsertItem"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -20,11 +18,12 @@ import {
   dreamFormSchema,
   DreamFormType,
 } from "@/components/itemModal/itemForms/schemas"
-import { notify } from "@/components/notifications/Notifications"
 import Button from "@/components/UI/Button"
 import DateInput from "@/components/UI/DateInput"
 import PriorityInput from "@/components/UI/PriorityInput"
 import TextInput from "@/components/UI/TextInput"
+import useItems from "@/stores/itemStore"
+import { notify } from "@/components/notifications/Notifications"
 
 type InputType = keyof z.infer<typeof dreamFormSchema>
 
@@ -43,11 +42,8 @@ export default function AddDreamModal() {
   const isKeyboardOpen = useKeyboard()
   const { styles } = useThemeStyles(componentStyles)
 
-  const { dreams } = useItemsList()
   const { editItem } = useEditItem()
-
-  const { mutateAsync, reset, isPending, isError, isSuccess } =
-    useUpsertItem("DREAM")
+  const { addItem, updateItem } = useItems()
 
   const defaultDream = getInitialDreamForm(editItem as Dream)
 
@@ -69,24 +65,18 @@ export default function AddDreamModal() {
       type: "DREAM" as const,
     }
 
-    mutateAsync(newDream)
-      .then(() => {
-        router.replace("/(tabs)/goals")
-        notify({
-          title: editItem
-            ? "Dream updated successfully"
-            : "Dream created successfully",
-        })
-      })
-      .catch(() => {
-        notify({
-          title: "Failed to save",
-          description:
-            "Your dream has not been saved. Please try adding it again later.",
-          type: "ERROR",
-        })
-        setTimeout(() => reset(), 2000)
-      })
+    if (editItem?.itemID) {
+      updateItem(newDream, 'DREAM')
+    } else {
+      addItem(newDream, 'DREAM')
+    }
+
+    router.replace("/(tabs)/goals")
+    notify({
+      title: editItem
+        ? "Dream updated successfully"
+        : "Dream created successfully",
+    })
   }
 
   return (
@@ -172,6 +162,7 @@ export default function AddDreamModal() {
                         placeholder="mm/dd/yyyy"
                         onChange={onChange}
                         value={value ? new Date(value) : undefined}
+                        minDate={new Date()}
                         wrapperProps={{
                           style: { marginBottom: 12 },
                         }}
@@ -206,7 +197,6 @@ export default function AddDreamModal() {
           <Button
             scale={0.98}
             onPress={form.handleSubmit(onSubmit)}
-            isLoading={isPending}
           >
             Save
           </Button>

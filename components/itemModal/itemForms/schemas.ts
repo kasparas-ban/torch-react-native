@@ -45,11 +45,6 @@ export const goalFormSchema = z.object({
   dream: z.string().optional(),
   targetDate: z.string().nullable().optional(),
   priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional().nullable(),
-  tasks: z.array(
-    taskFormSchema.omit({ goal: true }).extend({
-      itemID: z.string().optional(),
-    })
-  ),
 })
 
 export type GoalFormType = z.infer<typeof goalFormSchema>

@@ -195,11 +195,16 @@ const getFormattedItems = memoize((state: State) =>
 )
 
 const useItems = () => {
+  const allItems = itemStore(getFormattedItems)
+
   return {
-    ...itemStore(getFormattedItems),
+    ...allItems,
+    allItems,
     setItems: itemStore(state => state.setItems),
     addItem: itemStore(state => state.addItem),
     updateItem: itemStore(state => state.updateItem),
+    updateItemProgress: itemStore(state => state.updateItemProgress),
+    updateItemStatus: itemStore(state => state.updateItemStatus),
   }
 }
 

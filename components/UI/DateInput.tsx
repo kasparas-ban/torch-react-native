@@ -27,6 +27,8 @@ export type DateInputProps = {
   wrapperProps?: ViewProps
   labelProps?: TextProps
   errorProps?: TextProps
+  minDate?: Date
+  maxDate?: Date
 }
 
 export default function DateInput(props: DateInputProps) {
@@ -38,6 +40,8 @@ export default function DateInput(props: DateInputProps) {
     labelProps,
     wrapperProps,
     errorProps,
+    minDate,
+    maxDate
   } = props
 
   const { styles, isDark } = useThemeStyles(inputStyles)
@@ -52,7 +56,8 @@ export default function DateInput(props: DateInputProps) {
       onChange: handleChange,
       mode: "date",
       is24Hour: true,
-      maximumDate: new Date(),
+      minimumDate: minDate,
+      maximumDate: maxDate
     })
   }
 

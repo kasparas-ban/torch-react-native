@@ -1,5 +1,4 @@
 import React, { useRef } from "react"
-import { useItemsList } from "@/api-endpoints/hooks/items/useItemsList"
 import { getItemsByType } from "@/api-endpoints/utils/helpers"
 import CloseIcon from "@/assets/icons/close.svg"
 import Colors from "@/constants/Colors"
@@ -15,6 +14,7 @@ import { AnimatedButton } from "../../AnimatedButton"
 import ToggleSelect from "../../UI/ToggleSelect"
 import useTimerStore from "../hooks/useTimer"
 import useTimerForm, { FocusType } from "../hooks/useTimerForm"
+import useItems from "@/stores/itemStore"
 
 const MOCK_DATA = [
   {
@@ -349,16 +349,16 @@ export default function FocusSelect() {
 
   const { styles, isDark } = useThemeStyles(componentStyles)
 
-  const timerState = useTimerStore.use.timerState()
+  // const timerState = useTimerStore.use.timerState()
   const { focusOn, setFocusOn, focusType, setFocusType } = useTimerForm()
-  const { data } = useItemsList()
+  // const { allItems } = useItems()
 
   const isGrouped = focusType === "TASKS" || focusType === "GOALS"
-  const items = getItemsByType({
-    itemData: data,
-    focusType,
-    grouped: isGrouped,
-  })
+  // const items = getItemsByType({
+  //   itemData: allItems,
+  //   focusType,
+  //   grouped: isGrouped,
+  // })
 
   return (
     <View>

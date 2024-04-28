@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { useDeleteItem } from "@/api-endpoints/hooks/items/useDeleteItem"
-import { useItemsList } from "@/api-endpoints/hooks/items/useItemsList"
 import { useUpdateItemStatus } from "@/api-endpoints/hooks/items/useUpdateItemStatus"
 import InfoIcon from "@/assets/icons/info.svg"
 import { FadeIn, FadeOut } from "@/constants/Animations"
@@ -97,7 +96,7 @@ export default function RemoveCard() {
   const [selItems, setSelItems] = useState<SelectionType>("one")
 
   // const { toast } = useToast()
-  const { data } = useItemsList()
+  // const { data } = useItemsList()
   const { setFocusOn } = useTimerForm()
 
   const { mutateAsync: updateStatus, isPending: isUpdatePending } =
@@ -163,9 +162,8 @@ export default function RemoveCard() {
       exiting={FadeOut(0.9)}
       style={styles.card}
     >
-      <Text style={styles.title}>{`Remove ${
-        editItem?.type.toLowerCase() ?? ""
-      }`}</Text>
+      <Text style={styles.title}>{`Remove ${editItem?.type.toLowerCase() ?? ""
+        }`}</Text>
 
       <View
         style={{

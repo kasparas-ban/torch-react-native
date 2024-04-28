@@ -1,4 +1,3 @@
-import { useItemsList } from "@/api-endpoints/hooks/items/useItemsList"
 import {
   filterItemsByStatus,
   groupItemsByParent,
@@ -7,19 +6,20 @@ import { Dream, Goal, ItemStatus, Task } from "@/types/itemTypes"
 
 import useItemListConfig from "./hooks/useItemListConfig"
 import ItemsList from "./ItemsList"
+import useItems from "@/stores/itemStore"
 
 export default function ItemListWrapper() {
   const itemType = useItemListConfig.use.itemType()
   const showArchivedItems = useItemListConfig.use.showArchivedItems()
   const showCompletedItems = useItemListConfig.use.showCompletedItems()
-  const { data, error, isLoading } = useItemsList()
+  const { tasks, goals, dreams } = useItems()
 
   const items =
     itemType === "TASK"
-      ? data?.tasks
+      ? tasks
       : itemType === "GOAL"
-        ? data?.goals
-        : data?.dreams
+        ? goals
+        : dreams
 
   const filterBy = [
     "ACTIVE" as ItemStatus,
@@ -31,8 +31,6 @@ export default function ItemListWrapper() {
   const groupedItems = itemsWithStatus
     ? groupItemsByParent(itemsWithStatus, itemType)
     : {}
-
-  console.log('groupedItems', data, groupedItems)
 
   return (
     <ItemsList<Task | Goal | Dream>

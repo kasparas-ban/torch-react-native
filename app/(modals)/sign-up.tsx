@@ -272,6 +272,7 @@ export default function SignUpModal() {
                   label="Birthday"
                   onChange={onChange}
                   value={value ? new Date(value) : undefined}
+                  maxDate={new Date()}
                   wrapperProps={{
                     style: { marginBottom: 12 },
                   }}

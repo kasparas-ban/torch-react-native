@@ -1,6 +1,4 @@
 import { useState } from "react"
-import { useItemsList } from "@/api-endpoints/hooks/items/useItemsList"
-import { useUpsertItem } from "@/api-endpoints/hooks/items/useUpsertItem"
 import { groupItemsByParent } from "@/api-endpoints/utils/helpers"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
@@ -29,6 +27,7 @@ import PriorityInput from "@/components/UI/PriorityInput"
 import RecurringInput from "@/components/UI/RecuringInput"
 import Select from "@/components/UI/Select"
 import TextInput from "@/components/UI/TextInput"
+import useItems from "@/stores/itemStore"
 
 type InputType = keyof z.infer<typeof taskFormSchema>
 
@@ -59,11 +58,8 @@ export default function AddTaskModal() {
   const isKeyboardOpen = useKeyboard()
   const { styles } = useThemeStyles(componentStyles)
 
-  const { goals } = useItemsList()
+  const { goals, addItem, updateItem } = useItems()
   const { editItem } = useEditItem()
-
-  const { mutate, reset, isPending, isError, isSuccess } =
-    useUpsertItem("TASK")
 
   const params = useLocalSearchParams()
   const parentID = params.parentID as string
@@ -91,18 +87,18 @@ export default function AddTaskModal() {
       ...(goal ? { parentID: goal } : {}),
     }
 
-    try {
-      mutate(newTask)
-      router.replace("/(tabs)/goals")
-      notify({
-        title: editItem
-          ? "Task updated successfully"
-          : "Task created successfully",
-      })
-    } catch (e) {
-      console.log(e)
-      reset()
+    if (editItem?.itemID) {
+      updateItem(newTask, 'TASK')
+    } else {
+      addItem(newTask, 'TASK')
     }
+
+    router.replace("/(tabs)/goals")
+    notify({
+      title: editItem
+        ? "Task updated successfully"
+        : "Task created successfully",
+    })
   }
 
   return (
@@ -251,6 +247,7 @@ export default function AddTaskModal() {
                         placeholder="mm/dd/yyyy"
                         onChange={onChange}
                         value={value ? new Date(value) : undefined}
+                        minDate={new Date()}
                         wrapperProps={{
                           style: { marginBottom: 12 },
                         }}
@@ -311,7 +308,6 @@ export default function AddTaskModal() {
           <Button
             scale={0.98}
             onPress={form.handleSubmit(onSubmit)}
-            isLoading={isPending}
           >
             Save
           </Button>

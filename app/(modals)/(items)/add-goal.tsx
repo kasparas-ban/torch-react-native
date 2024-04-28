@@ -1,6 +1,4 @@
 import { useState } from "react"
-import { useItemsList } from "@/api-endpoints/hooks/items/useItemsList"
-import { useUpsertItem } from "@/api-endpoints/hooks/items/useUpsertItem"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -26,6 +24,7 @@ import DateInput from "@/components/UI/DateInput"
 import PriorityInput from "@/components/UI/PriorityInput"
 import Select from "@/components/UI/Select"
 import TextInput from "@/components/UI/TextInput"
+import useItems from "@/stores/itemStore"
 
 type InputType = keyof z.infer<typeof goalFormSchema>
 
@@ -42,8 +41,6 @@ const getInitialGoalForm = (
   title: initialGoal?.title || "",
   priority: initialGoal?.priority,
   targetDate: initialGoal?.targetDate,
-  tasks:
-    initialGoal?.tasks?.map(task => ({ ...task, itemID: task.itemID })) || [],
   dream: parentID
     ? parentID
     : initialGoal?.dream
@@ -55,11 +52,8 @@ export default function AddGoalModal() {
   const isKeyboardOpen = useKeyboard()
   const { styles } = useThemeStyles(componentStyles)
 
-  const { dreams } = useItemsList()
+  const { dreams, addItem, updateItem } = useItems()
   const { editItem } = useEditItem()
-
-  const { mutateAsync, reset, isPending, isError, isSuccess } =
-    useUpsertItem("GOAL")
 
   const params = useLocalSearchParams()
   const parentID = params.parentID as string
@@ -80,7 +74,7 @@ export default function AddGoalModal() {
   })
 
   const onSubmit = (data: GoalFormType) => {
-    const { dream, tasks, ...rest } = data
+    const { dream, ...rest } = data
     const newGoal = {
       ...pruneObject(rest),
       ...(editItem ? { itemID: editItem.itemID } : {}),
@@ -88,24 +82,18 @@ export default function AddGoalModal() {
       type: "GOAL" as const,
     }
 
-    mutateAsync(newGoal)
-      .then(() => {
-        router.replace("/(tabs)/goals")
-        notify({
-          title: editItem
-            ? "Goal updated successfully"
-            : "Goal created successfully",
-        })
-      })
-      .catch(() => {
-        notify({
-          title: "Failed to save",
-          description:
-            "Your goal has not been saved. Please try adding it again later.",
-          type: "ERROR",
-        })
-        setTimeout(() => reset(), 2000)
-      })
+    if (editItem?.itemID) {
+      updateItem(newGoal, 'GOAL')
+    } else {
+      addItem(newGoal, 'GOAL')
+    }
+
+    router.replace("/(tabs)/goals")
+    notify({
+      title: editItem
+        ? "Goal updated successfully"
+        : "Goal created successfully",
+    })
   }
 
   return (
@@ -227,6 +215,7 @@ export default function AddGoalModal() {
                         placeholder="mm/dd/yyyy"
                         onChange={onChange}
                         value={value ? new Date(value) : undefined}
+                        minDate={new Date()}
                         wrapperProps={{
                           style: { marginBottom: 12 },
                         }}
@@ -261,7 +250,6 @@ export default function AddGoalModal() {
           <Button
             scale={0.98}
             onPress={form.handleSubmit(onSubmit)}
-            isLoading={isPending}
           >
             Save
           </Button>

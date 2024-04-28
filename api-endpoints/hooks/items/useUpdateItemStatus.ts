@@ -1,15 +1,9 @@
+import { UpdateItemStatusReq } from "@/api-endpoints/endpoints/itemAPI"
 import { HOST } from "@/api-endpoints/utils/apiConfig"
 import { CustomError } from "@/api-endpoints/utils/errorMsgs"
 import { useAuth } from "@clerk/clerk-react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { ItemStatus, ItemType, ResponseItem } from "@/types/itemTypes"
-
-type UpdateItemStatusReq = {
-  itemID: string
-  status: ItemStatus
-  updateAssociated: boolean
-  itemType: ItemType
-}
+import { ResponseItem } from "@/types/itemTypes"
 
 export const useUpdateItemStatus = () => {
   const { getToken } = useAuth()

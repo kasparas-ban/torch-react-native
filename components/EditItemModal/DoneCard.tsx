@@ -1,4 +1,3 @@
-import { useUpdateItemStatus } from "@/api-endpoints/hooks/items/useUpdateItemStatus"
 import InfoIcon from "@/assets/icons/info.svg"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
@@ -8,6 +7,7 @@ import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
 import { AnimatedButton } from "../AnimatedButton"
 import useEditItem from "../itemModal/hooks/useEditItem"
+import useItems from "@/stores/itemStore"
 
 const selectOptions = {
   TASK: {
@@ -33,31 +33,23 @@ export default function DoneCard() {
   const { editItem, setEditItem } = useEditItem()
 
   const itemType = editItem?.type
-  const { mutateAsync: updateStatus, isPending } = useUpdateItemStatus()
+  const { updateItemStatus } = useItems()
 
   const handleSubmit = () => {
     if (!editItem) return
 
-    updateStatus({
+    updateItemStatus({
       itemID: editItem.itemID,
       status: "COMPLETED",
       updateAssociated: true,
       itemType: editItem.type,
     })
-      .then(() => {
-        // closeModal()
-        setEditItem(undefined)
-        // toast({
-        //   title: `Marked ${editItem.type.toLowerCase()} as completed`,
-        //   description: selectOptions[editItem.type].description,
-        // })
-      })
-      .catch(() => {
-        // toast({
-        //   title: `Failed to mark ${editItem.type.toLowerCase()} as completed`,
-        //   description: "Try to repeat the action later.",
-        // })
-      })
+
+    setEditItem(undefined)
+    // toast({
+    //   title: `Marked ${editItem.type.toLowerCase()} as completed`,
+    //   description: selectOptions[editItem.type].description,
+    // })
   }
 
   return (
@@ -66,9 +58,8 @@ export default function DoneCard() {
       exiting={FadeOut(0.9)}
       style={styles.card}
     >
-      <Text style={styles.title}>{`Mark ${
-        editItem?.type.toLowerCase() ?? ""
-      } as complete?`}</Text>
+      <Text style={styles.title}>{`Mark ${editItem?.type.toLowerCase() ?? ""
+        } as complete?`}</Text>
 
       {itemType && (
         <View style={styles.section}>

@@ -1,5 +1,4 @@
 import React, { Fragment, useCallback, useEffect } from "react"
-import { useItemsList } from "@/api-endpoints/hooks/items/useItemsList"
 import { findItemByID } from "@/api-endpoints/utils/helpers"
 import RotateIcon from "@/assets/icons/rotate.svg"
 import Colors from "@/constants/Colors"
@@ -15,6 +14,7 @@ import { GeneralItem, Task } from "@/types/itemTypes"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
 
 import { ItemStrip, RecurringItemStrip } from "./ItemStrip"
+import useItems from "@/stores/itemStore"
 
 const STRIP_HEIGHT = 48
 
@@ -29,12 +29,12 @@ export default function ItemSublist({
   subitemType: "TASK" | "GOAL"
   showSublist: boolean
 }) {
-  const { data } = useItemsList()
+  const { allItems } = useItems()
   const { setEditItem } = useEditItem()
 
   const toggleEditClick = (e: GestureResponderEvent, subitem: GeneralItem) => {
     e.stopPropagation()
-    const formattedItem = findItemByID(subitem.itemID, data)
+    const formattedItem = findItemByID(subitem.itemID, allItems)
     setEditItem(formattedItem)
     router.push("/(modals)/(items)/edit-item")
   }

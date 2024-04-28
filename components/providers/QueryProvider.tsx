@@ -86,39 +86,3 @@ export default function QueryProvider({ children }: { children: ReactNode }) {
 //     }
 //   }
 // }
-
-// async function syncItemData(getToken: GetToken) {
-//   const rawItemData = (queryClient.getQueriesData({
-//     queryKey: ["items"],
-//   })?.[0]?.[1] as any)?.rawItems as SyncMetadata<ResponseItem>[] | undefined
-//   if (!rawItemData) return
-
-//   const notSyncedItems = rawItemData.filter((item) => !item.isSynced)
-
-//   const token = await getToken()
-//   if (!token) throw new Error("Token not found")
-
-//   const changePromises = notSyncedItems.map(item => {
-//     // Create new items
-//     if (item.isNew) {
-//       return addItem(token, JSON.parse(JSON.stringify(item)), item.type)
-//     } else {
-//       // Update existing items
-//       return updateItem(token, JSON.parse(JSON.stringify(item)), item.type)
-//     }
-//   })
-
-
-//   try {
-//     const results = await Promise.allSettled(changePromises)
-//     const updatedItems = results.map((result) => result.status === 'fulfilled' && !(result.value as ErrorResp).error ? result.value : null).filter(Boolean) as ResponseItem[]
-//     const syncedItems = rawItemData.map(item => {
-//       const newItemData = updatedItems.find(i => i.itemID === item.itemID)
-//       return { ...newItemData, isSynced: true, updatedAt: new Date().toISOString() } ?? { ...item, isSynced: true, updatedAt: new Date().toISOString() }
-//     })
-//     const formattedItems = formatItemResponse(syncedItems)
-//     queryClient.setQueryData(["items"], formattedItems)
-//   } catch (e) {
-//     console.error('Failed to sync ')
-//   }
-// }
