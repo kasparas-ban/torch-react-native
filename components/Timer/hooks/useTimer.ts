@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react"
-import { useUpdateUserTime } from "@/api-endpoints/hooks/user/useUser"
 import useItems from "@/stores/itemStore"
+import useUserInfo from "@/stores/userStore"
 import dayjs from "dayjs"
 import { create } from "zustand"
 import { subscribeWithSelector } from "zustand/middleware"
@@ -153,7 +153,7 @@ export const useTimerListener = () => {
   const { focusOn } = useTimerForm()
   const { updateItemProgress } = useItems()
 
-  const { mutateAsync: updateUserTime } = useUpdateUserTime()
+  const { updateUserTime } = useUserInfo()
 
   const updateTime = useCallback(
     (timeSpent: number, itemID?: string) =>

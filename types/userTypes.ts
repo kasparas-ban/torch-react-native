@@ -5,10 +5,10 @@ export type ProfileResp = {
   birthday: string | null
   gender: GenderType | null
   createdAt: string
-  countryCode: string
-  city: string
+  countryCode: string | null
+  city: string | null
   focusTime: number
-  description: string
+  description: string | null
 }
 
 type GenderType = "MALE" | "FEMALE" | "OTHER"
@@ -41,7 +41,7 @@ export type RegisterUserReq = SignUpUserData & {
 export type UpdateProfileReq = {
   username: string
   birthday: string | null
-  gender: string | null
+  gender: GenderType | null
   countryCode: string | null
   city: string | null
   description: string | null

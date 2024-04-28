@@ -28,89 +28,89 @@ export const useRegisterUser = () => {
   })
 }
 
-export const useUpdateUser = () => {
-  const { getToken } = useAuth()
-  const queryClient = useQueryClient()
+// export const useUpdateUser = () => {
+//   const { getToken } = useAuth()
+//   const queryClient = useQueryClient()
 
-  const fetcher = async (data: UpdateProfileReq) => {
-    try {
-      const token = await getToken()
-      if (!token) throw new Error("Token not found")
-      const updatedUser = await updateUser(token, data)
+//   const fetcher = async (data: UpdateProfileReq) => {
+//     try {
+//       const token = await getToken()
+//       if (!token) throw new Error("Token not found")
+//       const updatedUser = await updateUser(token, data)
 
-      return {
-        ...updatedUser,
-        updatedAt: new Date().toISOString(),
-        isSynced: true,
-      }
-    } catch (err) {
-      throw new CustomError(err as string, UserUpdateServerErrorMsg)
-    }
-  }
+//       return {
+//         ...updatedUser,
+//         updatedAt: new Date().toISOString(),
+//         isSynced: true,
+//       }
+//     } catch (err) {
+//       throw new CustomError(err as string, UserUpdateServerErrorMsg)
+//     }
+//   }
 
-  return useMutation({
-    networkMode: "always",
-    mutationFn: (data: UpdateProfileReq) => fetcher(data),
-    onMutate: async (data: UpdateProfileReq) => {
-      await queryClient.cancelQueries({ queryKey: ["user"] })
+//   return useMutation({
+//     networkMode: "always",
+//     mutationFn: (data: UpdateProfileReq) => fetcher(data),
+//     onMutate: async (data: UpdateProfileReq) => {
+//       await queryClient.cancelQueries({ queryKey: ["user"] })
 
-      const oldData = queryClient.getQueryData(["user"]) as
-        | ProfileResp
-        | undefined
+//       const oldData = queryClient.getQueryData(["user"]) as
+//         | ProfileResp
+//         | undefined
 
-      queryClient.setQueryData(["user"], {
-        ...oldData,
-        ...data,
-        updatedAt: new Date().toISOString(),
-        isSynced: false,
-      })
-    },
-    onSuccess: data => queryClient.setQueryData(["user"], data),
-  })
-}
+//       queryClient.setQueryData(["user"], {
+//         ...oldData,
+//         ...data,
+//         updatedAt: new Date().toISOString(),
+//         isSynced: false,
+//       })
+//     },
+//     onSuccess: data => queryClient.setQueryData(["user"], data),
+//   })
+// }
 
-export const useUpdateUserTime = () => {
-  const { getToken } = useAuth()
-  const queryClient = useQueryClient()
+// export const useUpdateUserTime = () => {
+//   const { getToken } = useAuth()
+//   const queryClient = useQueryClient()
 
-  const fetcher = async (timeSpent: number) => {
-    try {
-      const token = await getToken()
-      if (!token) throw new Error("Token not found")
-      const updatedUser = await updateUserTime(token, { timeSpent })
+//   const fetcher = async (timeSpent: number) => {
+//     try {
+//       const token = await getToken()
+//       if (!token) throw new Error("Token not found")
+//       const updatedUser = await updateUserTime(token, { timeSpent })
 
-      return updatedUser
-    } catch (err) {
-      throw new CustomError(err as string, {
-        title: "Failed to update focus time",
-        description: "Your last focus time will not be saved.",
-      })
-    }
-  }
+//       return updatedUser
+//     } catch (err) {
+//       throw new CustomError(err as string, {
+//         title: "Failed to update focus time",
+//         description: "Your last focus time will not be saved.",
+//       })
+//     }
+//   }
 
-  return useMutation({
-    mutationFn: fetcher,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] })
-    },
-  })
-}
+//   return useMutation({
+//     mutationFn: fetcher,
+//     onSuccess: () => {
+//       queryClient.invalidateQueries({ queryKey: ["user"] })
+//     },
+//   })
+// }
 
-export default function useUserInfo() {
-  const { getToken } = useAuth()
+// export default function useUserInfo() {
+//   const { getToken } = useAuth()
 
-  const fetchUserInfo = async () => {
-    const token = await getToken()
-    if (token) {
-      const userInfo = await getUserInfo(token)
-      return userInfo
-    }
-    throw Error("Failed to get user info")
-  }
+//   const fetchUserInfo = async () => {
+//     const token = await getToken()
+//     if (token) {
+//       const userInfo = await getUserInfo(token)
+//       return userInfo
+//     }
+//     throw Error("Failed to get user info")
+//   }
 
-  return useQuery({
-    queryKey: ["user"],
-    queryFn: fetchUserInfo,
-    staleTime: Infinity,
-  })
-}
+//   return useQuery({
+//     queryKey: ["user"],
+//     queryFn: fetchUserInfo,
+//     staleTime: Infinity,
+//   })
+// }

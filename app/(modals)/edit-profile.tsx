@@ -1,5 +1,4 @@
 import { useState } from "react"
-import useUserInfo, { useUpdateUser } from "@/api-endpoints/hooks/user/useUser"
 import Colors from "@/constants/Colors"
 import { useUser } from "@clerk/clerk-expo"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -25,6 +24,7 @@ import DateInput from "@/components/UI/DateInput"
 import PictureInput from "@/components/UI/PictureInput"
 import Select from "@/components/UI/Select"
 import TextInput from "@/components/UI/TextInput"
+import useUserInfo from "@/stores/userStore"
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient)
 
@@ -55,9 +55,8 @@ export default function EditProfileScreen() {
   const isKeyboardOpen = useKeyboard()
   const { styles, isDark } = useThemeStyles(componentStyles)
 
-  const { mutate: updateUser } = useUpdateUser()
   const [isLoading, setIsLoading] = useState(false)
-  const { data: userInfo } = useUserInfo()
+  const { user: userInfo, updateUser } = useUserInfo()
   const { user } = useUser()
 
   const { scrollHandler, headerTitleStyle, headerGradientStyle } =

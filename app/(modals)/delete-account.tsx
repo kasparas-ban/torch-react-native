@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { deleteAccount } from "@/api-endpoints/endpoints/userAPI"
-import useUserInfo from "@/api-endpoints/hooks/user/useUser"
 import Colors from "@/constants/Colors"
 import { useAuth } from "@clerk/clerk-expo"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -13,6 +12,7 @@ import { notify } from "@/components/notifications/Notifications"
 import { queryClient } from "@/components/providers/QueryProvider"
 import Button from "@/components/UI/Button"
 import TextInput from "@/components/UI/TextInput"
+import useUserInfo from "@/stores/userStore"
 
 const getDeleteAccountFormSchema = (username: string) =>
   z.object({
@@ -25,10 +25,10 @@ export default function DeleteAccountScreen() {
   const { styles } = useThemeStyles(componentStyles)
 
   const { getToken, signOut } = useAuth()
-  const { data } = useUserInfo()
+  const { user } = useUserInfo()
   const [isLoading, setIsLoading] = useState(false)
 
-  const defaultCheckText = `delete ${data?.username ?? "my"} account`
+  const defaultCheckText = `delete ${user?.username ?? "my"} account`
   const deleteAccountSchema = getDeleteAccountFormSchema(defaultCheckText)
 
   const form = useForm<z.infer<typeof deleteAccountSchema>>({

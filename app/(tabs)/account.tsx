@@ -1,5 +1,4 @@
 import { useMemo } from "react"
-import useUserInfo from "@/api-endpoints/hooks/user/useUser"
 import Colors from "@/constants/Colors"
 import { useAuth, useUser } from "@clerk/clerk-expo"
 import dayjs from "dayjs"
@@ -23,6 +22,7 @@ import DeleteIcon from "../../assets/icons/delete.svg"
 import LockIcon from "../../assets/icons/lock.svg"
 import LogoutIcon from "../../assets/icons/logout.svg"
 import UserIcon from "../../assets/icons/userCircle.svg"
+import useUserInfo from "@/stores/userStore"
 
 export default function AccountScreen() {
   const { styles, isDark } = useThemeStyles(componentStyles)
@@ -32,7 +32,7 @@ export default function AccountScreen() {
 
   const router = useRouter()
   const { user } = useUser()
-  const { data: userInfo } = useUserInfo()
+  const { user: userInfo } = useUserInfo()
 
   const handleLogout = async () => {
     showGlobalLoading("Logging out...")
