@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import Colors from "@/constants/Colors"
 import { useAuth, useUser } from "@clerk/clerk-expo"
 import dayjs from "dayjs"
@@ -28,11 +28,17 @@ export default function AccountScreen() {
   const { styles, isDark } = useThemeStyles(componentStyles)
   const { showGlobalLoading, hideGlobalLoading } = useGlobalLoading()
 
-  const { signOut, sessionId, isSignedIn } = useAuth()
+  const { signOut, sessionId, isSignedIn, getToken } = useAuth()
+
+  useEffect(() => {
+    getToken().then((res) => console.log('TOKEN', res))
+  })
 
   const router = useRouter()
   const { user } = useUser()
   const { user: userInfo } = useUserInfo()
+
+  console.log('user', user)
 
   const handleLogout = async () => {
     showGlobalLoading("Logging out...")
