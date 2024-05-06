@@ -9,27 +9,21 @@ import { formatItemResponse } from "@/api-endpoints/utils/responseFormatters"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { memoize } from "proxy-memoize"
 import { create } from "zustand"
-import {
-  createJSONStorage,
-  persist,
-  subscribeWithSelector,
-} from "zustand/middleware"
+import { createJSONStorage, persist } from "zustand/middleware"
 import { Stringified, SyncMetadata } from "@/types/generalTypes"
 import { ItemType, ResponseItem } from "@/types/itemTypes"
 import { getRandomId } from "@/utils/randomId"
-import { formatDate } from "@/utils/utils"
 import {
   NewTaskType,
   UpdateTaskType,
 } from "@/components/itemModal/itemForms/schemas"
 
-export type ItemStoreState = {
+type State = {
   items: SyncMetadata<ResponseItem>[]
-  lastSync: Date | null
-  updatedAt: Date
+  deletedItemIDs: string[]
 }
 
-type ItemStoreActions = {
+type Actions = {
   setItems: (items: ResponseItem[]) => void
   addItem: (item: NewItemType, type: ItemType) => void
   updateItem: (item: UpdateItemType, type: ItemType) => void
@@ -38,19 +32,18 @@ type ItemStoreActions = {
   deleteItem: (req: DeleteItemReq) => void
 }
 
-export const itemStore = create<ItemStoreState & ItemStoreActions>()(
+const itemStore = create<State & Actions>()(
   persist(
-    subscribeWithSelector((set, get) => ({
+    (set, get) => ({
       items: [],
-      lastSync: null,
-      updatedAt: new Date(),
+      deletedItemIDs: [],
       setItems: (items: ResponseItem[]) =>
         set(() => ({
           items: items.map(i => ({
             ...i,
-            updatedAt: formatDate(new Date()),
+            updatedAt: new Date().toISOString(),
+            isSynced: false,
           })),
-          updatedAt: new Date(),
         })),
       addItem: (item: NewItemType, type: ItemType) =>
         set(state => {
@@ -59,26 +52,27 @@ export const itemStore = create<ItemStoreState & ItemStoreActions>()(
             ...(item as Stringified<NewItemType>),
             type,
             itemID: getRandomId(),
-            ...((item as NewTaskType).recurring
-              ? {
-                  ...(item as NewTaskType).recurring,
-                  progress: 0,
-                }
-              : null),
+            ...((item as NewTaskType).recurring ?? {
+              ...(item as NewTaskType).recurring,
+              progress: 0,
+            }),
             timeSpent: 0,
             status: "ACTIVE",
-            createdAt: formatDate(new Date()),
+            createdAt: new Date().toISOString(),
             // Sync data
-            updatedAt: formatDate(new Date()),
+            updatedAt: new Date().toISOString(),
+            isSynced: false,
+            isNew: true,
           } as SyncMetadata<ResponseItem>
 
-          return { items: [...state.items, newItem], updatedAt: new Date() }
+          return { items: [...state.items, newItem] }
         }),
       updateItem: (item: UpdateItemType) =>
         set(state => {
           const updatedItem = {
             ...item,
-            updatedAt: formatDate(new Date()),
+            updatedAt: new Date().toISOString(),
+            isSynced: false,
           } as Stringified<SyncMetadata<UpdateItemType>>
 
           const updatedItems = state.items.map(oldItem =>
@@ -86,7 +80,7 @@ export const itemStore = create<ItemStoreState & ItemStoreActions>()(
               ? {
                   ...oldItem,
                   ...updatedItem,
-                  recurring: (updatedItem as UpdateTaskType).recurring
+                  recurring: (updatedItem as UpdateTaskType)
                     ? {
                         ...(updatedItem as Stringified<UpdateTaskType>)
                           ?.recurring,
@@ -97,7 +91,7 @@ export const itemStore = create<ItemStoreState & ItemStoreActions>()(
               : oldItem
           ) as SyncMetadata<ResponseItem>[]
 
-          return { items: updatedItems, updatedAt: new Date() }
+          return { items: updatedItems }
         }),
       updateItemProgress: (req: UpdateItemProgressReq) =>
         set(state => ({
@@ -106,7 +100,8 @@ export const itemStore = create<ItemStoreState & ItemStoreActions>()(
               ? {
                   ...item,
                   timeSpent: item.timeSpent + req.timeSpent,
-                  updatedAt: formatDate(new Date()),
+                  updatedAt: new Date().toISOString(),
+                  isSynced: false,
                 }
               : item
           ),
@@ -144,7 +139,8 @@ export const itemStore = create<ItemStoreState & ItemStoreActions>()(
               ? {
                   ...item,
                   status: req.status,
-                  updatedAt: formatDate(new Date()),
+                  updatedAt: new Date().toISOString(),
+                  isSynced: false,
                 }
               : item
           )
@@ -153,7 +149,7 @@ export const itemStore = create<ItemStoreState & ItemStoreActions>()(
         }),
       deleteItem: (req: DeleteItemReq) =>
         set(state => {
-          let deletedItemIDs = [req.itemID]
+          let deleteItemIDs = [req.itemID]
 
           if (req.deleteAssociated) {
             if (req.itemType === "GOAL") {
@@ -161,32 +157,32 @@ export const itemStore = create<ItemStoreState & ItemStoreActions>()(
                 .filter(i => i.type === "TASK" && i.parentID === req.itemID)
                 .map(task => task.itemID)
 
-              deletedItemIDs.push(...associatedTasks)
+              deleteItemIDs.push(...associatedTasks)
             }
             if (req.itemType === "DREAM") {
               const associatedGoals = state.items
                 .filter(
                   goal => goal.type === "TASK" && goal.parentID === req.itemID
                 )
-                .map(task => task.itemID)
-
+                .map(i => i.itemID)
               const associatedTasks = state.items
                 .filter(task =>
                   associatedGoals.find(goalID => goalID === task.parentID)
                 )
-                .map(task => task.itemID)
+                .map(i => i.itemID)
 
-              deletedItemIDs.push(...associatedGoals, ...associatedTasks)
+              deleteItemIDs.push(...associatedGoals, ...associatedTasks)
             }
           }
 
           return {
+            deletedItemIDs: deleteItemIDs,
             items: state.items.filter(
-              item => !deletedItemIDs.find(id => id === item.itemID)
+              item => !deleteItemIDs.includes(item.itemID)
             ),
           }
         }),
-    })),
+    }),
     {
       name: "items-store",
       storage: createJSONStorage(() => AsyncStorage),
@@ -194,7 +190,7 @@ export const itemStore = create<ItemStoreState & ItemStoreActions>()(
   )
 )
 
-const getFormattedItems = memoize((state: ItemStoreState) =>
+const getFormattedItems = memoize((state: State) =>
   formatItemResponse(state.items)
 )
 

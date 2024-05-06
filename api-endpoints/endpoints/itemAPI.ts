@@ -33,13 +33,6 @@ export type UpdateItemStatusReq = {
   itemType: ItemType
 }
 
-export const getAllItem = (signal: AbortSignal, token: string) =>
-  fetch(`${HOST}/items`, {
-    signal,
-    method: "GET",
-    headers: { Authorization: `Bearer ${token}` },
-  }).then(res => handleFetch<ResponseItem[]>(res, "Failed to get all items"))
-
 export const addItem = (token: string, item: NewItemType, type: ItemType) =>
   fetch(`${HOST}/add-item/${type.toLowerCase()}`, {
     method: "POST",
@@ -53,13 +46,6 @@ export const updateItem = (
   type: ItemType
 ) =>
   fetch(`${HOST}/update-item/${type.toLowerCase()}`, {
-    method: "PUT",
-    headers: { Authorization: `Bearer ${token}` },
-    body: JSON.stringify(item),
-  }).then(res => handleFetch<ResponseItem>(res, "Failed to update item"))
-
-export const upsertItem = (token: string, item: ResponseItem) =>
-  fetch(`${HOST}/upsert-item/${item.type.toLowerCase()}`, {
     method: "PUT",
     headers: { Authorization: `Bearer ${token}` },
     body: JSON.stringify(item),

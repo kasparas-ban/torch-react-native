@@ -13,7 +13,6 @@ export type ResponseItem = {
   parentID: string | null
   timeSpent: number
   status: ItemStatus
-  updatedAt: string
   createdAt: string
 }
 
