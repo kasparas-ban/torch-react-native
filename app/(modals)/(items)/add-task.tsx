@@ -2,6 +2,7 @@ import { useState } from "react"
 import { groupItemsByParent } from "@/api-endpoints/utils/helpers"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
+import useItems from "@/stores/itemStore"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router, useLocalSearchParams } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
@@ -10,6 +11,7 @@ import Animated, { LinearTransition } from "react-native-reanimated"
 import { z } from "zod"
 import { SelectOption } from "@/types/generalTypes"
 import { Task } from "@/types/itemTypes"
+import { getRandomId } from "@/utils/randomId"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import useKeyboard from "@/utils/useKeyboard"
 import { pruneObject } from "@/utils/utils"
@@ -20,6 +22,7 @@ import {
   TaskFormType,
 } from "@/components/itemModal/itemForms/schemas"
 import { notify } from "@/components/notifications/Notifications"
+import { useElectric } from "@/components/providers/ElectricProvider/ElectricProvider"
 import Button from "@/components/UI/Button"
 import DateInput from "@/components/UI/DateInput"
 import DurationInput from "@/components/UI/DurationInput"
@@ -27,7 +30,6 @@ import PriorityInput from "@/components/UI/PriorityInput"
 import RecurringInput from "@/components/UI/RecuringInput"
 import Select from "@/components/UI/Select"
 import TextInput from "@/components/UI/TextInput"
-import useItems from "@/stores/itemStore"
 
 type InputType = keyof z.infer<typeof taskFormSchema>
 
@@ -61,6 +63,8 @@ export default function AddTaskModal() {
   const { goals, addItem, updateItem } = useItems()
   const { editItem } = useEditItem()
 
+  const electric = useElectric()
+
   const params = useLocalSearchParams()
   const parentID = params.parentID as string
   const defaultTask = getInitialTaskForm(
@@ -79,7 +83,7 @@ export default function AddTaskModal() {
     shouldUnregister: true,
   })
 
-  const onSubmit = (data: TaskFormType) => {
+  const onSubmit = async (data: TaskFormType) => {
     const { goal, ...rest } = data
     const newTask = {
       ...pruneObject(rest),
@@ -87,10 +91,83 @@ export default function AddTaskModal() {
       ...(goal ? { parentID: goal } : {}),
     }
 
+    try {
+      if (!electric) throw new Error("Electric DB not found")
+
+      await electric.db.items.create({
+        data: {
+          item_id: newTask.itemID ?? getRandomId(),
+          user_id: 2,
+          title: newTask.title,
+          item_type: "TASK",
+          target_date: newTask.targetDate,
+          item_priority: newTask.priority,
+          duration: newTask.duration,
+          time_spent: 0,
+          rec_times: newTask.recurring?.times,
+          rec_period: newTask.recurring?.period,
+          rec_progress: 0,
+          rec_updated_at: new Date().toISOString(),
+          parent_id: newTask.parentID,
+          item_status: "ACTIVE",
+          updated_at: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+        },
+      })
+
+      // await electric.db.rawQuery({
+      //   sql: `
+      //       INSERT INTO items (item_id, user_id, title, item_type, target_date, item_priority, duration, time_spent, rec_times, rec_period, rec_progress, rec_updated_at, parent_id, item_status, updated_at, created_at)
+      //       VALUES (${newTask.itemID}, ${1}, ${newTask.title}, "TASK", ${newTask.targetDate})
+      //     `,
+      // })
+
+      router.replace("/(tabs)/goals")
+      notify({
+        title: editItem
+          ? "Task updated successfully"
+          : "Task created successfully",
+      })
+    } catch (e) {
+      console.log("ERROR", e)
+      notify({
+        title: "Failed to save",
+        description:
+          "Your task has not been saved. Please try adding it again later.",
+        type: "ERROR",
+      })
+      // setTimeout(() => reset(), 2000)
+    }
+
+    // try {
+    //   if (!electric) throw new Error("Electric DB not found")
+
+    //   await electric.db.rawQuery({
+    //     sql: `
+    //         INSERT INTO items (item_id, user_id, title, item_type, target_date, item_priority, duration, time_spent, rec_times, rec_period, rec_progress, rec_updated_at, parent_id, item_status, updated_at, created_at)
+    //         VALUES (${newTask.itemID}, ${1}, ${newTask.title}, "TASK", ${newTask.targetDate})
+    //       `,
+    //   })
+    //   router.replace("/(tabs)/goals")
+    //   notify({
+    //     title: editItem
+    //       ? "Task updated successfully"
+    //       : "Task created successfully",
+    //   })
+    // } catch (e) {
+    //   notify({
+    //     title: "Failed to save",
+    //     description:
+    //       "Your task has not been saved. Please try adding it again later.",
+    //     type: "ERROR",
+    //   })
+    //   setTimeout(() => reset(), 2000)
+    // }
+
     if (editItem?.itemID) {
-      updateItem(newTask, 'TASK')
+      updateItem(newTask, "TASK")
     } else {
-      addItem(newTask, 'TASK')
+      addItem(newTask, "TASK")
     }
 
     router.replace("/(tabs)/goals")
@@ -305,10 +382,7 @@ export default function AddTaskModal() {
             paddingHorizontal: 24,
           }}
         >
-          <Button
-            scale={0.98}
-            onPress={form.handleSubmit(onSubmit)}
-          >
+          <Button scale={0.98} onPress={form.handleSubmit(onSubmit)}>
             Save
           </Button>
         </View>

@@ -2,12 +2,20 @@
   "name": "timer-app",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "exports": {
+    ".": "./utils/index.ts"
+  },
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "backend:start": "docker compose up -d",
+    "prebuild": "npx electric-sql generate -o ./db/generated/client",
+    "db:migrate": "npx electric-sql with-config \"npx @databases/pg-migrations apply --database {{ELECTRIC_PROXY}} --directory ./db/migrations\"",
+    "start:android": "expo start --android",
+    "start:ios": "expo start --ios"
   },
   "jest": {
     "preset": "jest-expo"
@@ -28,6 +36,7 @@
     "@tanstack/react-query": "^5.29.0",
     "@tanstack/react-query-persist-client": "^5.32.0",
     "dayjs": "^1.11.10",
+    "electric-sql": "^0.11.0",
     "expo": "~50.0.15",
     "expo-blur": "~12.9.2",
     "expo-font": "~11.10.3",
@@ -38,6 +47,7 @@
     "expo-router": "~3.4.8",
     "expo-secure-store": "^12.8.1",
     "expo-splash-screen": "~0.26.4",
+    "expo-sqlite": "~13.4.0",
     "expo-status-bar": "~1.11.1",
     "expo-system-ui": "~2.9.3",
     "expo-web-browser": "~12.8.2",
@@ -75,7 +85,8 @@
     "jest-expo": "~50.0.4",
     "prettier": "3.2.5",
     "react-test-renderer": "18.2.0",
-    "typescript": "^5.4.4"
+    "typescript": "^5.4.4",
+    "@databases/pg-migrations": "^5.0.3"
   },
   "private": true
 }
