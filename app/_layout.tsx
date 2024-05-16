@@ -16,6 +16,8 @@ import { StorageProvider } from "@/components/providers/StorageProvider"
 
 import "react-native-get-random-values"
 
+global.Buffer = require("buffer").Buffer
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,

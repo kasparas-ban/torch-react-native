@@ -3,6 +3,7 @@ import { groupItemsByParent } from "@/api-endpoints/utils/helpers"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import useItems from "@/stores/itemStore"
+import { useUser } from "@clerk/clerk-expo"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router, useLocalSearchParams } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
@@ -59,6 +60,7 @@ const getInitialTaskForm = (
 export default function AddTaskModal() {
   const isKeyboardOpen = useKeyboard()
   const { styles } = useThemeStyles(componentStyles)
+  const { user } = useUser()
 
   const { goals, addItem, updateItem } = useItems()
   const { editItem } = useEditItem()
@@ -94,10 +96,13 @@ export default function AddTaskModal() {
     try {
       if (!electric) throw new Error("Electric DB not found")
 
+      const results = await electric.db.items.findMany()
+      console.log("results", results)
+
       await electric.db.items.create({
         data: {
           item_id: newTask.itemID ?? getRandomId(),
-          user_id: 2,
+          user_id: user?.id ?? "local-user",
           title: newTask.title,
           item_type: "TASK",
           target_date: newTask.targetDate,

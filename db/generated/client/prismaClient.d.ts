@@ -18,7 +18,7 @@ type UnwrapTuple<Tuple extends readonly unknown[]> = {
  */
 export type Items = {
   item_id: string
-  user_id: bigint
+  user_id: string
   title: string
   item_type: item_type_enum | null
   target_date: Date | null
@@ -885,7 +885,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type ItemsAvgAggregateOutputType = {
-    user_id: number | null
     duration: number | null
     time_spent: number | null
     rec_times: number | null
@@ -893,7 +892,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type ItemsSumAggregateOutputType = {
-    user_id: bigint | null
     duration: number | null
     time_spent: number | null
     rec_times: number | null
@@ -902,7 +900,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type ItemsMinAggregateOutputType = {
     item_id: string | null
-    user_id: bigint | null
+    user_id: string | null
     title: string | null
     item_type: item_type_enum | null
     target_date: Date | null
@@ -921,7 +919,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type ItemsMaxAggregateOutputType = {
     item_id: string | null
-    user_id: bigint | null
+    user_id: string | null
     title: string | null
     item_type: item_type_enum | null
     target_date: Date | null
@@ -960,7 +958,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
   export type ItemsAvgAggregateInputType = {
-    user_id?: true
     duration?: true
     time_spent?: true
     rec_times?: true
@@ -968,7 +965,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type ItemsSumAggregateInputType = {
-    user_id?: true
     duration?: true
     time_spent?: true
     rec_times?: true
@@ -1127,7 +1123,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type ItemsGroupByOutputType = {
     item_id: string
-    user_id: bigint
+    user_id: string
     title: string
     item_type: item_type_enum | null
     target_date: Date | null
@@ -2003,7 +1999,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     OR?: Enumerable<ItemsWhereInput>
     NOT?: Enumerable<ItemsWhereInput>
     item_id?: StringFilter | string
-    user_id?: BigIntFilter | bigint | number
+    user_id?: StringFilter | string
     title?: StringFilter | string
     item_type?: Enumitem_type_enumNullableFilter | item_type_enum | null
     target_date?: DateTimeNullableFilter | Date | string | null
@@ -2072,7 +2068,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     OR?: Enumerable<ItemsScalarWhereWithAggregatesInput>
     NOT?: Enumerable<ItemsScalarWhereWithAggregatesInput>
     item_id?: StringWithAggregatesFilter | string
-    user_id?: BigIntWithAggregatesFilter | bigint | number
+    user_id?: StringWithAggregatesFilter | string
     title?: StringWithAggregatesFilter | string
     item_type?: Enumitem_type_enumNullableWithAggregatesFilter | item_type_enum | null
     target_date?: DateTimeNullableWithAggregatesFilter | Date | string | null
@@ -2091,7 +2087,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type ItemsCreateInput = {
     item_id: string
-    user_id: bigint | number
+    user_id: string
     title: string
     item_type?: item_type_enum | null
     target_date?: Date | string | null
@@ -2110,7 +2106,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type ItemsUncheckedCreateInput = {
     item_id: string
-    user_id: bigint | number
+    user_id: string
     title: string
     item_type?: item_type_enum | null
     target_date?: Date | string | null
@@ -2129,7 +2125,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type ItemsUpdateInput = {
     item_id?: StringFieldUpdateOperationsInput | string
-    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     item_type?: NullableEnumitem_type_enumFieldUpdateOperationsInput | item_type_enum | null
     target_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2148,7 +2144,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type ItemsUncheckedUpdateInput = {
     item_id?: StringFieldUpdateOperationsInput | string
-    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     item_type?: NullableEnumitem_type_enumFieldUpdateOperationsInput | item_type_enum | null
     target_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2167,7 +2163,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type ItemsCreateManyInput = {
     item_id: string
-    user_id: bigint | number
+    user_id: string
     title: string
     item_type?: item_type_enum | null
     target_date?: Date | string | null
@@ -2186,7 +2182,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type ItemsUpdateManyMutationInput = {
     item_id?: StringFieldUpdateOperationsInput | string
-    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     item_type?: NullableEnumitem_type_enumFieldUpdateOperationsInput | item_type_enum | null
     target_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2205,7 +2201,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type ItemsUncheckedUpdateManyInput = {
     item_id?: StringFieldUpdateOperationsInput | string
-    user_id?: BigIntFieldUpdateOperationsInput | bigint | number
+    user_id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     item_type?: NullableEnumitem_type_enumFieldUpdateOperationsInput | item_type_enum | null
     target_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2235,17 +2231,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     endsWith?: string
     mode?: QueryMode
     not?: NestedStringFilter | string
-  }
-
-  export type BigIntFilter = {
-    equals?: bigint | number
-    in?: Enumerable<bigint> | Enumerable<number>
-    notIn?: Enumerable<bigint> | Enumerable<number>
-    lt?: bigint | number
-    lte?: bigint | number
-    gt?: bigint | number
-    gte?: bigint | number
-    not?: NestedBigIntFilter | bigint | number
   }
 
   export type Enumitem_type_enumNullableFilter = {
@@ -2333,7 +2318,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type ItemsAvgOrderByAggregateInput = {
-    user_id?: SortOrder
     duration?: SortOrder
     time_spent?: SortOrder
     rec_times?: SortOrder
@@ -2379,7 +2363,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type ItemsSumOrderByAggregateInput = {
-    user_id?: SortOrder
     duration?: SortOrder
     time_spent?: SortOrder
     rec_times?: SortOrder
@@ -2402,22 +2385,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _count?: NestedIntFilter
     _min?: NestedStringFilter
     _max?: NestedStringFilter
-  }
-
-  export type BigIntWithAggregatesFilter = {
-    equals?: bigint | number
-    in?: Enumerable<bigint> | Enumerable<number>
-    notIn?: Enumerable<bigint> | Enumerable<number>
-    lt?: bigint | number
-    lte?: bigint | number
-    gt?: bigint | number
-    gte?: bigint | number
-    not?: NestedBigIntWithAggregatesFilter | bigint | number
-    _count?: NestedIntFilter
-    _avg?: NestedFloatFilter
-    _sum?: NestedBigIntFilter
-    _min?: NestedBigIntFilter
-    _max?: NestedBigIntFilter
   }
 
   export type Enumitem_type_enumNullableWithAggregatesFilter = {
@@ -2512,14 +2479,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     set?: string
   }
 
-  export type BigIntFieldUpdateOperationsInput = {
-    set?: bigint | number
-    increment?: bigint | number
-    decrement?: bigint | number
-    multiply?: bigint | number
-    divide?: bigint | number
-  }
-
   export type NullableEnumitem_type_enumFieldUpdateOperationsInput = {
     set?: item_type_enum | null
   }
@@ -2564,17 +2523,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     startsWith?: string
     endsWith?: string
     not?: NestedStringFilter | string
-  }
-
-  export type NestedBigIntFilter = {
-    equals?: bigint | number
-    in?: Enumerable<bigint> | Enumerable<number>
-    notIn?: Enumerable<bigint> | Enumerable<number>
-    lt?: bigint | number
-    lte?: bigint | number
-    gt?: bigint | number
-    gte?: bigint | number
-    not?: NestedBigIntFilter | bigint | number
   }
 
   export type NestedEnumitem_type_enumNullableFilter = {
@@ -2667,33 +2615,6 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     gt?: number
     gte?: number
     not?: NestedIntFilter | number
-  }
-
-  export type NestedBigIntWithAggregatesFilter = {
-    equals?: bigint | number
-    in?: Enumerable<bigint> | Enumerable<number>
-    notIn?: Enumerable<bigint> | Enumerable<number>
-    lt?: bigint | number
-    lte?: bigint | number
-    gt?: bigint | number
-    gte?: bigint | number
-    not?: NestedBigIntWithAggregatesFilter | bigint | number
-    _count?: NestedIntFilter
-    _avg?: NestedFloatFilter
-    _sum?: NestedBigIntFilter
-    _min?: NestedBigIntFilter
-    _max?: NestedBigIntFilter
-  }
-
-  export type NestedFloatFilter = {
-    equals?: number
-    in?: Enumerable<number>
-    notIn?: Enumerable<number>
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedFloatFilter | number
   }
 
   export type NestedEnumitem_type_enumNullableWithAggregatesFilter = {

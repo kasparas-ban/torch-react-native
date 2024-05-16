@@ -5,7 +5,7 @@ CREATE TYPE item_status_enum AS ENUM ('ACTIVE', 'COMPLETED', 'ARCHIVED');
 
 CREATE TABLE IF NOT EXISTS items (
   item_id VARCHAR PRIMARY KEY,
-  user_id BIGINT NOT NULL,
+  user_id VARCHAR NOT NULL,
   title VARCHAR NOT NULL,
   item_type item_type_enum,
   target_date DATE,

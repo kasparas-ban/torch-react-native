@@ -5,6 +5,7 @@ import { electrify } from "electric-sql/expo-next"
 import { makeElectricContext } from "electric-sql/react"
 import * as SQLite from "expo-sqlite/next"
 
+import { authToken } from "./auth"
 import { DEBUG_MODE, ELECTRIC_URL } from "./config"
 
 const { ElectricProvider, useElectric } = makeElectricContext<Electric>()
@@ -28,17 +29,18 @@ const ElectricProviderComponent = ({
       console.log("config", config)
 
       try {
-        const conn = SQLite.openDatabaseSync("postgres.db")
+        const conn = SQLite.openDatabaseSync("timer-app.db")
         const client = await electrify(conn, schema, config)
 
         const token = await getToken()
-        if (token) await client.connect(token)
+        if (token) await client.connect(authToken())
+        // if (token) await client.connect(token)
         console.log("CONNECTED")
 
         if (!isMounted) return
         setElectric(client)
       } catch (e) {
-        console.error(e)
+        console.error("PROVIDER ERROR", e)
       }
     }
 
