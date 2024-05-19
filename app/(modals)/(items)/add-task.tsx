@@ -2,6 +2,7 @@ import { useState } from "react"
 import { groupItemsByParent } from "@/api-endpoints/utils/helpers"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
+import useItems from "@/stores/itemStore"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router, useLocalSearchParams } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
@@ -20,6 +21,7 @@ import {
   TaskFormType,
 } from "@/components/itemModal/itemForms/schemas"
 import { notify } from "@/components/notifications/Notifications"
+import pb from "@/components/providers/Pocketbase/PocketbaseConfig"
 import Button from "@/components/UI/Button"
 import DateInput from "@/components/UI/DateInput"
 import DurationInput from "@/components/UI/DurationInput"
@@ -27,7 +29,6 @@ import PriorityInput from "@/components/UI/PriorityInput"
 import RecurringInput from "@/components/UI/RecuringInput"
 import Select from "@/components/UI/Select"
 import TextInput from "@/components/UI/TextInput"
-import useItems from "@/stores/itemStore"
 
 type InputType = keyof z.infer<typeof taskFormSchema>
 
@@ -79,7 +80,7 @@ export default function AddTaskModal() {
     shouldUnregister: true,
   })
 
-  const onSubmit = (data: TaskFormType) => {
+  const onSubmit = async (data: TaskFormType) => {
     const { goal, ...rest } = data
     const newTask = {
       ...pruneObject(rest),
@@ -87,11 +88,17 @@ export default function AddTaskModal() {
       ...(goal ? { parentID: goal } : {}),
     }
 
-    if (editItem?.itemID) {
-      updateItem(newTask, 'TASK')
-    } else {
-      addItem(newTask, 'TASK')
-    }
+    // if (editItem?.itemID) {
+    //   updateItem(newTask, 'TASK')
+    // } else {
+    //   addItem(newTask, 'TASK')
+    // }
+
+    const record = await pb.collection("items").create({
+      title: newTask.title,
+    })
+
+    console.log("ADDED ITEM", record)
 
     router.replace("/(tabs)/goals")
     notify({
@@ -305,10 +312,7 @@ export default function AddTaskModal() {
             paddingHorizontal: 24,
           }}
         >
-          <Button
-            scale={0.98}
-            onPress={form.handleSubmit(onSubmit)}
-          >
+          <Button scale={0.98} onPress={form.handleSubmit(onSubmit)}>
             Save
           </Button>
         </View>
