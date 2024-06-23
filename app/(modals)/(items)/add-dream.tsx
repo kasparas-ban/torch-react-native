@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import { formatNewItem } from "@/stores/helpers"
@@ -43,7 +43,7 @@ export default function AddDreamModal() {
   const isKeyboardOpen = useKeyboard()
   const { styles } = useThemeStyles(componentStyles)
 
-  const { editItem } = useEditItem()
+  const { editItem, setEditItem } = useEditItem()
   const { addItem, updateItem } = useItems()
 
   const defaultDream = getInitialDreamForm(editItem as Dream)
@@ -74,6 +74,10 @@ export default function AddDreamModal() {
         : "Dream created successfully",
     })
   }
+
+  useEffect(() => {
+    return () => setEditItem(undefined)
+  }, [setEditItem])
 
   return (
     <View style={styles.wrapper}>

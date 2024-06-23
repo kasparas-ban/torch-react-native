@@ -93,8 +93,10 @@ export default function DurationInput(props: InputProps) {
         bottomPickerGradientOverlayProps={{
           colors: ["transparent", isDark ? Colors.gray[700] : "white"],
         }}
-        initialHours={value ? Math.floor(value / 3600) : 0}
-        initialMinutes={value ? Math.floor((value % 3600) / 60) : 0}
+        initialValue={{
+          hours: value ? Math.floor(value / 3600) : 0,
+          minutes: value ? Math.floor((value % 3600) / 60) : 0,
+        }}
         styles={{
           contentContainer: {
             backgroundColor: isDark ? Colors.gray[700] : "white",

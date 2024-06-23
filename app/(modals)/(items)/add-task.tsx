@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { groupItemsByParent } from "@/api-endpoints/utils/helpers"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
@@ -64,7 +64,6 @@ export default function AddTaskModal() {
   const { styles } = useThemeStyles(componentStyles)
 
   const { addItem, updateItem } = useItems()
-  // const { goals, addItem, updateItem } = useItems()
   const { editItem, setEditItem } = useEditItem()
 
   const params = useLocalSearchParams()
@@ -95,8 +94,6 @@ export default function AddTaskModal() {
       addItem(newTask)
     }
 
-    setEditItem(undefined)
-
     router.replace("/(tabs)/goals")
     notify({
       title: editItem
@@ -104,6 +101,10 @@ export default function AddTaskModal() {
         : "Task created successfully",
     })
   }
+
+  useEffect(() => {
+    return () => setEditItem(undefined)
+  }, [setEditItem])
 
   return (
     <View style={styles.wrapper}>

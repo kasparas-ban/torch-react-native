@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import useItems from "@/stores/itemStore"
@@ -53,7 +53,7 @@ export default function AddGoalModal() {
   const { styles } = useThemeStyles(componentStyles)
 
   const { dreams, addItem, updateItem } = useItems()
-  const { editItem } = useEditItem()
+  const { editItem, setEditItem } = useEditItem()
 
   const params = useLocalSearchParams()
   const parent_id = params.parent_id as string
@@ -95,6 +95,10 @@ export default function AddGoalModal() {
         : "Goal created successfully",
     })
   }
+
+  useEffect(() => {
+    return () => setEditItem(undefined)
+  }, [setEditItem])
 
   return (
     <View style={styles.wrapper}>
