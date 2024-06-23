@@ -1,14 +1,14 @@
 import { useEffect } from "react"
 import Colors from "@/constants/Colors"
 import { StyleSheet, Text, TextProps, View, ViewProps } from "react-native"
-import { ResponseItem } from "@/types/itemTypes"
+import { ItemResponse } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
 import { AnimatedButton } from "../AnimatedButton"
 
 type InputProps = {
-  value?: ResponseItem["priority"] | null
-  onChange: (val: ResponseItem["priority"]) => void
+  value?: ItemResponse["priority"] | null
+  onChange: (val: ItemResponse["priority"]) => void
   label?: string
   title?: string
   wrapperProps?: ViewProps

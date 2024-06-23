@@ -40,7 +40,7 @@ export const useRegisterUser = () => {
 
 //       return {
 //         ...updatedUser,
-//         updatedAt: new Date().toISOString(),
+//         updated_at: new Date().toISOString(),
 //         isSynced: true,
 //       }
 //     } catch (err) {
@@ -61,7 +61,7 @@ export const useRegisterUser = () => {
 //       queryClient.setQueryData(["user"], {
 //         ...oldData,
 //         ...data,
-//         updatedAt: new Date().toISOString(),
+//         updated_at: new Date().toISOString(),
 //         isSynced: false,
 //       })
 //     },
@@ -73,11 +73,11 @@ export const useRegisterUser = () => {
 //   const { getToken } = useAuth()
 //   const queryClient = useQueryClient()
 
-//   const fetcher = async (timeSpent: number) => {
+//   const fetcher = async (time_spent: number) => {
 //     try {
 //       const token = await getToken()
 //       if (!token) throw new Error("Token not found")
-//       const updatedUser = await updateUserTime(token, { timeSpent })
+//       const updatedUser = await updateUserTime(token, { time_spent })
 
 //       return updatedUser
 //     } catch (err) {

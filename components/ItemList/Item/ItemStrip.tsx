@@ -168,13 +168,14 @@ function RecurringItemStrip({
   const { editItem, setEditItem } = useEditItem()
 
   const isActive = item.status === "ACTIVE"
-  const itemProgress = item.recurring
-    ? (item.recurring?.progress || 0) / item.recurring?.times
+  const itemProgress = item.rec_times
+    ? (item.rec_progress || 0) / item.rec_times
     : 0
 
   const handleStripClick = () => {
     const itemInEdit =
-      item.itemID === editItem?.itemID && item.type === editItem?.type
+      item.item_id === editItem?.item_id &&
+      item.item_type === editItem?.item_type
     if (itemInEdit) setEditItem(undefined)
   }
 
@@ -253,7 +254,7 @@ function RecurringItemStrip({
               color: stripPercentageColor,
             }}
           >
-            {item.recurring?.progress || 0}/{item.recurring?.times}
+            {item.rec_progress || 0}/{item.rec_times}
           </Text>
         </View>
         <View

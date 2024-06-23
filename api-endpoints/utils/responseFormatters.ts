@@ -1,69 +1,72 @@
-import { SyncMetadata } from "@/types/generalTypes"
-import { Dream, Goal, ItemStatus, ResponseItem, Task } from "@/types/itemTypes"
+import {
+  Dream,
+  Goal,
+  ItemResponse,
+  ItemStatus,
+  SyncMetadata,
+  Task,
+} from "@/types/itemTypes"
 
-const formatTaskResponse = (tasks: ResponseItem[]) => {
+const formatTaskResponse = (tasks: ItemResponse[]) => {
   return tasks.map(task => ({
     ...task,
-    recurring: task.recurring?.times ? task.recurring : null, // TODO: remove when BE returning null
-    progress: getProgress(task.timeSpent, task.duration),
+    progress: getProgress(task.time_spent, task.duration),
   }))
 }
 
 const formatGoalResponse = (
-  tasks: ResponseItem[],
-  goals: ResponseItem[],
-  dreams: ResponseItem[]
+  tasks: ItemResponse[],
+  goals: ItemResponse[],
+  dreams: ItemResponse[]
 ) => {
   return goals.map(goal => {
-    const goalTasks = tasks.filter(item => item.parentID === goal.itemID)
+    const goalTasks = tasks.filter(item => item.parent_id === goal.item_id)
 
-    let [tasksDuration, tasksTimeSpent] = [0, 0]
+    let [tasksDuration, taskstime_spent] = [0, 0]
     goalTasks.forEach(task => {
       tasksDuration += task.duration || 0
-      tasksTimeSpent += task.timeSpent
+      taskstime_spent += task.time_spent
     })
 
     return {
       ...goal,
-      recurring: null, // TODO: remove when BE returning null
-      progress: getProgress(tasksTimeSpent, tasksDuration),
-      dream: dreams.find(dream => dream.itemID === goal.parentID) || null,
-      totalTimeSpent: goal.timeSpent + tasksTimeSpent,
+      progress: getProgress(taskstime_spent, tasksDuration),
+      dream: dreams.find(dream => dream.item_id === goal.parent_id) || null,
+      totaltime_spent: goal.time_spent + taskstime_spent,
     }
   })
 }
 
 const formatDreamResponse = (
-  tasks: ResponseItem[],
-  goals: ResponseItem[],
-  dreams: ResponseItem[]
+  tasks: ItemResponse[],
+  goals: ItemResponse[],
+  dreams: ItemResponse[]
 ) => {
   return dreams.map(dream => {
-    const dreamGoals = goals.filter(goal => goal.parentID === dream.itemID)
+    const dreamGoals = goals.filter(goal => goal.parent_id === dream.item_id)
 
-    let [tasksDuration, tasksTimeSpent] = [0, 0]
+    let [tasksDuration, taskstime_spent] = [0, 0]
     dreamGoals.forEach(goal => {
       tasks.forEach(task => {
-        if (task.parentID === goal.itemID) {
+        if (task.parent_id === goal.item_id) {
           tasksDuration += task.duration || 0
-          tasksTimeSpent += task.timeSpent
+          taskstime_spent += task.time_spent
         }
       })
     })
 
     return {
       ...dream,
-      recurring: null, // TODO: remove when BE returning null
-      progress: getProgress(tasksTimeSpent, tasksDuration),
-      totalTimeSpent: dream.timeSpent + tasksTimeSpent,
+      progress: getProgress(taskstime_spent, tasksDuration),
+      totaltime_spent: dream.time_spent + taskstime_spent,
     }
   })
 }
 
-export const formatItemResponse = (response: SyncMetadata<ResponseItem>[]) => {
-  const tasksResp = response.filter(item => item.type === "TASK")
-  const goalsResp = response.filter(item => item.type === "GOAL")
-  const dreamsResp = response.filter(item => item.type === "DREAM")
+export const formatItemResponse = (response: SyncMetadata<ItemResponse>[]) => {
+  const tasksResp = response.filter(item => item.item_type === "TASK")
+  const goalsResp = response.filter(item => item.item_type === "GOAL")
+  const dreamsResp = response.filter(item => item.item_type === "DREAM")
 
   let tasks = formatTaskResponse(tasksResp)
   let goals = formatGoalResponse(tasksResp, goalsResp, dreamsResp)
@@ -71,26 +74,26 @@ export const formatItemResponse = (response: SyncMetadata<ResponseItem>[]) => {
 
   // Add child & parent elements
   const formattedTasks: Task[] = tasks.map(task => {
-    const { parentID, ...rest } = task
+    const { parent_id, ...rest } = task
     return {
       ...rest,
-      goal: goals.find(goal => goal.itemID === parentID) || null,
+      goal: goals.find(goal => goal.item_id === parent_id) || null,
     }
   })
 
   const formattedGoals: Goal[] = goals.map(goal => {
-    const { parentID, ...rest } = goal
+    const { parent_id, ...rest } = goal
     return {
       ...rest,
-      tasks: tasks.filter(task => task.parentID === goal.itemID),
-      dream: dreams.find(dream => dream.itemID === parentID) || null,
+      tasks: tasks.filter(task => task.parent_id === goal.item_id),
+      dream: dreams.find(dream => dream.item_id === parent_id) || null,
     }
   })
 
   const formattedDream: Dream[] = dreams.map(dream => {
     return {
       ...dream,
-      goals: goals.filter(goal => goal.parentID === dream.itemID),
+      goals: goals.filter(goal => goal.parent_id === dream.item_id),
     }
   })
 
@@ -102,9 +105,9 @@ export const formatItemResponse = (response: SyncMetadata<ResponseItem>[]) => {
   }
 }
 
-const getProgress = (timeSpent: number, duration: number | null) => {
+const getProgress = (time_spent: number, duration: number | null) => {
   const progress = duration
-    ? Math.round((timeSpent / duration) * 1000) / 1000
+    ? Math.round((time_spent / duration) * 1000) / 1000
     : 0
   return progress > 1 ? 1 : progress
 }

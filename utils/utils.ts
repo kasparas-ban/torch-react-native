@@ -47,7 +47,7 @@ export const formatPercentages = (fraction?: number) => {
   return `${rounded}`
 }
 
-export const formatTimeSpent = (totalSeconds: number) => {
+export const formatSpentTime = (totalSeconds: number) => {
   if (totalSeconds === 0) return "0 h"
 
   const hours = Math.floor(totalSeconds / 3600)

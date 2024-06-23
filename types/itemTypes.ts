@@ -1,22 +1,53 @@
 // === Items ===
 
-import { SyncMetadata } from "./generalTypes"
-
-export type ResponseItem = {
-  itemID: string
+export type ItemResponse = {
+  item_id: string
   title: string
-  type: ItemType
-  targetDate: string | null
+  item_type: ItemType
+  status: ItemStatus
+  target_date: string | null
   priority: "LOW" | "MEDIUM" | "HIGH" | null
   duration: number | null
-  recurring: RecurringType | null
-  parentID: string | null
-  timeSpent: number
-  status: ItemStatus
-  createdAt: string
+  time_spent: number
+  rec_times: number | null
+  rec_period: ReccuringPeriod | null
+  rec_progress: number | null
+  rec_updated_at: string | null
+  parent_id: string | null
+  updated_at: string
+  created_at: string
+  // Clock metadata
+  title__c: number
+  status__c: number
+  target_date__c: number
+  priority__c: number
+  duration__c: number
+  time_spent__c: number
+  rec_times__c: number
+  rec_period__c: number
+  rec_progress__c: number
+  parent_id__c: number
+  item__c: number
 }
 
-export type GeneralItem = Omit<ResponseItem, "parentID"> & {
+export type SyncMetadata<T> = T & {
+  updatedFields: UpdatedFields
+}
+
+export type UpdatedFields = {
+  title: boolean
+  status: boolean
+  target_date: boolean
+  priority: boolean
+  duration: boolean
+  time_spent: boolean
+  rec_times: boolean
+  rec_period: boolean
+  rec_progress: boolean
+  parent_id: boolean
+}
+
+export type GeneralItem = Omit<ItemResponse, "parent_id"> & {
   progress: number
 }
 
@@ -25,13 +56,13 @@ export type Task = GeneralItem & {
 }
 
 export type Goal = GeneralItem & {
-  totalTimeSpent: number
+  totaltime_spent: number
   tasks: GeneralItem[]
   dream: GeneralItem | null
 }
 
 export type Dream = GeneralItem & {
-  totalTimeSpent: number
+  totaltime_spent: number
   goals: GeneralItem[]
 }
 
@@ -40,7 +71,7 @@ export type FormattedItem = Task | Goal | Dream
 // === Rest ===
 
 export type GroupedItems<T> = {
-  [parentId: number | string | "empty" | "other"]: {
+  [parent_id: number | string | "empty" | "other"]: {
     parentLabel?: string
     items: T[]
   }
@@ -50,7 +81,7 @@ export type FormattedItems = {
   tasks: Task[]
   goals: Goal[]
   dreams: Dream[]
-  rawItems: SyncMetadata<ResponseItem>[]
+  rawItems: SyncMetadata<ItemResponse>[]
 }
 
 export type ItemTypeLabel = "Tasks" | "Goals" | "Dreams"
@@ -65,8 +96,8 @@ export type ItemOptionType = {
   type: ItemType
   containsTasks: boolean
   progress?: number
-  timeSpent?: number
-  totalTimeSpent?: number
+  time_spent?: number
+  totaltime_spent?: number
   duration?: number
 }
 
@@ -87,7 +118,7 @@ export type RecurringType = {
 export type ReccuringPeriod = "DAY" | "WEEK" | "MONTH"
 
 export type TimerHistoryRecord = {
-  timeSpent: number
+  time_spent: number
   focusOn?: { label: string; value: string; type: ItemType }
   progress?: number
   progressDifference?: number

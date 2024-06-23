@@ -12,7 +12,7 @@ import {
 } from "react-native"
 import { TimerPickerModal } from "react-native-timer-picker"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
-import { formatTimeSpent } from "@/utils/utils"
+import { formatSpentTime } from "@/utils/utils"
 
 import { AnimatedButton } from "../AnimatedButton"
 
@@ -43,9 +43,7 @@ export default function DurationInput(props: InputProps) {
             children={label}
             style={[styles.label, labelProps?.style]}
           />
-          <Text style={styles.infoLabel}>
-            (Important to track your progress)
-          </Text>
+          <Text style={styles.infoLabel}>(Used to track your progress)</Text>
         </View>
       )}
 
@@ -58,7 +56,7 @@ export default function DurationInput(props: InputProps) {
               !!value && styles.inputValue,
             ]}
           >
-            {value ? formatTimeSpent(value) : placeholder}
+            {value ? formatSpentTime(value) : placeholder}
           </Text>
         )}
       </Pressable>

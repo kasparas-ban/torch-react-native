@@ -1,11 +1,11 @@
-import { UpsertItem } from "@/api-endpoints/endpoints/itemAPI"
+import { UpsertItem } from "@/api-endpoints/endpoints/itemAPITypes"
 import { HOST } from "@/api-endpoints/utils/apiConfig"
 import { CustomError, PostFetchErrorMsg } from "@/api-endpoints/utils/errorMsgs"
 import { formatItemResponse } from "@/api-endpoints/utils/responseFormatters"
 import { useAuth } from "@clerk/clerk-react"
 import { GetToken } from "@clerk/types/dist"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { FormattedItems, ItemType, ResponseItem } from "@/types/itemTypes"
+import { FormattedItems, ItemResponse, ItemType } from "@/types/itemTypes"
 import { getRandomId } from "@/utils/randomId"
 import { UpdateTaskType } from "@/components/itemModal/itemForms/schemas"
 
@@ -24,18 +24,18 @@ export const useUpsertItem = (type: ItemType) => {
           | FormattedItems
           | undefined
 
-        const itemID = (item as UpdateTaskType).itemID
+        const item_id = (item as UpdateTaskType).item_id
 
-        if (itemID) {
+        if (item_id) {
           // Update an existing item
           const updatedItem = {
-            ...oldData?.rawItems.find(i => i.itemID === itemID),
+            ...oldData?.rawItems.find(i => i.item_id === item_id),
             ...item,
-            updatedAt: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
             isSynced: false,
           }
           const newRawItems = oldData?.rawItems.map(item =>
-            item.itemID === itemID ? updatedItem : item
+            item.item_id === item_id ? updatedItem : item
           )
 
           const newItems = formatItemResponse(
@@ -47,12 +47,12 @@ export const useUpsertItem = (type: ItemType) => {
           // Create new item
           const newItem: any = {
             ...item,
-            itemID: getRandomId(),
+            item_id: getRandomId(),
             type,
-            timeSpent: 0,
+            time_spent: 0,
             status: "ACTIVE",
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
             isSynced: false,
             isNew: true,
           }
@@ -71,7 +71,7 @@ export const useUpsertItem = (type: ItemType) => {
 
         const updatedData =
           oldData?.rawItems.map(item =>
-            item.itemID === data.itemID ? { ...item, isSynced: true } : item
+            item.item_id === data.item_id ? { ...item, isSynced: true } : item
           ) || []
         const formattedItems = formatItemResponse(updatedData)
 
@@ -90,10 +90,10 @@ const upsertItem = async (
   const token = await getToken()
   if (!token) throw new Error("Failed to load token")
 
-  const endpoint = (item as UpdateTaskType).itemID
+  const endpoint = (item as UpdateTaskType).item_id
     ? `${HOST}/update-item/${type.toLowerCase()}`
     : `${HOST}/add-item/${type.toLowerCase()}`
-  const method = (item as UpdateTaskType).itemID ? "PUT" : "POST"
+  const method = (item as UpdateTaskType).item_id ? "PUT" : "POST"
 
   return fetch(endpoint, {
     method: method,
@@ -102,7 +102,7 @@ const upsertItem = async (
   })
     .then(res => {
       if (!res.ok) throw new CustomError("", PostFetchErrorMsg)
-      return res.json() as Promise<ResponseItem>
+      return res.json() as Promise<ItemResponse>
     })
     .catch(err => {
       throw new CustomError(err, PostFetchErrorMsg)

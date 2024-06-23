@@ -25,13 +25,16 @@ function Item<T extends FormattedItem>({
   const toggleSublist = () => {
     const newState = !showSublist
     setShowSublist(newState)
-    saveCollapseState({ itemId: item.itemID, itemType: item.type }, !newState)
+    saveCollapseState(
+      { item_id: item.item_id, itemType: item.item_type },
+      !newState
+    )
   }
 
   const itemSublist = useMemo(() => {
     return itemType === "GOAL"
       ? (item as Goal).tasks
-      : item.type === "DREAM"
+      : item.item_type === "DREAM"
         ? (item as Dream).goals
         : undefined
   }, [itemType])
@@ -46,7 +49,7 @@ function Item<T extends FormattedItem>({
     [setEditItem]
   )
 
-  const isRecurring = itemType === "TASK" && !!(item as Task).recurring
+  const isRecurring = itemType === "TASK" && !!(item as Task).rec_times
 
   return (
     <View>
@@ -70,8 +73,8 @@ function Item<T extends FormattedItem>({
         <>
           {containsSublist && (
             <ItemSublist
-              parentID={item.itemID}
-              key={`${itemType}_${item.itemID}_sublist`}
+              parent_id={item.item_id}
+              key={`${itemType}_${item.item_id}_sublist`}
               subitems={itemSublist || []}
               subitemType={itemType === "DREAM" ? "GOAL" : "TASK"}
               showSublist={showSublist}
@@ -82,8 +85,8 @@ function Item<T extends FormattedItem>({
         <>
           {containsSublist && (
             <ItemSublist
-              parentID={item.itemID}
-              key={`${itemType}_${item.itemID}_sublist`}
+              parent_id={item.item_id}
+              key={`${itemType}_${item.item_id}_sublist`}
               subitems={itemSublist || []}
               subitemType={itemType === "DREAM" ? "GOAL" : "TASK"}
               showSublist={showSublist}

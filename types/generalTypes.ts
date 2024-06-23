@@ -13,12 +13,6 @@ export type SelectOptionExtended<T> = SelectOption<T> & {
 
 export const genericMemo: <T>(component: T) => T = memo
 
-export type SyncMetadata<T> = T & {
-  updatedAt: string
-  isSynced: boolean
-  isNew?: boolean
-}
-
 export type Stringified<T> = {
   [Property in keyof T]-?: T[Property]
 }

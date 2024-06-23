@@ -4,12 +4,16 @@ import { useUpdateItemStatus } from "@/api-endpoints/hooks/items/useUpdateItemSt
 import InfoIcon from "@/assets/icons/info.svg"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
+import useItems from "@/stores/itemStore"
+import { router } from "expo-router"
 import { StyleSheet, Text, View } from "react-native"
 import Animated from "react-native-reanimated"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
+import { capitalize } from "@/utils/utils"
 
 import { AnimatedButton } from "../AnimatedButton"
 import useEditItem from "../itemModal/hooks/useEditItem"
+import { notify } from "../notifications/Notifications"
 import useTimerForm from "../Timer/hooks/useTimerForm"
 
 const selectOptions = {
@@ -95,16 +99,16 @@ export default function RemoveCard() {
   )
   const [selItems, setSelItems] = useState<SelectionType>("one")
 
-  // const { toast } = useToast()
   // const { data } = useItemsList()
   const { setFocusOn } = useTimerForm()
 
   const { mutateAsync: updateStatus, isPending: isUpdatePending } =
     useUpdateItemStatus()
-  const { mutateAsync: deleteItem, isPending: isDeletePending } =
-    useDeleteItem()
+  // const { mutateAsync: deleteItem, isPending: isDeletePending } =
+  //   useDeleteItem()
+  const { deleteItem } = useItems()
 
-  const itemType = editItem?.type
+  const itemType = editItem?.item_type
   const isArchived = editItem?.status === "ARCHIVED"
 
   const handleSubmit = () => {
@@ -112,10 +116,10 @@ export default function RemoveCard() {
 
     if (action === "archive") {
       updateStatus({
-        itemID: editItem.itemID,
+        item_id: editItem.item_id,
         status: "ARCHIVED",
         updateAssociated: selItems === "all",
-        itemType: editItem.type,
+        itemType: editItem.item_type,
       })
         .then(() => {
           // closeModal()
@@ -133,26 +137,18 @@ export default function RemoveCard() {
         })
     } else {
       deleteItem({
-        itemID: editItem.itemID,
+        item_id: editItem.item_id,
+        cl: editItem.item__c,
         deleteAssociated: selItems === "all",
-        itemType: editItem.type,
       })
-        .then(() => {
-          // closeModal()
-          setEditItem(undefined)
-          setFocusOn(null)
+      router.back()
+      setEditItem(undefined)
+      setFocusOn(null)
 
-          // toast({
-          //   title: `${capitalize(editItem.type)} deleted`,
-          //   description: `It will be removed from the ${editItem.type.toLowerCase()} list.`,
-          // })
-        })
-        .catch(() => {
-          // toast({
-          //   title: `Failed to delete ${editItem.type.toLowerCase()}`,
-          //   description: "Try deleting it later.",
-          // })
-        })
+      notify({
+        title: `${capitalize(editItem.item_type)} deleted`,
+        description: `It will be removed from the ${editItem.item_type.toLowerCase()} list.`,
+      })
     }
   }
 
@@ -162,8 +158,9 @@ export default function RemoveCard() {
       exiting={FadeOut(0.9)}
       style={styles.card}
     >
-      <Text style={styles.title}>{`Remove ${editItem?.type.toLowerCase() ?? ""
-        }`}</Text>
+      <Text style={styles.title}>{`Remove ${
+        editItem?.item_type.toLowerCase() ?? ""
+      }`}</Text>
 
       <View
         style={{
@@ -368,7 +365,11 @@ export default function RemoveCard() {
         </Text>
       </View>
 
-      <AnimatedButton style={styles.confirmBtn} scale={0.96}>
+      <AnimatedButton
+        style={styles.confirmBtn}
+        scale={0.96}
+        onPress={handleSubmit}
+      >
         <Text style={styles.confirmLabel}>Confirm</Text>
       </AnimatedButton>
     </Animated.View>

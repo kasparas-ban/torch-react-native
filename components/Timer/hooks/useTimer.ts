@@ -156,10 +156,10 @@ export const useTimerListener = () => {
   const { updateUserTime } = useUserInfo()
 
   const updateTime = useCallback(
-    (timeSpent: number, itemID?: string) =>
-      itemID
-        ? updateItemProgress({ timeSpent, itemID })
-        : updateUserTime(timeSpent),
+    (time_spent: number, item_id?: string) =>
+      item_id
+        ? updateItemProgress({ time_spent, item_id })
+        : updateUserTime(time_spent),
     [updateItemProgress, updateUserTime]
   )
 

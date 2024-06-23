@@ -6,7 +6,7 @@ import { StyleSheet, Text, View } from "react-native"
 import Animated from "react-native-reanimated"
 import { Goal, ItemOptionType, Task } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
-import { formatTimeSpent, toPercent } from "@/utils/utils"
+import { formatSpentTime, toPercent } from "@/utils/utils"
 
 import { AnimatedButton } from "../AnimatedButton"
 import useEditItem from "../itemModal/hooks/useEditItem"
@@ -16,7 +16,7 @@ export default function EditItemFunction() {
   const { styles, isDark } = useThemeStyles(componentStyles)
   const { editItem } = useEditItem()
 
-  const isRecurring = !!editItem?.recurring
+  const isRecurring = !!editItem?.rec_period
 
   const { setFocusOn } = useTimerForm()
 
@@ -24,11 +24,11 @@ export default function EditItemFunction() {
     if (!editItem) return
 
     const itemOption: ItemOptionType = {
-      value: editItem.itemID,
+      value: editItem.item_id,
       label: editItem.title,
-      type: editItem.type,
+      type: editItem.item_type,
       progress: editItem.progress,
-      timeSpent: editItem.timeSpent,
+      time_spent: editItem.time_spent,
       duration: (editItem as Task).duration ?? undefined,
       containsTasks: !!(editItem as Goal).tasks?.length,
     }
@@ -55,7 +55,7 @@ export default function EditItemFunction() {
             }}
           >
             {isRecurring
-              ? `${editItem.recurring?.progress || 0}/${editItem.recurring?.times}`
+              ? `${editItem.rec_progress || 0}/${editItem.rec_times}`
               : toPercent(editItem?.progress).slice(0, -1)}
           </Text>
           {!isRecurring && (
@@ -118,9 +118,9 @@ export default function EditItemFunction() {
                 style={{ color: isDark ? Colors.gray[300] : Colors.gray[500] }}
               >
                 {isRecurring
-                  ? editItem.recurring?.progress
-                  : formatTimeSpent(
-                      (editItem as Goal).totalTimeSpent || editItem.timeSpent
+                  ? editItem.rec_progress
+                  : formatSpentTime(
+                      (editItem as Goal).totaltime_spent || editItem.time_spent
                     )}
               </Text>
             </View>

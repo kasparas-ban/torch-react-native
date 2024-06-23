@@ -1,7 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
-import { SyncMetadata } from "@/types/generalTypes"
 import { ProfileResp, UpdateProfileReq } from "@/types/userTypes"
 
 type State = {
@@ -11,7 +10,7 @@ type State = {
 type Actions = {
   setUser: (user: ProfileResp) => void
   updateUser: (user: UpdateProfileReq) => void
-  updateUserTime: (timeSpent: number) => void
+  updateUserTime: (time_spent: number) => void
 }
 
 const itemStore = create<State & Actions>()(
@@ -22,7 +21,7 @@ const itemStore = create<State & Actions>()(
         set(() => ({
           user: {
             ...user,
-            updatedAt: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
             isSynced: false,
           },
         })),
@@ -34,20 +33,20 @@ const itemStore = create<State & Actions>()(
             user: {
               ...state.user,
               ...user,
-              updatedAt: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
               isSynced: false,
             },
           }
         }),
-      updateUserTime: (timeSpent: number) =>
+      updateUserTime: (time_spent: number) =>
         set(state => {
           if (!state.user) return state
 
           return {
             user: {
               ...state.user,
-              focusTime: state.user?.focusTime + timeSpent,
-              updatedAt: new Date().toISOString(),
+              focusTime: state.user?.focusTime + time_spent,
+              updated_at: new Date().toISOString(),
               isSynced: false,
             },
           }

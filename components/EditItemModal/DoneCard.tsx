@@ -1,13 +1,13 @@
 import InfoIcon from "@/assets/icons/info.svg"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
+import useItems from "@/stores/itemStore"
 import { StyleSheet, Text, View } from "react-native"
 import Animated from "react-native-reanimated"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
 import { AnimatedButton } from "../AnimatedButton"
 import useEditItem from "../itemModal/hooks/useEditItem"
-import useItems from "@/stores/itemStore"
 
 const selectOptions = {
   TASK: {
@@ -32,17 +32,17 @@ export default function DoneCard() {
   // const { toast } = useToast()
   const { editItem, setEditItem } = useEditItem()
 
-  const itemType = editItem?.type
+  const itemType = editItem?.item_type
   const { updateItemStatus } = useItems()
 
   const handleSubmit = () => {
     if (!editItem) return
 
     updateItemStatus({
-      itemID: editItem.itemID,
+      item_id: editItem.item_id,
       status: "COMPLETED",
       updateAssociated: true,
-      itemType: editItem.type,
+      itemType: editItem.item_type,
     })
 
     setEditItem(undefined)
@@ -58,8 +58,9 @@ export default function DoneCard() {
       exiting={FadeOut(0.9)}
       style={styles.card}
     >
-      <Text style={styles.title}>{`Mark ${editItem?.type.toLowerCase() ?? ""
-        } as complete?`}</Text>
+      <Text style={styles.title}>{`Mark ${
+        editItem?.item_type.toLowerCase() ?? ""
+      } as complete?`}</Text>
 
       {itemType && (
         <View style={styles.section}>

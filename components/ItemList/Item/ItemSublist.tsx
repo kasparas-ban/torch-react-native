@@ -2,6 +2,7 @@ import React, { Fragment, useCallback, useEffect } from "react"
 import { findItemByID } from "@/api-endpoints/utils/helpers"
 import RotateIcon from "@/assets/icons/rotate.svg"
 import Colors from "@/constants/Colors"
+import useItems from "@/stores/itemStore"
 import { router } from "expo-router"
 import { GestureResponderEvent, useColorScheme, View } from "react-native"
 import Animated, {
@@ -14,17 +15,16 @@ import { GeneralItem, Task } from "@/types/itemTypes"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
 
 import { ItemStrip, RecurringItemStrip } from "./ItemStrip"
-import useItems from "@/stores/itemStore"
 
 const STRIP_HEIGHT = 48
 
 export default function ItemSublist({
-  parentID,
+  parent_id,
   subitems,
   subitemType,
   showSublist,
 }: {
-  parentID: string
+  parent_id: string
   subitems: GeneralItem[]
   subitemType: "TASK" | "GOAL"
   showSublist: boolean
@@ -34,12 +34,12 @@ export default function ItemSublist({
 
   const toggleEditClick = (e: GestureResponderEvent, subitem: GeneralItem) => {
     e.stopPropagation()
-    const formattedItem = findItemByID(subitem.itemID, allItems)
+    const formattedItem = findItemByID(subitem.item_id, allItems)
     setEditItem(formattedItem)
     router.push("/(modals)/(items)/edit-item")
   }
 
-  const isRecurring = (item: GeneralItem) => !!item.recurring
+  const isRecurring = (item: GeneralItem) => !!item.rec_times
 
   const animVal = useSharedValue(0)
 
@@ -80,7 +80,7 @@ export default function ItemSublist({
   return (
     <Animated.View style={[{ gap: 12, marginBottom: 12 }, animatedHeight]}>
       {subitems.map((subitem, idx) => (
-        <Fragment key={`${parentID}_${subitem.itemID}`}>
+        <Fragment key={`${parent_id}_${subitem.item_id}`}>
           <Animated.View
             style={[
               {
@@ -135,7 +135,7 @@ function BulletPoint({
   const colorScheme = useColorScheme()
   const isDark = colorScheme === "dark"
 
-  const isRecurring = (subitems[idx] as Task).recurring
+  const isRecurring = (subitems[idx] as Task).rec_times
 
   const bulletColor =
     isRecurring && !isDark ? Colors.amber[200] : Colors.gray[300]

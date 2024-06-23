@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
+import useItems from "@/stores/itemStore"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router, useLocalSearchParams } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
@@ -24,27 +25,26 @@ import DateInput from "@/components/UI/DateInput"
 import PriorityInput from "@/components/UI/PriorityInput"
 import Select from "@/components/UI/Select"
 import TextInput from "@/components/UI/TextInput"
-import useItems from "@/stores/itemStore"
 
 type InputType = keyof z.infer<typeof goalFormSchema>
 
 const inputNames = [
   { label: "Priority", value: "priority" },
-  { label: "Target date", value: "targetDate" },
+  { label: "Target date", value: "target_date" },
   { label: "Assign dream", value: "dream" },
 ] as SelectOption<InputType>[]
 
 const getInitialGoalForm = (
   initialGoal?: Goal,
-  parentID?: string
+  parent_id?: string
 ): GoalFormType => ({
   title: initialGoal?.title || "",
   priority: initialGoal?.priority,
-  targetDate: initialGoal?.targetDate,
-  dream: parentID
-    ? parentID
+  target_date: initialGoal?.target_date,
+  dream: parent_id
+    ? parent_id
     : initialGoal?.dream
-      ? initialGoal.dream.itemID
+      ? initialGoal.dream.item_id
       : undefined,
 })
 
@@ -56,10 +56,10 @@ export default function AddGoalModal() {
   const { editItem } = useEditItem()
 
   const params = useLocalSearchParams()
-  const parentID = params.parentID as string
+  const parent_id = params.parent_id as string
   const defaultGoal = getInitialGoalForm(
-    parentID ? undefined : (editItem as Goal),
-    parentID
+    parent_id ? undefined : (editItem as Goal),
+    parent_id
   )
 
   const defaultInputOrder = (Object.keys(defaultGoal) as InputType[]).filter(
@@ -77,15 +77,15 @@ export default function AddGoalModal() {
     const { dream, ...rest } = data
     const newGoal = {
       ...pruneObject(rest),
-      ...(editItem ? { itemID: editItem.itemID } : {}),
-      ...(dream ? { parentID: dream } : {}),
+      ...(editItem ? { item_id: editItem.item_id } : {}),
+      ...(dream ? { parent_id: dream } : {}),
       type: "GOAL" as const,
     }
 
-    if (editItem?.itemID) {
-      updateItem(newGoal, 'GOAL')
+    if (editItem?.item_id) {
+      updateItem(newGoal, "GOAL")
     } else {
-      addItem(newGoal, 'GOAL')
+      addItem(newGoal, "GOAL")
     }
 
     router.replace("/(tabs)/goals")
@@ -140,7 +140,7 @@ export default function AddGoalModal() {
               const dreamOptions =
                 dreams?.map(dream => ({
                   label: dream.title,
-                  value: dream.itemID,
+                  value: dream.item_id,
                 })) || []
 
               return (
@@ -198,16 +198,16 @@ export default function AddGoalModal() {
               )
             }
 
-            if (input === "targetDate") {
+            if (input === "target_date") {
               return (
                 <Animated.View
-                  key="goal_targetDate"
+                  key="goal_target_date"
                   entering={FadeIn(0.8)}
                   exiting={FadeOut(0.8)}
                   layout={LinearTransition}
                 >
                   <Controller
-                    name="targetDate"
+                    name="target_date"
                     control={form.control}
                     render={({ field: { onChange, value } }) => (
                       <DateInput
@@ -247,10 +247,7 @@ export default function AddGoalModal() {
             paddingHorizontal: 24,
           }}
         >
-          <Button
-            scale={0.98}
-            onPress={form.handleSubmit(onSubmit)}
-          >
+          <Button scale={0.98} onPress={form.handleSubmit(onSubmit)}>
             Save
           </Button>
         </View>

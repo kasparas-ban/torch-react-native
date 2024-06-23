@@ -23,33 +23,33 @@ export default function EditItemOptionsCard({ setCard }: CardProps) {
   const { editItem, setEditItem } = useEditItem()
 
   const handleEdit = () => {
-    if (editItem?.type === "TASK") {
+    if (editItem?.item_type === "TASK") {
       router.replace("/(modals)/(items)/add-task")
     }
-    if (editItem?.type === "GOAL") {
+    if (editItem?.item_type === "GOAL") {
       router.replace("/(modals)/(items)/add-goal")
     }
-    if (editItem?.type === "DREAM") {
+    if (editItem?.item_type === "DREAM") {
       router.replace("/(modals)/(items)/add-dream")
     }
   }
 
   const handleAddSubitem = () => {
-    const parentID = editItem?.itemID
-    if (!parentID) return
+    const parent_id = editItem?.item_id
+    if (!parent_id) return
 
     setEditItem(undefined)
 
-    if (editItem?.type === "GOAL") {
+    if (editItem?.item_type === "GOAL") {
       router.replace({
         pathname: "/(modals)/(items)/add-task",
-        params: { parentID },
+        params: { parent_id },
       })
     }
-    if (editItem?.type === "DREAM") {
+    if (editItem?.item_type === "DREAM") {
       router.replace({
         pathname: "/(modals)/(items)/add-goal",
-        params: { parentID },
+        params: { parent_id },
       })
     }
   }
@@ -90,7 +90,8 @@ export default function EditItemOptionsCard({ setCard }: CardProps) {
 
         <View style={styles.separator} />
 
-        {(editItem?.type === "GOAL" || editItem?.type === "DREAM") && (
+        {(editItem?.item_type === "GOAL" ||
+          editItem?.item_type === "DREAM") && (
           <AnimatedButton
             style={{
               alignItems: "center",
@@ -106,7 +107,7 @@ export default function EditItemOptionsCard({ setCard }: CardProps) {
               style={styles.editIcon}
             />
             <Text style={styles.editlabel}>
-              {editItem?.type === "GOAL" ? "Add task" : "Add goal"}
+              {editItem?.item_type === "GOAL" ? "Add task" : "Add goal"}
             </Text>
             <ArrowIcon
               color={isDark ? Colors.gray[100] : Colors.gray[800]}

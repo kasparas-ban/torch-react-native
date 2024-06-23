@@ -1,5 +1,6 @@
 import { useMemo } from "react"
 import Colors from "@/constants/Colors"
+import useUserInfo from "@/stores/userStore"
 import { useAuth, useUser } from "@clerk/clerk-expo"
 import dayjs from "dayjs"
 import { Image, ImageStyle } from "expo-image"
@@ -22,7 +23,6 @@ import DeleteIcon from "../../assets/icons/delete.svg"
 import LockIcon from "../../assets/icons/lock.svg"
 import LogoutIcon from "../../assets/icons/logout.svg"
 import UserIcon from "../../assets/icons/userCircle.svg"
-import useUserInfo from "@/stores/userStore"
 
 export default function AccountScreen() {
   const { styles, isDark } = useThemeStyles(componentStyles)
@@ -126,8 +126,8 @@ export default function AccountScreen() {
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.detailLabel}>Joined since</Text>
           <Text style={styles.detailData}>
-            {userInfo?.createdAt
-              ? dayjs(userInfo.createdAt).format("MMMM D, YYYY")
+            {userInfo?.created_at
+              ? dayjs(userInfo.created_at).format("MMMM D, YYYY")
               : "-"}
           </Text>
         </View>

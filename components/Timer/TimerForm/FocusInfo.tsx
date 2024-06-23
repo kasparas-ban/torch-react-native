@@ -4,7 +4,7 @@ import Colors from "@/constants/Colors"
 import { StyleSheet, Text, View } from "react-native"
 import { ItemOptionType } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
-import { formatPercentages, formatTimeSpent } from "@/utils/utils"
+import { formatPercentages, formatSpentTime } from "@/utils/utils"
 
 import useTimerForm from "../hooks/useTimerForm"
 
@@ -31,8 +31,8 @@ const TaskInfo = ({
 }) => {
   const showProgress = !!focusOn.duration
   const timeLeft =
-    focusOn.duration && focusOn.timeSpent
-      ? focusOn.duration - focusOn.timeSpent
+    focusOn.duration && focusOn.time_spent
+      ? focusOn.duration - focusOn.time_spent
       : undefined
 
   return (
@@ -81,7 +81,7 @@ const TaskInfo = ({
               color: isDark ? Colors.gray[300] : Colors.gray[800],
             }}
           >
-            {formatTimeSpent(focusOn.timeSpent ?? 0)}
+            {formatSpentTime(focusOn.time_spent ?? 0)}
           </Text>
           <Text style={{ color: isDark ? Colors.gray[400] : Colors.gray[500] }}>
             spent
@@ -100,7 +100,7 @@ const TaskInfo = ({
                 color: isDark ? Colors.gray[300] : Colors.gray[800],
               }}
             >
-              {formatTimeSpent(timeLeft)}
+              {formatSpentTime(timeLeft)}
             </Text>
             <Text
               style={{ color: isDark ? Colors.gray[400] : Colors.gray[500] }}
@@ -123,8 +123,8 @@ const ParentInfo = ({
 }) => {
   const showProgress = !!focusOn.duration
   const timeLeft =
-    focusOn.duration && focusOn.timeSpent
-      ? focusOn.duration - focusOn.timeSpent
+    focusOn.duration && focusOn.time_spent
+      ? focusOn.duration - focusOn.time_spent
       : undefined
 
   return (
@@ -161,7 +161,7 @@ const ParentInfo = ({
         </View>
       )}
       <View style={{ gap: 4 }}>
-        {focusOn.timeSpent !== undefined && (
+        {focusOn.time_spent !== undefined && (
           <View style={{ flexDirection: "row" }}>
             <TimerBoldIcon
               color={isDark ? Colors.gray[200] : Colors.gray[800]}
@@ -174,7 +174,7 @@ const ParentInfo = ({
                 color: isDark ? Colors.gray[300] : Colors.gray[800],
               }}
             >
-              {formatTimeSpent(focusOn.timeSpent)}
+              {formatSpentTime(focusOn.time_spent)}
             </Text>
             <Text
               style={{ color: isDark ? Colors.gray[400] : Colors.gray[500] }}
@@ -182,7 +182,7 @@ const ParentInfo = ({
           </View>
         )}
         {focusOn?.containsTasks ||
-          (focusOn.totalTimeSpent !== undefined && (
+          (focusOn.totaltime_spent !== undefined && (
             <View style={{ flexDirection: "row" }}>
               <TimerBoldIcon
                 color={isDark ? Colors.gray[200] : Colors.gray[800]}
@@ -195,7 +195,7 @@ const ParentInfo = ({
                   color: isDark ? Colors.gray[300] : Colors.gray[800],
                 }}
               >
-                {formatTimeSpent(focusOn.totalTimeSpent)}
+                {formatSpentTime(focusOn.totaltime_spent)}
               </Text>
               <Text
                 style={{ color: isDark ? Colors.gray[400] : Colors.gray[500] }}
@@ -217,11 +217,11 @@ const ParentInfo = ({
                 color: isDark ? Colors.gray[300] : Colors.gray[800],
               }}
             >
-              {formatTimeSpent(50)}
+              {formatSpentTime(50)}
             </Text>
             <Text
               style={{ color: isDark ? Colors.gray[400] : Colors.gray[500] }}
-            >{`left ${focusOn.totalTimeSpent ? "on tasks" : ""}`}</Text>
+            >{`left ${focusOn.totaltime_spent ? "on tasks" : ""}`}</Text>
           </View>
         )}
       </View>

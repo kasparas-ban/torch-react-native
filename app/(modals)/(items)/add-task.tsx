@@ -2,6 +2,8 @@ import { useState } from "react"
 import { groupItemsByParent } from "@/api-endpoints/utils/helpers"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
+import { formatNewItem } from "@/stores/helpers"
+import useItems from "@/stores/itemStore"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router, useLocalSearchParams } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
@@ -12,7 +14,6 @@ import { SelectOption } from "@/types/generalTypes"
 import { Task } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import useKeyboard from "@/utils/useKeyboard"
-import { pruneObject } from "@/utils/utils"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
 import InputSelectPanel from "@/components/itemModal/itemForms/InputSelectPanel"
 import {
@@ -27,30 +28,34 @@ import PriorityInput from "@/components/UI/PriorityInput"
 import RecurringInput from "@/components/UI/RecuringInput"
 import Select from "@/components/UI/Select"
 import TextInput from "@/components/UI/TextInput"
-import useItems from "@/stores/itemStore"
 
 type InputType = keyof z.infer<typeof taskFormSchema>
 
 const inputNames = [
   { label: "Priority", value: "priority" },
-  { label: "Target date", value: "targetDate" },
+  { label: "Target date", value: "target_date" },
   { label: "Assign goal", value: "goal" },
   { label: "Repeating", value: "recurring" },
 ] as SelectOption<InputType>[]
 
 const getInitialTaskForm = (
   initialTask?: Task,
-  parentID?: string
+  parent_id?: string
 ): TaskFormType => ({
   title: initialTask?.title || "",
   duration: initialTask?.duration || 30 * 60,
   priority: initialTask?.priority,
-  targetDate: initialTask?.targetDate,
-  recurring: initialTask?.recurring,
-  goal: parentID
-    ? parentID
+  target_date: initialTask?.target_date,
+  recurring: initialTask?.rec_times
+    ? {
+        times: initialTask?.rec_times || 0,
+        period: initialTask?.rec_period || "WEEK",
+      }
+    : undefined,
+  goal: parent_id
+    ? parent_id
     : initialTask?.goal
-      ? initialTask.goal.itemID
+      ? initialTask.goal.item_id
       : undefined,
 })
 
@@ -58,14 +63,15 @@ export default function AddTaskModal() {
   const isKeyboardOpen = useKeyboard()
   const { styles } = useThemeStyles(componentStyles)
 
-  const { goals, addItem, updateItem } = useItems()
-  const { editItem } = useEditItem()
+  const { addItem, updateItem } = useItems()
+  // const { goals, addItem, updateItem } = useItems()
+  const { editItem, setEditItem } = useEditItem()
 
   const params = useLocalSearchParams()
-  const parentID = params.parentID as string
+  const parent_id = params.parent_id as string
   const defaultTask = getInitialTaskForm(
-    parentID ? undefined : (editItem as Task),
-    parentID
+    parent_id ? undefined : (editItem as Task),
+    parent_id
   )
 
   const defaultInputOrder = Object.keys(defaultTask).filter(
@@ -81,17 +87,15 @@ export default function AddTaskModal() {
 
   const onSubmit = (data: TaskFormType) => {
     const { goal, ...rest } = data
-    const newTask = {
-      ...pruneObject(rest),
-      ...(editItem && !parentID ? { itemID: editItem.itemID } : {}),
-      ...(goal ? { parentID: goal } : {}),
+
+    if (editItem?.item_id) {
+      updateItem({ item_id: editItem?.item_id, ...rest })
+    } else {
+      const newTask = formatNewItem({ ...rest, type: "TASK" })
+      addItem(newTask)
     }
 
-    if (editItem?.itemID) {
-      updateItem(newTask, 'TASK')
-    } else {
-      addItem(newTask, 'TASK')
-    }
+    setEditItem(undefined)
 
     router.replace("/(tabs)/goals")
     notify({
@@ -171,7 +175,7 @@ export default function AddTaskModal() {
                 label: groupedGoals[dreamId].parentLabel || "Other",
                 options: groupedGoals[dreamId].items.map(goal => ({
                   label: goal.title,
-                  value: goal.itemID,
+                  value: goal.item_id,
                 })),
               }))
 
@@ -230,16 +234,16 @@ export default function AddTaskModal() {
               )
             }
 
-            if (input === "targetDate") {
+            if (input === "target_date") {
               return (
                 <Animated.View
-                  key="task_targetDate"
+                  key="task_target_date"
                   entering={FadeIn(0.8)}
                   exiting={FadeOut(0.8)}
                   layout={LinearTransition}
                 >
                   <Controller
-                    name="targetDate"
+                    name="target_date"
                     control={form.control}
                     render={({ field: { onChange, value } }) => (
                       <DateInput
@@ -305,10 +309,7 @@ export default function AddTaskModal() {
             paddingHorizontal: 24,
           }}
         >
-          <Button
-            scale={0.98}
-            onPress={form.handleSubmit(onSubmit)}
-          >
+          <Button scale={0.98} onPress={form.handleSubmit(onSubmit)}>
             Save
           </Button>
         </View>

@@ -4,7 +4,7 @@ export type ProfileResp = {
   email: string
   birthday: string | null
   gender: GenderType | null
-  createdAt: string
+  created_at: string
   countryCode: string | null
   city: string | null
   focusTime: number
@@ -48,5 +48,5 @@ export type UpdateProfileReq = {
 }
 
 export type UpdateUserTime = {
-  timeSpent: number
+  time_spent: number
 }

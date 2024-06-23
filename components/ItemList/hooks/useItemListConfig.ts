@@ -5,7 +5,7 @@ import { GeneralItem, ItemType } from "@/types/itemTypes"
 import { createSelectors } from "@/utils/zustandUtils"
 
 type CollapsedItemState = {
-  itemId: string
+  item_id: string
   itemType: ItemType
 }
 
@@ -36,8 +36,8 @@ const useItemListConfigState = create<ItemListConfigState>()(
       isItemCollapsed: (item: GeneralItem) =>
         !!get().collapsedItems.find(
           collapsedItem =>
-            collapsedItem.itemId === item.itemID &&
-            collapsedItem.itemType === item.type
+            collapsedItem.item_id === item.item_id &&
+            collapsedItem.itemType === item.item_type
         ),
       saveCollapseState: (item: CollapsedItemState, isCollapsed: boolean) =>
         set({
@@ -46,7 +46,7 @@ const useItemListConfigState = create<ItemListConfigState>()(
             : get().collapsedItems.filter(
                 collapsedItem =>
                   !(
-                    collapsedItem.itemId == item.itemId &&
+                    collapsedItem.item_id == item.item_id &&
                     collapsedItem.itemType == item.itemType
                   )
               ),

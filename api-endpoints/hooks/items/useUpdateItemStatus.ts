@@ -1,9 +1,9 @@
-import { UpdateItemStatusReq } from "@/api-endpoints/endpoints/itemAPI"
+import { UpdateItemStatusReq } from "@/api-endpoints/endpoints/itemAPITypes"
 import { HOST } from "@/api-endpoints/utils/apiConfig"
 import { CustomError } from "@/api-endpoints/utils/errorMsgs"
 import { useAuth } from "@clerk/clerk-react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { ResponseItem } from "@/types/itemTypes"
+import { ItemResponse } from "@/types/itemTypes"
 
 export const useUpdateItemStatus = () => {
   const { getToken } = useAuth()
@@ -26,7 +26,7 @@ export const useUpdateItemStatus = () => {
                 title: `Failed to update ${body.itemType.toLowerCase()} status`,
                 description: "Try changing it again later.",
               })
-            return res.json() as Promise<ResponseItem>
+            return res.json() as Promise<ItemResponse>
           })
           .catch(err => {
             throw new CustomError(err, {
