@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
+import { formatNewItem } from "@/stores/helpers"
 import useItems from "@/stores/itemStore"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router, useLocalSearchParams } from "expo-router"
@@ -12,7 +13,6 @@ import { SelectOption } from "@/types/generalTypes"
 import { Goal } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import useKeyboard from "@/utils/useKeyboard"
-import { pruneObject } from "@/utils/utils"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
 import InputSelectPanel from "@/components/itemModal/itemForms/InputSelectPanel"
 import {
@@ -75,17 +75,20 @@ export default function AddGoalModal() {
 
   const onSubmit = (data: GoalFormType) => {
     const { dream, ...rest } = data
-    const newGoal = {
-      ...pruneObject(rest),
-      ...(editItem ? { item_id: editItem.item_id } : {}),
-      ...(dream ? { parent_id: dream } : {}),
-      type: "GOAL" as const,
+    const goal = {
+      ...rest,
+      parent_id: dream,
     }
 
     if (editItem?.item_id) {
-      updateItem(newGoal, "GOAL")
+      const updatedGoal = {
+        ...goal,
+        item_id: editItem?.item_id,
+      }
+      updateItem(updatedGoal)
     } else {
-      addItem(newGoal, "GOAL")
+      const newGoal = formatNewItem({ ...goal, type: "GOAL" })
+      addItem(newGoal)
     }
 
     router.replace("/(tabs)/goals")

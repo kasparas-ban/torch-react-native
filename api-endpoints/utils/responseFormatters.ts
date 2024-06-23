@@ -22,17 +22,17 @@ const formatGoalResponse = (
   return goals.map(goal => {
     const goalTasks = tasks.filter(item => item.parent_id === goal.item_id)
 
-    let [tasksDuration, taskstime_spent] = [0, 0]
+    let [tasksDuration, tasksSpentTime] = [0, 0]
     goalTasks.forEach(task => {
       tasksDuration += task.duration || 0
-      taskstime_spent += task.time_spent
+      tasksSpentTime += task.time_spent
     })
 
     return {
       ...goal,
-      progress: getProgress(taskstime_spent, tasksDuration),
+      progress: getProgress(tasksSpentTime, tasksDuration),
       dream: dreams.find(dream => dream.item_id === goal.parent_id) || null,
-      totaltime_spent: goal.time_spent + taskstime_spent,
+      totaltime_spent: goal.time_spent + tasksSpentTime,
     }
   })
 }
@@ -45,20 +45,20 @@ const formatDreamResponse = (
   return dreams.map(dream => {
     const dreamGoals = goals.filter(goal => goal.parent_id === dream.item_id)
 
-    let [tasksDuration, taskstime_spent] = [0, 0]
+    let [tasksDuration, tasksSpentTime] = [0, 0]
     dreamGoals.forEach(goal => {
       tasks.forEach(task => {
         if (task.parent_id === goal.item_id) {
           tasksDuration += task.duration || 0
-          taskstime_spent += task.time_spent
+          tasksSpentTime += task.time_spent
         }
       })
     })
 
     return {
       ...dream,
-      progress: getProgress(taskstime_spent, tasksDuration),
-      totaltime_spent: dream.time_spent + taskstime_spent,
+      progress: getProgress(tasksSpentTime, tasksDuration),
+      totaltime_spent: dream.time_spent + tasksSpentTime,
     }
   })
 }

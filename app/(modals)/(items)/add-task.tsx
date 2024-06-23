@@ -63,7 +63,7 @@ export default function AddTaskModal() {
   const isKeyboardOpen = useKeyboard()
   const { styles } = useThemeStyles(componentStyles)
 
-  const { addItem, updateItem } = useItems()
+  const { goals, addItem, updateItem } = useItems()
   const { editItem, setEditItem } = useEditItem()
 
   const params = useLocalSearchParams()
@@ -85,12 +85,22 @@ export default function AddTaskModal() {
   })
 
   const onSubmit = (data: TaskFormType) => {
-    const { goal, ...rest } = data
+    const { goal, recurring, ...rest } = data
+    const task = {
+      ...rest,
+      rec_times: recurring?.times,
+      rec_period: recurring?.period,
+      parent_id: goal || undefined,
+    }
 
     if (editItem?.item_id) {
-      updateItem({ item_id: editItem?.item_id, ...rest })
+      const updatedTask = {
+        ...task,
+        item_id: editItem?.item_id,
+      }
+      updateItem(updatedTask)
     } else {
-      const newTask = formatNewItem({ ...rest, type: "TASK" })
+      const newTask = formatNewItem({ ...task, type: "TASK" })
       addItem(newTask)
     }
 
@@ -169,8 +179,6 @@ export default function AddTaskModal() {
 
           {inputOrder.map(input => {
             if (input === "goal") {
-              // TODO: Fix the next line
-              // @ts-ignore:next-line
               const groupedGoals = groupItemsByParent(goals || [], "GOAL")
               const goalOptions = Object.keys(groupedGoals).map(dreamId => ({
                 label: groupedGoals[dreamId].parentLabel || "Other",

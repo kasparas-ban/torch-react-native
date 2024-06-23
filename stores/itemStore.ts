@@ -1,9 +1,9 @@
 import {
   DeleteItemData,
   DeleteItemReq,
+  FormattedUpdateItemType,
   UpdateItemProgressReq,
   UpdateItemStatusReq,
-  UpdateItemType,
 } from "@/api-endpoints/endpoints/itemAPITypes"
 import { formatItemResponse } from "@/api-endpoints/utils/responseFormatters"
 import AsyncStorage from "@react-native-async-storage/async-storage"
@@ -90,7 +90,7 @@ const useItems = () => {
       store.addItem(item)
       op.addItem(item)
     },
-    updateItem: (updatedData: UpdateItemType) => {
+    updateItem: (updatedData: FormattedUpdateItemType) => {
       const oldItem = allItems.rawItems.find(
         i => i.item_id === updatedData.item_id
       )
