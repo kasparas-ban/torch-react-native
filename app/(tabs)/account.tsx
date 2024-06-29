@@ -42,7 +42,7 @@ export default function AccountScreen() {
       await signOut({ sessionId })
       queryClient.invalidateQueries({ queryKey: ["user"] })
       router.replace("/(tabs)/timer")
-      notify({ title: "Logout successful!" })
+      notify({ title: "You've been logged out" })
     } catch (e) {
       notify({
         title: "Logout failed",

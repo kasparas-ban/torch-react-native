@@ -1,4 +1,5 @@
 import { DeleteItemData } from "@/api-endpoints/endpoints/itemAPITypes"
+import { Platform } from "react-native"
 import {
   ItemResponse,
   ItemStatus,
@@ -50,6 +51,20 @@ type FieldDiff = {
     val: UpdateDiffs[key]
     cl: number
   }
+}
+
+type IncomingDeleteOp = {
+  op: "DELETE"
+  item_id: string
+}
+
+type ServerOp = (IncomingInsertOp | IncomingUpdateOp | IncomingDeleteOp) & {
+  wsId: number
+}
+
+type IncomingInsertOp = Omit<InsertOp, "data"> & { diffs: ItemResponse }
+type IncomingUpdateOp = Omit<UpdateOp, "diffs"> & {
+  diffs: Partial<ItemResponse>
 }
 
 export function getDeleteOps(
@@ -130,5 +145,27 @@ export function getDefaultMetadata(): UpdatedFields {
     rec_period: false,
     rec_progress: false,
     parent_id: false,
+  }
+}
+
+export function handleServerMsg(
+  op: ServerOp,
+  addItem: (item: SyncMetadata<ItemResponse>) => void,
+  updateItem: (data: Partial<ItemResponse>) => void,
+  deleteItem: (item_id: string) => void
+) {
+  console.log("Handling server msg: ", Platform.OS, op)
+
+  if (op.op === "INSERT") {
+    const newItem = { ...op.diffs, updatedFields: getDefaultMetadata() }
+    addItem(newItem)
+  }
+
+  if (op.op === "UPDATE") {
+    updateItem({ item_id: op.item_id, ...op.diffs })
+  }
+
+  if (op.op === "DELETE") {
+    deleteItem(op.item_id)
   }
 }

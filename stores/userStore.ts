@@ -4,7 +4,7 @@ import { createJSONStorage, persist } from "zustand/middleware"
 import { ProfileResp, UpdateProfileReq } from "@/types/userTypes"
 
 type State = {
-  user?: SyncMetadata<ProfileResp>
+  user?: ProfileResp
 }
 
 type Actions = {

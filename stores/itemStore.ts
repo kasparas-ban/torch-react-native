@@ -11,7 +11,6 @@ import { memoize } from "proxy-memoize"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
 import { ItemResponse, SyncMetadata, UpdatedFields } from "@/types/itemTypes"
-import { getDefaultMetadata } from "@/components/providers/SyncProvider/helpers"
 import useItemsSync from "@/components/providers/SyncProvider/useItemsSync"
 
 import { getAllAssociatedItems } from "./helpers"
@@ -28,7 +27,7 @@ type Actions = {
   addItem: (item: SyncMetadata<ItemResponse>) => void
   updateItem: (updatedItem: SyncMetadata<ItemResponse>) => void
   deleteItems: (items: { item_id: string; cl: number }[]) => void
-  // updateItemProgress: (req: UpdateItemProgressReq) => void
+  updateItemProgress: (req: UpdateItemProgressReq) => void
   // updateItemStatus: (req: UpdateItemStatusReq) => void
 }
 
@@ -57,6 +56,14 @@ const itemStore = create<State & Actions>()(
         })),
       setLastSyncItems: (items: ItemResponse[]) =>
         set(() => ({ lastSyncItems: items })),
+      updateItemProgress: (req: UpdateItemProgressReq) =>
+        set(state => ({
+          items: state.items.map(i =>
+            i.item_id === req.item_id
+              ? { ...i, time_spent: i.time_spent + req.time_spent }
+              : i
+          ),
+        })),
     }),
     {
       name: "items-store",
@@ -86,24 +93,29 @@ const useItems = () => {
     items: itemStore(state => state.items),
     deletedItems: itemStore(state => state.deletedItems),
     // Actions
-    addItem: (item: SyncMetadata<ItemResponse>) => {
+    addItem: (item: SyncMetadata<ItemResponse>, local: boolean = false) => {
       store.addItem(item)
-      op.addItem(item)
+      if (!local) op.addItem(item)
     },
-    updateItem: (updatedData: FormattedUpdateItemType) => {
+    updateItem: (
+      updatedData: FormattedUpdateItemType,
+      local: boolean = false
+    ) => {
       const oldItem = allItems.rawItems.find(
         i => i.item_id === updatedData.item_id
       )
+      console.log("OLD ITEM", updatedData, allItems.rawItems, oldItem)
       if (!oldItem) return
 
-      const updatedFields = oldItem
-        ? Object.entries(oldItem.updatedFields).reduce((prev, curr) => {
-            const field = curr[0] as keyof UpdatedFields
-            const updatedField = (updatedData as any)[field]
-            const isUpdated = updatedField && updatedField !== oldItem[field]
-            return { ...prev, [field]: isUpdated || curr[1] }
-          }, oldItem.updatedFields)
-        : getDefaultMetadata()
+      const updatedFields = Object.entries(oldItem.updatedFields).reduce(
+        (prev, curr) => {
+          const field = curr[0] as keyof UpdatedFields
+          const updatedField = (updatedData as any)[field]
+          const isUpdated = updatedField && updatedField !== oldItem[field]
+          return { ...prev, [field]: isUpdated || curr[1] }
+        },
+        oldItem.updatedFields
+      )
 
       const newItem: SyncMetadata<ItemResponse> = {
         ...oldItem,
@@ -111,10 +123,12 @@ const useItems = () => {
         updatedFields,
       }
 
+      console.log("Updated", newItem)
+
       store.updateItem(newItem)
-      op.updateItem(newItem)
+      if (!local) op.updateItem(newItem)
     },
-    deleteItem: (data: DeleteItemReq) => {
+    deleteItem: (data: DeleteItemReq, local: boolean = false) => {
       if (data.deleteAssociated) {
         // Delete all associated items
         const associatedItems = getAllAssociatedItems(allItems.rawItems, data)
@@ -124,13 +138,11 @@ const useItems = () => {
       }
 
       store.deleteItems([data])
-      op.deleteItem(data)
+      if (!local) op.deleteItem(data)
     },
     resetItems: itemStore(state => state.resetItems),
     setLastSyncItems: itemStore(state => state.setLastSyncItems),
-    updateItemProgress: (req: UpdateItemProgressReq) => {
-      console.log("NEED TO IMPLEMENT")
-    },
+    updateItemProgress: itemStore(state => state.updateItemProgress),
     updateItemStatus: (req: UpdateItemStatusReq) => {
       console.log("NEED TO IMPLEMENT")
     },
