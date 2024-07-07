@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { ItemType } from "@/types/itemTypes"
 
 type DeleteItemReq = {
-  item_id: string
+  id: string
   itemType: ItemType
   deleteAssociated: boolean
 }

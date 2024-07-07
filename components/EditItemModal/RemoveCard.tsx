@@ -4,7 +4,7 @@ import { useUpdateItemStatus } from "@/api-endpoints/hooks/items/useUpdateItemSt
 import InfoIcon from "@/assets/icons/info.svg"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
-import useItems from "@/stores/itemStore"
+import { useItems } from "@/library/useItems"
 import { router } from "expo-router"
 import { StyleSheet, Text, View } from "react-native"
 import Animated from "react-native-reanimated"
@@ -108,7 +108,7 @@ export default function RemoveCard() {
   //   useDeleteItem()
   const { deleteItem } = useItems()
 
-  const itemType = editItem?.item_type
+  const itemType = editItem?.type
   const isArchived = editItem?.status === "ARCHIVED"
 
   const handleSubmit = () => {
@@ -116,10 +116,10 @@ export default function RemoveCard() {
 
     if (action === "archive") {
       updateStatus({
-        item_id: editItem.item_id,
+        id: editItem.itemID,
         status: "ARCHIVED",
         updateAssociated: selItems === "all",
-        itemType: editItem.item_type,
+        itemType: editItem.type,
       })
         .then(() => {
           // closeModal()
@@ -137,8 +137,7 @@ export default function RemoveCard() {
         })
     } else {
       deleteItem({
-        item_id: editItem.item_id,
-        cl: editItem.item__c,
+        deleteItemId: editItem.itemID,
         deleteAssociated: selItems === "all",
       })
       router.back()
@@ -146,8 +145,8 @@ export default function RemoveCard() {
       setFocusOn(null)
 
       notify({
-        title: `${capitalize(editItem.item_type)} deleted`,
-        description: `It will be removed from the ${editItem.item_type.toLowerCase()} list.`,
+        title: `${capitalize(editItem.type)} deleted`,
+        description: `It will be removed from the ${editItem.type.toLowerCase()} list.`,
       })
     }
   }
@@ -159,7 +158,7 @@ export default function RemoveCard() {
       style={styles.card}
     >
       <Text style={styles.title}>{`Remove ${
-        editItem?.item_type.toLowerCase() ?? ""
+        editItem?.type.toLowerCase() ?? ""
       }`}</Text>
 
       <View

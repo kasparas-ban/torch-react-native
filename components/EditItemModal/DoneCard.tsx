@@ -39,7 +39,7 @@ export default function DoneCard() {
     if (!editItem) return
 
     updateItemStatus({
-      item_id: editItem.item_id,
+      id: editItem.id,
       status: "COMPLETED",
       updateAssociated: true,
       itemType: editItem.item_type,

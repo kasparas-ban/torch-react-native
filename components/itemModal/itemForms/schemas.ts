@@ -6,12 +6,12 @@ export const dreamFormSchema = z.object({
     .min(2, { message: "Title must be longer than 2 characters." })
     .max(50, { message: "Title must be shorter than 50 characters." }),
   priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
-  target_date: z.string().nullable().optional(),
+  targetDate: z.string().nullable().optional(),
 })
 
 export type DreamFormType = z.infer<typeof dreamFormSchema>
-export type NewDreamType = DreamFormType
-export type UpdateDreamType = NewDreamType & { item_id?: string }
+export type NewDreamType = DreamFormType & { type: "DREAM" }
+export type UpdateDreamType = NewDreamType & { itemID?: string }
 
 export const taskFormSchema = z.object({
   title: z
@@ -20,7 +20,7 @@ export const taskFormSchema = z.object({
     .max(50, { message: "Title must be shorter than 50 characters." }),
   duration: z.number().nullable().optional(),
   goal: z.string().optional().nullable(),
-  target_date: z.string().nullable().optional(),
+  targetDate: z.string().nullable().optional(),
   priority: z.enum(["LOW", "MEDIUM", "HIGH"]).nullable().optional(),
   recurring: z
     .object({
@@ -33,9 +33,10 @@ export const taskFormSchema = z.object({
 
 export type TaskFormType = z.infer<typeof taskFormSchema>
 export type NewTaskType = Omit<TaskFormType, "goal"> & {
-  parent_id?: string
+  type: "TASK"
+  parentID?: string
 }
-export type UpdateTaskType = NewTaskType & { item_id?: string }
+export type UpdateTaskType = NewTaskType & { itemID?: string }
 
 export const goalFormSchema = z.object({
   title: z
@@ -43,20 +44,21 @@ export const goalFormSchema = z.object({
     .min(2, { message: "Title must be longer than 2 characters." })
     .max(50, { message: "Title must be shorter than 50 characters." }),
   dream: z.string().optional(),
-  target_date: z.string().nullable().optional(),
+  targetDate: z.string().nullable().optional(),
   priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional().nullable(),
 })
 
 export type GoalFormType = z.infer<typeof goalFormSchema>
 export type NewGoalType = Omit<GoalFormType, "dream" | "tasks"> & {
-  parent_id?: string
+  type: "GOAL"
+  parentID?: string
 }
 export type UpdateGoalType = Omit<NewGoalType, "tasks"> & {
-  item_id?: string
+  itemID?: string
 }
 
 const subtaskFormSchema = taskFormSchema
-  .extend({ item_id: z.string() })
+  .extend({ itemID: z.string() })
   .omit({ goal: true })
 export type SubitemType = z.infer<typeof subtaskFormSchema>
 export type SubitemKeyType = keyof SubitemType

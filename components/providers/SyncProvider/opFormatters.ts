@@ -6,7 +6,7 @@ import { DeleteOp, FieldDiff, InsertOp, UpdateOp } from "./opTypes"
 export function getInsertOp(item: ItemResponse): InsertOp {
   return {
     op: "INSERT",
-    item_id: item.item_id,
+    id: item.id,
     data: {
       title: item.title,
       item_type: item.item_type,
@@ -25,7 +25,7 @@ export function getInsertOp(item: ItemResponse): InsertOp {
 export function getDeleteOp(item: DeleteItemData): DeleteOp {
   return {
     op: "DELETE",
-    item_id: item.item_id,
+    id: item.id,
     cl: item.cl,
   }
 }
@@ -53,7 +53,7 @@ export function getUpdateOp(
 
   return {
     op: "UPDATE",
-    item_id: newItem.item_id,
+    id: newItem.id,
     diffs,
   }
 }

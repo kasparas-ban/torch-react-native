@@ -1,15 +1,13 @@
-import dayjs from "dayjs"
+import { ItemRecord } from "@/library/powersync/AppSchema"
 import {
   Dream,
+  FormattedItem,
   FormattedItems,
   GeneralItem,
   Goal,
   GroupedItems,
-  ItemResponse,
   ItemStatus,
   ItemType,
-  ReccuringPeriod,
-  RecurringType,
   Task,
 } from "@/types/itemTypes"
 import { FocusType } from "@/components/Timer/hooks/useTimerForm"
@@ -17,7 +15,7 @@ import { FocusType } from "@/components/Timer/hooks/useTimerForm"
 import { ErrorResp } from "./errorMsgs"
 
 export const groupItemsByParent = (
-  items: GeneralItem[],
+  items: FormattedItem[],
   itemType: ItemType
 ) => {
   let response = {} as
@@ -26,8 +24,8 @@ export const groupItemsByParent = (
     | GroupedItems<Dream>
   if (itemType === "GOAL") {
     const groupedItems = (items as Goal[]).reduce((prev, curr) => {
-      const dreamTitle = curr.dream?.title || "Other"
-      const groupLabel = curr.dream?.item_id || "other"
+      const dreamTitle = curr.parent?.title || "Other"
+      const groupLabel = curr.parent?.itemID || "other"
       const groupedGoals = prev[groupLabel]?.items || []
 
       return {
@@ -42,8 +40,8 @@ export const groupItemsByParent = (
     response = groupedItems
   } else if (itemType === "TASK") {
     const groupedItems_1 = (items as Task[]).reduce((prev_1, curr_1) => {
-      const goalTitle = curr_1.goal?.title || "Other"
-      const groupLabel_1 = curr_1.goal?.item_id || "other"
+      const goalTitle = curr_1.parent?.title || "Other"
+      const groupLabel_1 = curr_1.parent?.itemID || "other"
       const groupedTasks = prev_1[groupLabel_1]?.items || []
 
       return {
@@ -89,11 +87,11 @@ export const getItemsByType = ({
   const filteredItems =
     selectedItems?.map(item => ({
       label: item.title,
-      value: item.item_id,
+      value: item.itemID,
       type: item.type,
       progress: item.progress,
-      time_spent: item.time_spent,
-      totaltime_spent: (item as Goal)?.totaltime_spent,
+      time_spent: item.timeSpent,
+      totalTimeSpent: (item as Goal)?.totalTimeSpent,
       containsTasks:
         !!(item as Goal).tasks?.length ||
         !!(item as Dream).goals?.find(goal => !!(goal as Goal).tasks?.length),
@@ -103,7 +101,7 @@ export const getItemsByType = ({
           (prev, curr) => (prev += curr.duration || 0),
           0
         ),
-      parent: (item as Task).goal?.item_id || (item as Goal).dream?.item_id,
+      parent: (item as Task).parent?.itemID,
     })) || []
 
   if (grouped) {
@@ -112,16 +110,16 @@ export const getItemsByType = ({
     const parents =
       focusType === "TASKS"
         ? allGoals.filter(goal =>
-            filteredItems.find(item => item.parent === goal.item_id)
+            filteredItems.find(item => item.parent === goal.itemID)
           )
         : allDreams.filter(dream =>
-            filteredItems.find(item => item.parent === dream.item_id)
+            filteredItems.find(item => item.parent === dream.itemID)
           )
 
     const groupedItems = parents.map(parent => ({
       label: parent.title,
-      value: parent.item_id,
-      options: filteredItems.filter(item => item.parent === parent.item_id),
+      value: parent.itemID,
+      options: filteredItems.filter(item => item.parent === parent.itemID),
     }))
 
     return groupedItems
@@ -130,26 +128,23 @@ export const getItemsByType = ({
   return filteredItems
 }
 
-export const findItemByID = (
-  item_id: string,
-  formattedItems?: FormattedItems
-) => {
+export const findItemByID = (id: string, formattedItems?: FormattedItems) => {
   let item
-  item = formattedItems?.dreams.find(item => item.item_id === item_id)
+  item = formattedItems?.dreams.find(item => item.itemID === id)
   if (item) return item
 
-  item = formattedItems?.goals.find(item => item.item_id === item_id)
+  item = formattedItems?.goals.find(item => item.itemID === id)
   if (item) return item
 
-  item = formattedItems?.tasks.find(item => item.item_id === item_id)
+  item = formattedItems?.tasks.find(item => item.itemID === id)
   if (item) return item
 }
 
 export const countAssociatedTasks = (
   goal: GeneralItem,
-  allItems: ItemResponse[]
+  allItems: ItemRecord[]
 ) => {
-  return allItems.filter(item => item.parent_id === goal.item_id).length
+  return allItems.filter(item => item.parent_id === goal.itemID).length
 }
 
 export const filterItemsByStatus = (
@@ -188,7 +183,7 @@ export const filterItemsByStatus = (
 //       "seconds"
 //     )
 
-//     const item = findItemByID(record.item_id, formattedItems)
+//     const item = findItemByID(record.id, formattedItems)
 
 //     let progressDifference
 //     if ((item as Task).duration) {
@@ -205,7 +200,7 @@ export const filterItemsByStatus = (
 //     return {
 //       focusOn: item
 //         ? {
-//             value: record.item_id,
+//             value: record.id,
 //             label: item.title,
 //             type: item.type,
 //           }

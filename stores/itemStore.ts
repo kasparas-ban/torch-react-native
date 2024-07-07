@@ -26,7 +26,7 @@ type Actions = {
   resetItems: (items: SyncMetadata<ItemResponse>[]) => void
   addItem: (item: SyncMetadata<ItemResponse>) => void
   updateItem: (updatedItem: SyncMetadata<ItemResponse>) => void
-  deleteItems: (items: { item_id: string; cl: number }[]) => void
+  deleteItems: (items: { id: string; cl: number }[]) => void
   updateItemProgress: (req: UpdateItemProgressReq) => void
   // updateItemStatus: (req: UpdateItemStatusReq) => void
 }
@@ -44,14 +44,12 @@ const itemStore = create<State & Actions>()(
       updateItem: (updatedItem: SyncMetadata<ItemResponse>) =>
         set(state => ({
           items: state.items.map(i =>
-            i.item_id === updatedItem.item_id ? updatedItem : i
+            i.id === updatedItem.id ? updatedItem : i
           ),
         })),
       deleteItems: (items: DeleteItemData[]) =>
         set(state => ({
-          items: state.items.filter(
-            i => !items.find(it => i.item_id === it.item_id)
-          ),
+          items: state.items.filter(i => !items.find(it => i.id === it.id)),
           deletedItems: [...state.deletedItems, ...items],
         })),
       setLastSyncItems: (items: ItemResponse[]) =>
@@ -59,7 +57,7 @@ const itemStore = create<State & Actions>()(
       updateItemProgress: (req: UpdateItemProgressReq) =>
         set(state => ({
           items: state.items.map(i =>
-            i.item_id === req.item_id
+            i.id === req.id
               ? { ...i, time_spent: i.time_spent + req.time_spent }
               : i
           ),
@@ -101,10 +99,8 @@ const useItems = () => {
       updatedData: FormattedUpdateItemType,
       local: boolean = false
     ) => {
-      const oldItem = allItems.rawItems.find(
-        i => i.item_id === updatedData.item_id
-      )
-      console.log("OLD ITEM", updatedData, allItems.rawItems, oldItem)
+      const oldItem = allItems.rawItems.find(i => i.id === updatedData.itemID)
+      // console.log("OLD ITEM", updatedData, allItems.rawItems, oldItem)
       if (!oldItem) return
 
       const updatedFields = Object.entries(oldItem.updatedFields).reduce(
@@ -123,7 +119,7 @@ const useItems = () => {
         updatedFields,
       }
 
-      console.log("Updated", newItem)
+      // console.log("Updated", newItem)
 
       store.updateItem(newItem)
       if (!local) op.updateItem(newItem)
@@ -144,7 +140,7 @@ const useItems = () => {
     setLastSyncItems: itemStore(state => state.setLastSyncItems),
     updateItemProgress: itemStore(state => state.updateItemProgress),
     updateItemStatus: (req: UpdateItemStatusReq) => {
-      console.log("NEED TO IMPLEMENT")
+      // console.log("NEED TO IMPLEMENT")
     },
   }
 }

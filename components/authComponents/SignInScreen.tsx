@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import Colors from "@/constants/Colors"
-import { useSignIn } from "@clerk/clerk-expo"
+import { useSystem } from "@/library/powersync/system"
+import { AppConfig } from "@/library/supabase/AppConfig"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
@@ -23,7 +24,7 @@ type SignInFormType = z.infer<typeof SignInSchema>
 
 export default function SignInScreen() {
   const router = useRouter()
-  const { signIn, setActive } = useSignIn()
+  const { supabaseConnector } = useSystem()
   const { styles } = useThemeStyles(componentStyles)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -33,18 +34,12 @@ export default function SignInScreen() {
   })
 
   const onSignInPress = async (data: SignInFormType) => {
-    if (!signIn) return
     Keyboard.dismiss()
 
     try {
       setIsLoading(true)
-      const completeSignIn = await signIn.create({
-        strategy: "password",
-        identifier: data.email,
-        password: data.password,
-      })
+      await supabaseConnector.login(data.email, data.password)
 
-      await setActive({ session: completeSignIn.createdSessionId })
       router.replace("/(tabs)/timer")
       notify({ title: "Login successful!" })
     } catch (err) {

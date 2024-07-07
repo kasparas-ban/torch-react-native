@@ -182,7 +182,7 @@ const ParentInfo = ({
           </View>
         )}
         {focusOn?.containsTasks ||
-          (focusOn.totaltime_spent !== undefined && (
+          (focusOn.totalTimeSpent !== undefined && (
             <View style={{ flexDirection: "row" }}>
               <TimerBoldIcon
                 color={isDark ? Colors.gray[200] : Colors.gray[800]}
@@ -195,7 +195,7 @@ const ParentInfo = ({
                   color: isDark ? Colors.gray[300] : Colors.gray[800],
                 }}
               >
-                {formatSpentTime(focusOn.totaltime_spent)}
+                {formatSpentTime(focusOn.totalTimeSpent)}
               </Text>
               <Text
                 style={{ color: isDark ? Colors.gray[400] : Colors.gray[500] }}
@@ -221,7 +221,7 @@ const ParentInfo = ({
             </Text>
             <Text
               style={{ color: isDark ? Colors.gray[400] : Colors.gray[500] }}
-            >{`left ${focusOn.totaltime_spent ? "on tasks" : ""}`}</Text>
+            >{`left ${focusOn.totalTimeSpent ? "on tasks" : ""}`}</Text>
           </View>
         )}
       </View>

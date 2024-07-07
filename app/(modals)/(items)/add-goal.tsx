@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
-import { formatNewItem } from "@/stores/helpers"
-import useItems from "@/stores/itemStore"
+import { useItems } from "@/library/useItems"
+import { formatItemFormData } from "@/stores/helpers"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router, useLocalSearchParams } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
@@ -30,7 +30,7 @@ type InputType = keyof z.infer<typeof goalFormSchema>
 
 const inputNames = [
   { label: "Priority", value: "priority" },
-  { label: "Target date", value: "target_date" },
+  { label: "Target date", value: "targetDate" },
   { label: "Assign dream", value: "dream" },
 ] as SelectOption<InputType>[]
 
@@ -40,12 +40,8 @@ const getInitialGoalForm = (
 ): GoalFormType => ({
   title: initialGoal?.title || "",
   priority: initialGoal?.priority,
-  target_date: initialGoal?.target_date,
-  dream: parent_id
-    ? parent_id
-    : initialGoal?.dream
-      ? initialGoal.dream.item_id
-      : undefined,
+  targetDate: initialGoal?.targetDate,
+  dream: parent_id ? parent_id : initialGoal?.parent?.itemID,
 })
 
 export default function AddGoalModal() {
@@ -75,19 +71,13 @@ export default function AddGoalModal() {
 
   const onSubmit = (data: GoalFormType) => {
     const { dream, ...rest } = data
-    const goal = {
-      ...rest,
-      parent_id: dream,
-    }
+    const goal = { ...rest, parentID: dream }
 
-    if (editItem?.item_id) {
-      const updatedGoal = {
-        ...goal,
-        item_id: editItem?.item_id,
-      }
-      updateItem(updatedGoal)
+    if (editItem?.itemID) {
+      const updatedGoal = formatItemFormData({ ...goal, type: "GOAL" })
+      updateItem({ ...updatedGoal, itemID: editItem.itemID })
     } else {
-      const newGoal = formatNewItem({ ...goal, type: "GOAL" })
+      const newGoal = formatItemFormData({ ...goal, type: "GOAL" })
       addItem(newGoal)
     }
 
@@ -147,7 +137,7 @@ export default function AddGoalModal() {
               const dreamOptions =
                 dreams?.map(dream => ({
                   label: dream.title,
-                  value: dream.item_id,
+                  value: dream.itemID,
                 })) || []
 
               return (
@@ -205,7 +195,7 @@ export default function AddGoalModal() {
               )
             }
 
-            if (input === "target_date") {
+            if (input === "targetDate") {
               return (
                 <Animated.View
                   key="goal_target_date"
@@ -214,7 +204,7 @@ export default function AddGoalModal() {
                   layout={LinearTransition}
                 >
                   <Controller
-                    name="target_date"
+                    name="targetDate"
                     control={form.control}
                     render={({ field: { onChange, value } }) => (
                       <DateInput

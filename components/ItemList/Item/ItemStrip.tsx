@@ -9,7 +9,7 @@ import {
 } from "react-native-reanimated"
 import TextTicker from "react-native-text-ticker"
 import { genericMemo } from "@/types/generalTypes"
-import { GeneralItem, ItemType, Task } from "@/types/itemTypes"
+import { FormattedItem, Goal, ItemType, Task } from "@/types/itemTypes"
 import { toPercent } from "@/utils/utils"
 import { AnimatedButton } from "@/components/AnimatedButton"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
@@ -19,7 +19,7 @@ import ItemProgress from "./ProgressBar"
 
 const fullStripWidth = Dimensions.get("window").width - 2 * 14
 
-function ItemStrip<T extends GeneralItem>({
+function ItemStrip<T extends FormattedItem>({
   item,
   toggleSublist,
   itemSublist,
@@ -30,7 +30,7 @@ function ItemStrip<T extends GeneralItem>({
   item: T
   itemType: ItemType
   toggleSublist?: () => void
-  itemSublist?: GeneralItem[]
+  itemSublist?: Omit<Task, "parent">[] | Omit<Goal, "tasks" | "parent">[]
   toggleEditClick: (e: GestureResponderEvent) => void
   isSublistItem?: boolean
   isSublistCollapsed?: boolean
@@ -168,14 +168,13 @@ function RecurringItemStrip({
   const { editItem, setEditItem } = useEditItem()
 
   const isActive = item.status === "ACTIVE"
-  const itemProgress = item.rec_times
-    ? (item.rec_progress || 0) / item.rec_times
+  const itemProgress = item.recurring?.times
+    ? (item.recurring.progress || 0) / item.recurring.times
     : 0
 
   const handleStripClick = () => {
     const itemInEdit =
-      item.item_id === editItem?.item_id &&
-      item.item_type === editItem?.item_type
+      item.itemID === editItem?.itemID && item.type === editItem?.type
     if (itemInEdit) setEditItem(undefined)
   }
 
@@ -254,7 +253,7 @@ function RecurringItemStrip({
               color: stripPercentageColor,
             }}
           >
-            {item.rec_progress || 0}/{item.rec_times}
+            {item.recurring?.progress || 0}/{item.recurring?.times}
           </Text>
         </View>
         <View

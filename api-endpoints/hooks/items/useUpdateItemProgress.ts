@@ -36,7 +36,7 @@ export const useUpdateItemProgress = () => {
     onSuccess: (_, variables) => {
       queryClient.setQueryData(["items"], (prev: FormattedItems) => {
         const newRawItems = prev.rawItems.map(item => {
-          if (item.item_id === variables.item_id) {
+          if (item.id === variables.id) {
             return {
               ...item,
               time_spent: item.time_spent + variables.time_spent,
@@ -49,9 +49,7 @@ export const useUpdateItemProgress = () => {
         const formattedItems = formatItemResponse(newRawItems)
 
         // Update focus item labels
-        const focusOnItem = newRawItems.find(
-          item => item.item_id === focusOn?.value
-        )
+        const focusOnItem = newRawItems.find(item => item.id === focusOn?.value)
         if (focusOnItem) {
           const itemOptions = getItemsByType({
             itemData: formattedItems,

@@ -1,18 +1,18 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
-import { GeneralItem, ItemType } from "@/types/itemTypes"
+import { FormattedItem, GeneralItem, ItemType } from "@/types/itemTypes"
 import { createSelectors } from "@/utils/zustandUtils"
 
 type CollapsedItemState = {
-  item_id: string
+  id: string
   itemType: ItemType
 }
 
 interface ItemListConfigState {
   // Collaped items
   collapsedItems: CollapsedItemState[]
-  isItemCollapsed: (item: GeneralItem) => boolean
+  isItemCollapsed: (item: FormattedItem) => boolean
   saveCollapseState: (item: CollapsedItemState, isCollapsed: boolean) => void
 
   // Item type header
@@ -33,11 +33,11 @@ const useItemListConfigState = create<ItemListConfigState>()(
     (set, get) => ({
       // Collaped items
       collapsedItems: [],
-      isItemCollapsed: (item: GeneralItem) =>
+      isItemCollapsed: (item: FormattedItem) =>
         !!get().collapsedItems.find(
           collapsedItem =>
-            collapsedItem.item_id === item.item_id &&
-            collapsedItem.itemType === item.item_type
+            collapsedItem.id === item.itemID &&
+            collapsedItem.itemType === item.type
         ),
       saveCollapseState: (item: CollapsedItemState, isCollapsed: boolean) =>
         set({
@@ -46,7 +46,7 @@ const useItemListConfigState = create<ItemListConfigState>()(
             : get().collapsedItems.filter(
                 collapsedItem =>
                   !(
-                    collapsedItem.item_id == item.item_id &&
+                    collapsedItem.id == item.id &&
                     collapsedItem.itemType == item.itemType
                   )
               ),

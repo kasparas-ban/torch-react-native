@@ -1,69 +1,63 @@
 // === Items ===
 
-export type ItemResponse = {
-  item_id: string
+import { ItemRecord } from "@/library/powersync/AppSchema"
+
+export type GeneralItem = {
+  itemID: string
   title: string
-  item_type: ItemType
+  type: ItemType
   status: ItemStatus
-  target_date: string | null
+  timeSpent: number
+  targetDate: string | null
   priority: "LOW" | "MEDIUM" | "HIGH" | null
   duration: number | null
-  time_spent: number
-  rec_times: number | null
-  rec_period: ReccuringPeriod | null
-  rec_progress: number | null
-  rec_updated_at: string | null
-  parent_id: string | null
-  updated_at: string
-  created_at: string
-  // Clock metadata
-  title__c: number
-  status__c: number
-  target_date__c: number
-  priority__c: number
-  duration__c: number
-  time_spent__c: number
-  rec_times__c: number
-  rec_period__c: number
-  rec_progress__c: number
-  parent_id__c: number
-  item__c: number
+  parentID: string | null
+  recurring: {
+    period: ReccuringPeriod
+    times: number
+    progress: number
+    updatedAt: string | null
+  } | null
+  updatedAt: string
+  createdAt: string
 }
 
-export type SyncMetadata<T> = T & {
-  updatedFields: UpdatedFields
-}
-
-export type UpdatedFields = {
-  title: boolean
-  status: boolean
-  target_date: boolean
-  priority: boolean
-  duration: boolean
-  time_spent: boolean
-  rec_times: boolean
-  rec_period: boolean
-  rec_progress: boolean
-  parent_id: boolean
-}
-
-export type GeneralItem = Omit<ItemResponse, "parent_id"> & {
+type CommonItem = {
+  itemID: string
+  title: string
+  type: ItemType
+  status: ItemStatus
+  timeSpent: number
+  targetDate: string | null
+  priority: "LOW" | "MEDIUM" | "HIGH" | null
+  updatedAt: string
+  createdAt: string
+  // Additional field
   progress: number
 }
 
-export type Task = GeneralItem & {
-  goal: GeneralItem | null
+export type Task = CommonItem & {
+  duration: number | null
+  parent: Omit<Goal, "tasks" | "parent"> | null
+  recurring: {
+    period: ReccuringPeriod
+    times: number
+    progress: number
+    updatedAt: string | null
+  } | null
 }
 
-export type Goal = GeneralItem & {
-  totaltime_spent: number
-  tasks: GeneralItem[]
-  dream: GeneralItem | null
+export type Goal = CommonItem & {
+  parent: Omit<Dream, "goals"> | null
+  // Additional fields
+  totalTimeSpent: number
+  tasks: Omit<Task, "parent">[]
 }
 
-export type Dream = GeneralItem & {
-  totaltime_spent: number
-  goals: GeneralItem[]
+export type Dream = CommonItem & {
+  // Additional fields
+  totalTimeSpent: number
+  goals: Omit<Goal, "parent" | "tasks">[]
 }
 
 export type FormattedItem = Task | Goal | Dream
@@ -81,7 +75,7 @@ export type FormattedItems = {
   tasks: Task[]
   goals: Goal[]
   dreams: Dream[]
-  rawItems: SyncMetadata<ItemResponse>[]
+  rawItems: ItemRecord[]
 }
 
 export type ItemTypeLabel = "Tasks" | "Goals" | "Dreams"
@@ -97,7 +91,7 @@ export type ItemOptionType = {
   containsTasks: boolean
   progress?: number
   time_spent?: number
-  totaltime_spent?: number
+  totalTimeSpent?: number
   duration?: number
 }
 

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
-import { formatNewItem } from "@/stores/helpers"
-import useItems from "@/stores/itemStore"
+import { useItems } from "@/library/useItems"
+import { formatItemFormData } from "@/stores/helpers"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
@@ -13,7 +13,6 @@ import { SelectOption } from "@/types/generalTypes"
 import { Dream } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import useKeyboard from "@/utils/useKeyboard"
-import { pruneObject } from "@/utils/utils"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
 import InputSelectPanel from "@/components/itemModal/itemForms/InputSelectPanel"
 import {
@@ -30,13 +29,13 @@ type InputType = keyof z.infer<typeof dreamFormSchema>
 
 const inputNames = [
   { label: "Priority", value: "priority" },
-  { label: "Target date", value: "target_date" },
+  { label: "Target date", value: "targetDate" },
 ] as SelectOption<InputType>[]
 
 const getInitialDreamForm = (initialDream: Dream): DreamFormType => ({
   title: initialDream?.title || "",
   ...(initialDream?.priority && { priority: initialDream?.priority }),
-  ...(initialDream?.target_date && { target_date: initialDream?.target_date }),
+  ...(initialDream?.targetDate && { targetDate: initialDream?.targetDate }),
 })
 
 export default function AddDreamModal() {
@@ -60,10 +59,11 @@ export default function AddDreamModal() {
   })
 
   const onSubmit = (data: DreamFormType) => {
-    if (editItem?.item_id) {
-      updateItem({ item_id: editItem.item_id, ...data })
+    if (editItem?.itemID) {
+      const updatedDream = formatItemFormData({ ...data, type: "DREAM" })
+      updateItem({ ...updatedDream, itemID: editItem.itemID })
     } else {
-      const newDream = formatNewItem({ ...data, type: "DREAM" })
+      const newDream = formatItemFormData({ ...data, type: "DREAM" })
       addItem(newDream)
     }
 
@@ -145,7 +145,7 @@ export default function AddDreamModal() {
               )
             }
 
-            if (input === "target_date") {
+            if (input === "targetDate") {
               return (
                 <Animated.View
                   key="dream_target_date"
@@ -154,7 +154,7 @@ export default function AddDreamModal() {
                   layout={LinearTransition}
                 >
                   <Controller
-                    name="target_date"
+                    name="targetDate"
                     control={form.control}
                     render={({ field: { onChange, value } }) => (
                       <DateInput

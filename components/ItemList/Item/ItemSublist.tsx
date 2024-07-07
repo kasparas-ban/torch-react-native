@@ -2,7 +2,7 @@ import React, { Fragment, useCallback, useEffect } from "react"
 import { findItemByID } from "@/api-endpoints/utils/helpers"
 import RotateIcon from "@/assets/icons/rotate.svg"
 import Colors from "@/constants/Colors"
-import useItems from "@/stores/itemStore"
+import { useItems } from "@/library/useItems"
 import { router } from "expo-router"
 import { GestureResponderEvent, useColorScheme, View } from "react-native"
 import Animated, {
@@ -11,7 +11,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated"
-import { GeneralItem, Task } from "@/types/itemTypes"
+import { FormattedItem, Goal, Task } from "@/types/itemTypes"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
 
 import { ItemStrip, RecurringItemStrip } from "./ItemStrip"
@@ -25,21 +25,28 @@ export default function ItemSublist({
   showSublist,
 }: {
   parent_id: string
-  subitems: GeneralItem[]
+  subitems: Omit<Task, "parent">[] | Omit<Goal, "tasks" | "parent">[]
   subitemType: "TASK" | "GOAL"
   showSublist: boolean
 }) {
   const { allItems } = useItems()
-  const { setEditItem } = useEditItem()
+  const { editItem, setEditItem } = useEditItem()
 
-  const toggleEditClick = (e: GestureResponderEvent, subitem: GeneralItem) => {
+  const toggleEditClick = (
+    e: GestureResponderEvent,
+    subitem: Omit<Task, "parent"> | Omit<Goal, "tasks" | "parent">
+  ) => {
     e.stopPropagation()
-    const formattedItem = findItemByID(subitem.item_id, allItems)
+
+    if (editItem) return
+    const formattedItem = findItemByID(subitem.itemID, allItems)
     setEditItem(formattedItem)
     router.push("/(modals)/(items)/edit-item")
   }
 
-  const isRecurring = (item: GeneralItem) => !!item.rec_times
+  const isRecurring = (
+    item: Omit<Task, "parent"> | Omit<Goal, "tasks" | "parent">
+  ) => !!(item as Task).recurring
 
   const animVal = useSharedValue(0)
 
@@ -80,7 +87,7 @@ export default function ItemSublist({
   return (
     <Animated.View style={[{ gap: 12, marginBottom: 12 }, animatedHeight]}>
       {subitems.map((subitem, idx) => (
-        <Fragment key={`${parent_id}_${subitem.item_id}`}>
+        <Fragment key={`${parent_id}_${subitem.itemID}`}>
           <Animated.View
             style={[
               {
@@ -107,7 +114,7 @@ export default function ItemSublist({
               />
             ) : (
               <ItemStrip
-                item={subitem}
+                item={subitem as any}
                 itemType={subitemType}
                 toggleEditClick={(e: GestureResponderEvent) => {
                   toggleEditClick(e, subitem)
@@ -130,12 +137,12 @@ function BulletPoint({
 }: {
   idx: number
   showSublist: boolean
-  subitems: GeneralItem[]
+  subitems: Omit<Task, "parent">[] | Omit<Goal, "tasks" | "parent">[]
 }) {
   const colorScheme = useColorScheme()
   const isDark = colorScheme === "dark"
 
-  const isRecurring = (subitems[idx] as Task).rec_times
+  const isRecurring = (subitems[idx] as Task).recurring
 
   const bulletColor =
     isRecurring && !isDark ? Colors.amber[200] : Colors.gray[300]

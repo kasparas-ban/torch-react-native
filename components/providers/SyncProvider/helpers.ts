@@ -5,7 +5,6 @@ import {
   ItemStatus,
   ItemType,
   ReccuringPeriod,
-  SyncMetadata,
   UpdatedFields,
 } from "@/types/itemTypes"
 
@@ -13,7 +12,7 @@ import { getDeleteOp, getInsertOp, getUpdateOp } from "./opFormatters"
 
 type InsertOp = {
   op: "INSERT"
-  item_id: string
+  id: string
   data: {
     title: string
     item_type: ItemType
@@ -29,7 +28,7 @@ type InsertOp = {
 
 type UpdateOp = {
   op: "UPDATE"
-  item_id: string
+  id: string
   diffs: FieldDiff
 }
 
@@ -55,7 +54,7 @@ type FieldDiff = {
 
 type IncomingDeleteOp = {
   op: "DELETE"
-  item_id: string
+  id: string
 }
 
 type ServerOp = (IncomingInsertOp | IncomingUpdateOp | IncomingDeleteOp) & {
@@ -73,7 +72,7 @@ export function getDeleteOps(
 ) {
   const itemsToDelete: DeleteItemData[] = []
   deletedItems.forEach(i => {
-    const remoteItem = remoteItems.find(item => item.item_id === i.item_id)
+    const remoteItem = remoteItems.find(item => item.id === i.id)
     if (!remoteItem || remoteItem.item__c > i.cl) return
     itemsToDelete.push(i)
   })
@@ -89,10 +88,10 @@ export function getInsertOps(
   lastSyncItems: ItemResponse[]
 ) {
   const insertItems = localItems.filter(item => {
-    const isExisting = remoteItems.find(i => i.item_id === item.item_id)
+    const isExisting = remoteItems.find(i => i.id === item.id)
     if (isExisting) return false
 
-    const lastSyncedItem = lastSyncItems.find(i => i.item_id === item.item_id)
+    const lastSyncedItem = lastSyncItems.find(i => i.id === item.id)
     if (lastSyncedItem) {
       // The item was deleted from the DB. Check if it was updated since last sync
       const isChanged = JSON.stringify(lastSyncedItem) !== JSON.stringify(item)
@@ -114,7 +113,7 @@ export function getUpdateOps(
   const updateOps: UpdateOp[] = []
 
   remoteItems.forEach(remoteItem => {
-    const localItem = localItems.find(i => i.item_id === remoteItem.item_id)
+    const localItem = localItems.find(i => i.id === remoteItem.id)
     if (!localItem) return
 
     const updateOp = getUpdateOp(localItem)
@@ -152,7 +151,7 @@ export function handleServerMsg(
   op: ServerOp,
   addItem: (item: SyncMetadata<ItemResponse>) => void,
   updateItem: (data: Partial<ItemResponse>) => void,
-  deleteItem: (item_id: string) => void
+  deleteItem: (id: string) => void
 ) {
   console.log("Handling server msg: ", Platform.OS, op)
 
@@ -162,10 +161,10 @@ export function handleServerMsg(
   }
 
   if (op.op === "UPDATE") {
-    updateItem({ item_id: op.item_id, ...op.diffs })
+    updateItem({ id: op.id, ...op.diffs })
   }
 
   if (op.op === "DELETE") {
-    deleteItem(op.item_id)
+    deleteItem(op.id)
   }
 }

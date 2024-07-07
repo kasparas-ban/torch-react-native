@@ -3,7 +3,14 @@ import { router } from "expo-router"
 import { GestureResponderEvent, View } from "react-native"
 import Animated from "react-native-reanimated"
 import { genericMemo } from "@/types/generalTypes"
-import { Dream, FormattedItem, Goal, ItemType, Task } from "@/types/itemTypes"
+import {
+  Dream,
+  FormattedItem,
+  GeneralItem,
+  Goal,
+  ItemType,
+  Task,
+} from "@/types/itemTypes"
 
 import useEditItem from "../../itemModal/hooks/useEditItem"
 import useItemListConfig from "../hooks/useItemListConfig"
@@ -17,7 +24,7 @@ function Item<T extends FormattedItem>({
   item: T
   itemType: ItemType
 }) {
-  const { setEditItem } = useEditItem()
+  const { editItem, setEditItem } = useEditItem()
   const isItemCollapsed = useItemListConfig.use.isItemCollapsed()
   const saveCollapseState = useItemListConfig.use.saveCollapseState()
   const [showSublist, setShowSublist] = useState(!isItemCollapsed(item))
@@ -25,31 +32,27 @@ function Item<T extends FormattedItem>({
   const toggleSublist = () => {
     const newState = !showSublist
     setShowSublist(newState)
-    saveCollapseState(
-      { item_id: item.item_id, itemType: item.item_type },
-      !newState
-    )
+    saveCollapseState({ id: item.itemID, itemType: item.type }, !newState)
   }
 
   const itemSublist = useMemo(() => {
     return itemType === "GOAL"
       ? (item as Goal).tasks
-      : item.item_type === "DREAM"
+      : item.type === "DREAM"
         ? (item as Dream).goals
         : undefined
   }, [itemType])
   const containsSublist = !!itemSublist?.length
 
-  const toggleEditClick = useCallback(
-    (e: GestureResponderEvent) => {
-      e.stopPropagation()
-      setEditItem(item)
-      router.push("/(modals)/(items)/edit-item")
-    },
-    [setEditItem]
-  )
+  const toggleEditClick = (e: GestureResponderEvent) => {
+    e.stopPropagation()
 
-  const isRecurring = itemType === "TASK" && !!(item as Task).rec_times
+    if (editItem) return
+    setEditItem(item)
+    router.push("/(modals)/(items)/edit-item")
+  }
+
+  const isRecurring = itemType === "TASK" && !!(item as Task).recurring
 
   return (
     <View>
@@ -73,8 +76,8 @@ function Item<T extends FormattedItem>({
         <>
           {containsSublist && (
             <ItemSublist
-              parent_id={item.item_id}
-              key={`${itemType}_${item.item_id}_sublist`}
+              parent_id={item.itemID}
+              key={`${itemType}_${item.itemID}_sublist`}
               subitems={itemSublist || []}
               subitemType={itemType === "DREAM" ? "GOAL" : "TASK"}
               showSublist={showSublist}
@@ -85,8 +88,8 @@ function Item<T extends FormattedItem>({
         <>
           {containsSublist && (
             <ItemSublist
-              parent_id={item.item_id}
-              key={`${itemType}_${item.item_id}_sublist`}
+              parent_id={item.itemID}
+              key={`${itemType}_${item.itemID}_sublist`}
               subitems={itemSublist || []}
               subitemType={itemType === "DREAM" ? "GOAL" : "TASK"}
               showSublist={showSublist}

@@ -24,18 +24,18 @@ export const useUpsertItem = (type: ItemType) => {
           | FormattedItems
           | undefined
 
-        const item_id = (item as UpdateTaskType).item_id
+        const id = (item as UpdateTaskType).id
 
-        if (item_id) {
+        if (id) {
           // Update an existing item
           const updatedItem = {
-            ...oldData?.rawItems.find(i => i.item_id === item_id),
+            ...oldData?.rawItems.find(i => i.id === id),
             ...item,
             updated_at: new Date().toISOString(),
             isSynced: false,
           }
           const newRawItems = oldData?.rawItems.map(item =>
-            item.item_id === item_id ? updatedItem : item
+            item.id === id ? updatedItem : item
           )
 
           const newItems = formatItemResponse(
@@ -47,7 +47,7 @@ export const useUpsertItem = (type: ItemType) => {
           // Create new item
           const newItem: any = {
             ...item,
-            item_id: getRandomId(),
+            id: getRandomId(),
             type,
             time_spent: 0,
             status: "ACTIVE",
@@ -71,7 +71,7 @@ export const useUpsertItem = (type: ItemType) => {
 
         const updatedData =
           oldData?.rawItems.map(item =>
-            item.item_id === data.item_id ? { ...item, isSynced: true } : item
+            item.id === data.id ? { ...item, isSynced: true } : item
           ) || []
         const formattedItems = formatItemResponse(updatedData)
 
@@ -90,10 +90,10 @@ const upsertItem = async (
   const token = await getToken()
   if (!token) throw new Error("Failed to load token")
 
-  const endpoint = (item as UpdateTaskType).item_id
+  const endpoint = (item as UpdateTaskType).id
     ? `${HOST}/update-item/${type.toLowerCase()}`
     : `${HOST}/add-item/${type.toLowerCase()}`
-  const method = (item as UpdateTaskType).item_id ? "PUT" : "POST"
+  const method = (item as UpdateTaskType).id ? "PUT" : "POST"
 
   return fetch(endpoint, {
     method: method,

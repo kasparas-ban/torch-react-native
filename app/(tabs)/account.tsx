@@ -1,7 +1,9 @@
 import { useMemo } from "react"
 import Colors from "@/constants/Colors"
+import { useSystem } from "@/library/powersync/system"
+import useAuth from "@/library/supabase/useAuth"
 import useUserInfo from "@/stores/userStore"
-import { useAuth, useUser } from "@clerk/clerk-expo"
+import { useAuth as useAuthClerk, useUser } from "@clerk/clerk-expo"
 import dayjs from "dayjs"
 import { Image, ImageStyle } from "expo-image"
 import { Redirect, useRouter } from "expo-router"
@@ -28,19 +30,22 @@ export default function AccountScreen() {
   const { styles, isDark } = useThemeStyles(componentStyles)
   const { showGlobalLoading, hideGlobalLoading } = useGlobalLoading()
 
-  const { signOut, sessionId, isSignedIn } = useAuth()
+  const { signOut, sessionId } = useAuthClerk()
+  const { isSignedIn } = useAuth()
 
   const router = useRouter()
   const { user } = useUser()
   const { user: userInfo } = useUserInfo()
+  const system = useSystem()
 
   const handleLogout = async () => {
     showGlobalLoading("Logging out...")
     try {
-      if (!sessionId) throw new Error("Logout failed")
+      await system.supabaseConnector.client.auth.signOut()
+      // if (!sessionId) throw new Error("Logout failed")
 
-      await signOut({ sessionId })
-      queryClient.invalidateQueries({ queryKey: ["user"] })
+      // await signOut({ sessionId })
+      // queryClient.invalidateQueries({ queryKey: ["user"] })
       router.replace("/(tabs)/timer")
       notify({ title: "You've been logged out" })
     } catch (e) {

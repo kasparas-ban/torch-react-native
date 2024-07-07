@@ -9,29 +9,27 @@ import {
 } from "@/components/itemModal/itemForms/schemas"
 
 export type UpsertItem = NewItemType | UpdateItemType
+
 export type NewItemType = NewTaskType | NewGoalType | NewDreamType
+
 export type UpdateItemType = UpdateTaskType | UpdateGoalType | UpdateDreamType
 
 export type FormattedUpdateItemType = Omit<UpdateItemType, "goal" | "recurring">
 
 export type AddNewItemType = NewItemType & { type: ItemType }
 
-export type DeleteItemData = {
-  item_id: string
-  cl: number
-}
-
-export type DeleteItemReq = DeleteItemData & {
+export type DeleteItemReq = {
+  deleteItemId: string
   deleteAssociated: boolean
 }
 
 export type UpdateItemProgressReq = {
-  item_id: string
+  id: string
   time_spent: number
 }
 
 export type UpdateItemStatusReq = {
-  item_id: string
+  id: string
   status: ItemStatus
   updateAssociated: boolean
   itemType: ItemType

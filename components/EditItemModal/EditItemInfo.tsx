@@ -16,7 +16,7 @@ export default function EditItemFunction() {
   const { styles, isDark } = useThemeStyles(componentStyles)
   const { editItem } = useEditItem()
 
-  const isRecurring = !!editItem?.rec_period
+  const isRecurring = !!(editItem as Task)?.recurring
 
   const { setFocusOn } = useTimerForm()
 
@@ -24,11 +24,11 @@ export default function EditItemFunction() {
     if (!editItem) return
 
     const itemOption: ItemOptionType = {
-      value: editItem.item_id,
+      value: editItem.itemID,
       label: editItem.title,
-      type: editItem.item_type,
+      type: editItem.type,
       progress: editItem.progress,
-      time_spent: editItem.time_spent,
+      time_spent: editItem.timeSpent,
       duration: (editItem as Task).duration ?? undefined,
       containsTasks: !!(editItem as Goal).tasks?.length,
     }
@@ -43,7 +43,7 @@ export default function EditItemFunction() {
       entering={FadeIn(0.9)}
       exiting={FadeOut(0.9)}
     >
-      <Text style={styles.itemTitle}>Learn Spanish language</Text>
+      <Text style={styles.itemTitle}>{editItem?.title}</Text>
       <View style={{ flexDirection: "row", paddingHorizontal: 6 }}>
         <View style={{ flexDirection: "row", gap: 2, marginRight: 12 }}>
           <Text
@@ -55,7 +55,7 @@ export default function EditItemFunction() {
             }}
           >
             {isRecurring
-              ? `${editItem.rec_progress || 0}/${editItem.rec_times}`
+              ? `${(editItem as Task).recurring?.progress || 0}/${(editItem as Task).recurring?.times}`
               : toPercent(editItem?.progress).slice(0, -1)}
           </Text>
           {!isRecurring && (
@@ -118,9 +118,9 @@ export default function EditItemFunction() {
                 style={{ color: isDark ? Colors.gray[300] : Colors.gray[500] }}
               >
                 {isRecurring
-                  ? editItem.rec_progress
+                  ? (editItem as Task).recurring?.progress
                   : formatSpentTime(
-                      (editItem as Goal).totaltime_spent || editItem.time_spent
+                      (editItem as Goal).totalTimeSpent || editItem.timeSpent
                     )}
               </Text>
             </View>

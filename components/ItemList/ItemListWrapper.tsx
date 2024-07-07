@@ -2,7 +2,7 @@ import {
   filterItemsByStatus,
   groupItemsByParent,
 } from "@/api-endpoints/utils/helpers"
-import useItems from "@/stores/itemStore"
+import { useItems } from "@/library/useItems"
 import { Dream, Goal, ItemStatus, Task } from "@/types/itemTypes"
 
 import useItemListConfig from "./hooks/useItemListConfig"
@@ -12,8 +12,7 @@ export default function ItemListWrapper() {
   const itemType = useItemListConfig.use.itemType()
   const showArchivedItems = useItemListConfig.use.showArchivedItems()
   const showCompletedItems = useItemListConfig.use.showCompletedItems()
-  const { tasks, goals, dreams, items: allItems, deletedItems } = useItems()
-  console.log("ALL ITEMS", allItems, deletedItems)
+  const { tasks, goals, dreams } = useItems()
 
   const items =
     itemType === "TASK" ? tasks : itemType === "GOAL" ? goals : dreams
