@@ -14,7 +14,7 @@ const wsStore = create<State & Actions>(set => ({
   id: undefined,
   setWs: (ws?: WebSocket, id?: string) =>
     set(state => {
-      if (!ws) state.ws?.close()
+      if (state.ws || !ws) state.ws?.close()
       return { ws, id }
     }),
 }))

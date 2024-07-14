@@ -2,7 +2,7 @@ import {
   AddNewItemType,
   DeleteItemData,
 } from "@/api-endpoints/endpoints/itemAPITypes"
-import { ItemResponse, SyncMetadata } from "@/types/itemTypes"
+import { ItemResponse } from "@/types/itemTypes"
 import { getRandomId } from "@/utils/randomId"
 import {
   NewDreamType,
@@ -62,9 +62,7 @@ export function formatNewItem(item: AddNewItemType, item_id?: string) {
       rec_period__c: 0,
       rec_progress__c: 0,
       parent_id__c: 0,
-      // Update metadata
-      updatedFields: defaultUpdateMetadata,
-    } as SyncMetadata<ItemResponse>
+    } as ItemResponse
   }
 
   if (type === "GOAL") {
@@ -79,9 +77,7 @@ export function formatNewItem(item: AddNewItemType, item_id?: string) {
       target_date__c: 0,
       priority__c: 0,
       parent_id__c: 0,
-      // Update metadata
-      updatedFields: defaultUpdateMetadata,
-    } as SyncMetadata<ItemResponse>
+    } as ItemResponse
   }
 
   const dream = rest as NewDreamType
@@ -93,9 +89,7 @@ export function formatNewItem(item: AddNewItemType, item_id?: string) {
     // Clock metadata
     target_date__c: 0,
     priority__c: 0,
-    // Update metadata
-    updatedFields: defaultUpdateMetadata,
-  } as SyncMetadata<ItemResponse>
+  } as ItemResponse
 }
 
 export function getAllAssociatedItems(

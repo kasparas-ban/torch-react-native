@@ -1,6 +1,6 @@
 import { useState } from "react"
 import Colors from "@/constants/Colors"
-import { useSignIn } from "@clerk/clerk-expo"
+import { useSignIn } from "@/library/clerk"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router } from "expo-router"
 import { Controller, useForm } from "react-hook-form"

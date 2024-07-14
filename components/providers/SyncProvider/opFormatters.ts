@@ -1,5 +1,5 @@
 import { DeleteItemData } from "@/api-endpoints/endpoints/itemAPITypes"
-import { ItemResponse, SyncMetadata, UpdatedFields } from "@/types/itemTypes"
+import { ItemResponse } from "@/types/itemTypes"
 
 import { DeleteOp, FieldDiff, InsertOp, UpdateOp } from "./opTypes"
 
@@ -31,25 +31,36 @@ export function getDeleteOp(item: DeleteItemData): DeleteOp {
 }
 
 export function getUpdateOp(
-  newItem: SyncMetadata<ItemResponse>
+  oldItem: ItemResponse,
+  newItem: ItemResponse
 ): UpdateOp | null {
   let diffs: FieldDiff = {}
 
-  const fieldsToUpdate = Object.entries(newItem.updatedFields)
-    .filter(([_, val]) => val)
-    .map(entry => entry[0]) as (keyof UpdatedFields)[]
+  let fieldsToUpdate = Object.keys(newItem).reduce(
+    (prev, curr) => {
+      const key = curr as keyof ItemResponse
+      if (
+        (newItem[key] === undefined || newItem[key] === null) &&
+        (oldItem[key] === undefined || oldItem[key] === null)
+      )
+        return prev
+      if (newItem[key] === oldItem[key]) return prev
+      return [...prev, key]
+    },
+    [] as (keyof ItemResponse)[]
+  )
+
+  if (fieldsToUpdate.length === 0) return null
 
   fieldsToUpdate.forEach(field => {
     diffs = {
       ...diffs,
       [field]: {
         val: newItem[field],
-        cl: newItem[(field + "__c") as keyof UpdatedFields],
+        cl: newItem[(field + "__c") as keyof ItemResponse],
       },
     }
   })
-
-  if (Object.keys(diffs).length === 0) return null
 
   return {
     op: "UPDATE",

@@ -10,22 +10,24 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { memoize } from "proxy-memoize"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
-import { ItemResponse, SyncMetadata, UpdatedFields } from "@/types/itemTypes"
+import { ItemResponse } from "@/types/itemTypes"
+import { removeElsFromArray } from "@/utils/utils"
 import useItemsSync from "@/components/providers/SyncProvider/useItemsSync"
 
 import { getAllAssociatedItems } from "./helpers"
 
 type State = {
-  items: SyncMetadata<ItemResponse>[]
+  items: ItemResponse[]
   lastSyncItems: ItemResponse[]
   deletedItems: DeleteItemData[]
+  updatedItems: string[]
 }
 
 type Actions = {
   setLastSyncItems: (items: ItemResponse[]) => void
-  resetItems: (items: SyncMetadata<ItemResponse>[]) => void
-  addItem: (item: SyncMetadata<ItemResponse>) => void
-  updateItem: (updatedItem: SyncMetadata<ItemResponse>) => void
+  resetItems: (items: ItemResponse[]) => void
+  addItem: (item: ItemResponse) => void
+  updateItem: (updatedItem: ItemResponse) => void
   deleteItems: (items: { item_id: string; cl: number }[]) => void
   updateItemProgress: (req: UpdateItemProgressReq) => void
   // updateItemStatus: (req: UpdateItemStatusReq) => void
@@ -37,14 +39,18 @@ const itemStore = create<State & Actions>()(
       items: [],
       lastSyncItems: [],
       deletedItems: [],
-      resetItems: (items: SyncMetadata<ItemResponse>[]) =>
-        set(() => ({ items, deletedItems: [] })),
-      addItem: (newItem: SyncMetadata<ItemResponse>) =>
+      updatedItems: [],
+      resetItems: (items: ItemResponse[]) =>
+        set(() => ({ items, deletedItems: [], updatedItems: [] })),
+      addItem: (newItem: ItemResponse) =>
         set(state => ({ items: [...state.items, newItem] })),
-      updateItem: (updatedItem: SyncMetadata<ItemResponse>) =>
+      updateItem: (updatedItem: ItemResponse) =>
         set(state => ({
           items: state.items.map(i =>
             i.item_id === updatedItem.item_id ? updatedItem : i
+          ),
+          updatedItems: Array.from(
+            new Set([...state.updatedItems, updatedItem.item_id])
           ),
         })),
       deleteItems: (items: DeleteItemData[]) =>
@@ -53,6 +59,10 @@ const itemStore = create<State & Actions>()(
             i => !items.find(it => i.item_id === it.item_id)
           ),
           deletedItems: [...state.deletedItems, ...items],
+          updatedItems: removeElsFromArray(
+            state.updatedItems,
+            items.map(i => i.item_id)
+          ),
         })),
       setLastSyncItems: (items: ItemResponse[]) =>
         set(() => ({ lastSyncItems: items })),
@@ -92,8 +102,9 @@ const useItems = () => {
     lastSyncItems: itemStore(state => state.lastSyncItems),
     items: itemStore(state => state.items),
     deletedItems: itemStore(state => state.deletedItems),
+    updatedItems: itemStore(state => state.updatedItems),
     // Actions
-    addItem: (item: SyncMetadata<ItemResponse>, local: boolean = false) => {
+    addItem: (item: ItemResponse, local: boolean = false) => {
       store.addItem(item)
       if (!local) op.addItem(item)
     },
@@ -104,29 +115,15 @@ const useItems = () => {
       const oldItem = allItems.rawItems.find(
         i => i.item_id === updatedData.item_id
       )
-      console.log("OLD ITEM", updatedData, allItems.rawItems, oldItem)
       if (!oldItem) return
 
-      const updatedFields = Object.entries(oldItem.updatedFields).reduce(
-        (prev, curr) => {
-          const field = curr[0] as keyof UpdatedFields
-          const updatedField = (updatedData as any)[field]
-          const isUpdated = updatedField && updatedField !== oldItem[field]
-          return { ...prev, [field]: isUpdated || curr[1] }
-        },
-        oldItem.updatedFields
-      )
-
-      const newItem: SyncMetadata<ItemResponse> = {
+      const newItem: ItemResponse = {
         ...oldItem,
         ...updatedData,
-        updatedFields,
       }
 
-      console.log("Updated", newItem)
-
       store.updateItem(newItem)
-      if (!local) op.updateItem(newItem)
+      if (!local) op.updateItem(oldItem, newItem)
     },
     deleteItem: (data: DeleteItemReq, local: boolean = false) => {
       if (data.deleteAssociated) {

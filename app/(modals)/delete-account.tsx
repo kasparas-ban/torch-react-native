@@ -1,7 +1,8 @@
 import { useState } from "react"
 import { deleteAccount } from "@/api-endpoints/endpoints/userAPI"
 import Colors from "@/constants/Colors"
-import { useAuth } from "@clerk/clerk-expo"
+import { useAuth } from "@/library/clerk"
+import useUserInfo from "@/stores/userStore"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { router } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
@@ -12,7 +13,6 @@ import { notify } from "@/components/notifications/Notifications"
 import { queryClient } from "@/components/providers/QueryProvider"
 import Button from "@/components/UI/Button"
 import TextInput from "@/components/UI/TextInput"
-import useUserInfo from "@/stores/userStore"
 
 const getDeleteAccountFormSchema = (username: string) =>
   z.object({

@@ -1,12 +1,9 @@
 import { DeleteItemData } from "@/api-endpoints/endpoints/itemAPITypes"
-import { Platform } from "react-native"
 import {
   ItemResponse,
   ItemStatus,
   ItemType,
   ReccuringPeriod,
-  SyncMetadata,
-  UpdatedFields,
 } from "@/types/itemTypes"
 
 import { getDeleteOp, getInsertOp, getUpdateOp } from "./opFormatters"
@@ -59,7 +56,7 @@ type IncomingDeleteOp = {
 }
 
 type ServerOp = (IncomingInsertOp | IncomingUpdateOp | IncomingDeleteOp) & {
-  wsId: number
+  wsId: string
 }
 
 type IncomingInsertOp = Omit<InsertOp, "data"> & { diffs: ItemResponse }
@@ -108,61 +105,44 @@ export function getInsertOps(
 }
 
 export function getUpdateOps(
+  updatedItems: string[],
   remoteItems: ItemResponse[],
-  localItems: SyncMetadata<ItemResponse>[]
+  localItems: ItemResponse[]
 ) {
   const updateOps: UpdateOp[] = []
 
-  remoteItems.forEach(remoteItem => {
-    const localItem = localItems.find(i => i.item_id === remoteItem.item_id)
-    if (!localItem) return
-
-    const updateOp = getUpdateOp(localItem)
-    if (updateOp) updateOps.push(updateOp)
+  updatedItems.forEach(id => {
+    const localItem = localItems.find(i => i.item_id === id)
+    const remoteItem = remoteItems.find(i => i.item_id === id)
+    if (localItem && remoteItem && localItem.item__c >= remoteItem.item__c) {
+      const updateOp = getUpdateOp(remoteItem, localItem)
+      if (updateOp) updateOps.push(updateOp)
+    }
   })
 
   return updateOps
 }
 
-export function addMetadata(
-  items: ItemResponse[]
-): SyncMetadata<ItemResponse>[] {
-  return items.map(item => ({
-    ...item,
-    updatedFields: getDefaultMetadata(),
-  }))
-}
-
-export function getDefaultMetadata(): UpdatedFields {
-  return {
-    title: false,
-    status: false,
-    target_date: false,
-    priority: false,
-    duration: false,
-    time_spent: false,
-    rec_times: false,
-    rec_period: false,
-    rec_progress: false,
-    parent_id: false,
-  }
-}
-
 export function handleServerMsg(
   op: ServerOp,
-  addItem: (item: SyncMetadata<ItemResponse>) => void,
-  updateItem: (data: Partial<ItemResponse>) => void,
+  wsId: string,
+  addItem: (item: ItemResponse) => void,
+  updateItem: (item: Partial<ItemResponse>) => void,
   deleteItem: (item_id: string) => void
 ) {
-  console.log("Handling server msg: ", Platform.OS, op)
+  console.log("Handling server msg: ", wsId, op)
 
   if (op.op === "INSERT") {
-    const newItem = { ...op.diffs, updatedFields: getDefaultMetadata() }
+    const newItem = {
+      ...op.diffs,
+      item_id: op.item_id,
+    }
     addItem(newItem)
   }
 
   if (op.op === "UPDATE") {
-    updateItem({ item_id: op.item_id, ...op.diffs })
+    const newItem = { item_id: op.item_id, ...op.diffs }
+    updateItem(newItem)
   }
 
   if (op.op === "DELETE") {

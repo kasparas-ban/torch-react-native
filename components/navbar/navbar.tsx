@@ -1,7 +1,7 @@
 import { ReactNode } from "react"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
-import { useAuth } from "@clerk/clerk-expo"
+import { useAuth } from "@/library/clerk"
 import {
   BottomTabBarProps,
   BottomTabHeaderProps,

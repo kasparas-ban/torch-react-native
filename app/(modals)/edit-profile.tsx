@@ -1,6 +1,7 @@
 import { useState } from "react"
 import Colors from "@/constants/Colors"
-import { useUser } from "@clerk/clerk-expo"
+import { useUser } from "@/library/clerk"
+import useUserInfo from "@/stores/userStore"
 import { zodResolver } from "@hookform/resolvers/zod"
 import dayjs from "dayjs"
 import { LinearGradient } from "expo-linear-gradient"
@@ -24,7 +25,6 @@ import DateInput from "@/components/UI/DateInput"
 import PictureInput from "@/components/UI/PictureInput"
 import Select from "@/components/UI/Select"
 import TextInput from "@/components/UI/TextInput"
-import useUserInfo from "@/stores/userStore"
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient)
 
@@ -35,8 +35,8 @@ const ProfileSchema = z.object({
       file =>
         file?.mimeType
           ? ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(
-            file.mimeType
-          )
+              file.mimeType
+            )
           : true,
       ".jpg, .jpeg, .png and .webp files are accepted."
     )

@@ -1,14 +1,13 @@
 import { DeleteItemData } from "@/api-endpoints/endpoints/itemAPITypes"
 import useWs from "@/stores/websocketStore"
-import { useNetInfo } from "@react-native-community/netinfo"
-import { ItemResponse, SyncMetadata } from "@/types/itemTypes"
+import { ItemResponse } from "@/types/itemTypes"
+import useDev from "@/components/dev/useDev"
 
 import { getDeleteOp, getInsertOp, getUpdateOp } from "./opFormatters"
 
 export default function useItemsSync() {
   const { ws } = useWs()
-  const netInfo = useNetInfo()
-  const isOnline = netInfo.isConnected && netInfo.isInternetReachable
+  const { isOnline } = useDev()
 
   const addItem = (item: ItemResponse) => {
     if (!isOnline || !ws) return
@@ -16,9 +15,9 @@ export default function useItemsSync() {
     ws.send(JSON.stringify(insertOp))
   }
 
-  const updateItem = (newItem: SyncMetadata<ItemResponse>) => {
+  const updateItem = (oldItem: ItemResponse, newItem: ItemResponse) => {
     if (!isOnline || !ws) return
-    const updateOp = getUpdateOp(newItem)
+    const updateOp = getUpdateOp(oldItem, newItem)
     ws.send(JSON.stringify(updateOp))
   }
 

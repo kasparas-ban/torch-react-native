@@ -8,6 +8,7 @@ import * as SplashScreen from "expo-splash-screen"
 import { useColorScheme } from "react-native"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { NotifierWrapper } from "react-native-notifier"
+import ConnectionTagProvider from "@/components/dev/ConnectionTagProvider"
 import GlobalLoadingScreen from "@/components/GlobalLoadingScreen/GlobalLoadingScreen"
 import { ClerkProvider } from "@/components/providers/ClerkProvider"
 import QueryProvider from "@/components/providers/QueryProvider"
@@ -54,136 +55,138 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme()
 
   return (
-    <ClerkProvider>
-      <QueryProvider>
-        <SyncProvider>
-          <ThemeProvider
-            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-          >
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <BottomSheetModalProvider>
-                <NotifierWrapper>
-                  <StorageProvider />
-                  <GlobalLoadingScreen>
-                    <Stack>
-                      <Stack.Screen
-                        name="(tabs)"
-                        options={{ headerShown: false }}
-                      />
-                      <Stack.Screen
-                        name="(modals)/sign-in"
-                        options={{
-                          presentation: "modal",
-                          headerTransparent: true,
-                          title: "",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="(modals)/sign-up"
-                        options={{
-                          presentation: "modal",
-                          headerTransparent: true,
-                          title: "",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="(modals)/sign-up-confirm"
-                        options={{
-                          presentation: "modal",
-                          headerTransparent: true,
-                          title: "",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="(modals)/password-reset"
-                        options={{
-                          presentation: "modal",
-                          headerTransparent: true,
-                          title: "",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="(modals)/timer-settings"
-                        options={{
-                          presentation: "modal",
-                          headerTransparent: true,
-                          title: "",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="(modals)/(items)/general-item"
-                        options={{
-                          presentation: "modal",
-                          headerTransparent: true,
-                          title: "",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="(modals)/(items)/add-task"
-                        options={{
-                          presentation: "modal",
-                          headerTransparent: true,
-                          title: "",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="(modals)/(items)/add-goal"
-                        options={{
-                          presentation: "modal",
-                          headerTransparent: true,
-                          title: "",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="(modals)/(items)/add-dream"
-                        options={{
-                          presentation: "modal",
-                          headerTransparent: true,
-                          title: "",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="(modals)/(items)/edit-item"
-                        options={{
-                          presentation: "transparentModal",
-                          animation: "fade",
-                          headerTransparent: true,
-                          title: "",
-                          headerBackVisible: false,
-                        }}
-                      />
-                      <Stack.Screen
-                        name="(modals)/edit-profile"
-                        options={{
-                          presentation: "modal",
-                          headerTransparent: true,
-                          title: "",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="(modals)/change-password"
-                        options={{
-                          presentation: "modal",
-                          headerTransparent: true,
-                          title: "",
-                        }}
-                      />
-                      <Stack.Screen
-                        name="(modals)/delete-account"
-                        options={{
-                          presentation: "modal",
-                          headerTransparent: true,
-                          title: "",
-                        }}
-                      />
-                    </Stack>
-                  </GlobalLoadingScreen>
-                </NotifierWrapper>
-              </BottomSheetModalProvider>
-            </GestureHandlerRootView>
-          </ThemeProvider>
-        </SyncProvider>
-      </QueryProvider>
-    </ClerkProvider>
+    <ConnectionTagProvider>
+      <ClerkProvider>
+        <QueryProvider>
+          <SyncProvider>
+            <ThemeProvider
+              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+            >
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <BottomSheetModalProvider>
+                  <NotifierWrapper>
+                    <StorageProvider />
+                    <GlobalLoadingScreen>
+                      <Stack>
+                        <Stack.Screen
+                          name="(tabs)"
+                          options={{ headerShown: false }}
+                        />
+                        <Stack.Screen
+                          name="(modals)/sign-in"
+                          options={{
+                            presentation: "modal",
+                            headerTransparent: true,
+                            title: "",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="(modals)/sign-up"
+                          options={{
+                            presentation: "modal",
+                            headerTransparent: true,
+                            title: "",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="(modals)/sign-up-confirm"
+                          options={{
+                            presentation: "modal",
+                            headerTransparent: true,
+                            title: "",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="(modals)/password-reset"
+                          options={{
+                            presentation: "modal",
+                            headerTransparent: true,
+                            title: "",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="(modals)/timer-settings"
+                          options={{
+                            presentation: "modal",
+                            headerTransparent: true,
+                            title: "",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="(modals)/(items)/general-item"
+                          options={{
+                            presentation: "modal",
+                            headerTransparent: true,
+                            title: "",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="(modals)/(items)/add-task"
+                          options={{
+                            presentation: "modal",
+                            headerTransparent: true,
+                            title: "",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="(modals)/(items)/add-goal"
+                          options={{
+                            presentation: "modal",
+                            headerTransparent: true,
+                            title: "",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="(modals)/(items)/add-dream"
+                          options={{
+                            presentation: "modal",
+                            headerTransparent: true,
+                            title: "",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="(modals)/(items)/edit-item"
+                          options={{
+                            presentation: "transparentModal",
+                            animation: "fade",
+                            headerTransparent: true,
+                            title: "",
+                            headerBackVisible: false,
+                          }}
+                        />
+                        <Stack.Screen
+                          name="(modals)/edit-profile"
+                          options={{
+                            presentation: "modal",
+                            headerTransparent: true,
+                            title: "",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="(modals)/change-password"
+                          options={{
+                            presentation: "modal",
+                            headerTransparent: true,
+                            title: "",
+                          }}
+                        />
+                        <Stack.Screen
+                          name="(modals)/delete-account"
+                          options={{
+                            presentation: "modal",
+                            headerTransparent: true,
+                            title: "",
+                          }}
+                        />
+                      </Stack>
+                    </GlobalLoadingScreen>
+                  </NotifierWrapper>
+                </BottomSheetModalProvider>
+              </GestureHandlerRootView>
+            </ThemeProvider>
+          </SyncProvider>
+        </QueryProvider>
+      </ClerkProvider>
+    </ConnectionTagProvider>
   )
 }

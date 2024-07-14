@@ -1,7 +1,7 @@
 import { useState } from "react"
 import InfoIcon from "@/assets/icons/info.svg"
 import Colors from "@/constants/Colors"
-import { useAuth, useUser } from "@clerk/clerk-expo"
+import { useAuth, useUser } from "@/library/clerk"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import { router } from "expo-router"

@@ -40,14 +40,11 @@ function Item<T extends FormattedItem>({
   }, [itemType])
   const containsSublist = !!itemSublist?.length
 
-  const toggleEditClick = useCallback(
-    (e: GestureResponderEvent) => {
-      e.stopPropagation()
-      setEditItem(item)
-      router.push("/(modals)/(items)/edit-item")
-    },
-    [setEditItem]
-  )
+  const toggleEditClick = (e: GestureResponderEvent) => {
+    e.stopPropagation()
+    setEditItem(item)
+    router.push("/(modals)/(items)/edit-item")
+  }
 
   const isRecurring = itemType === "TASK" && !!(item as Task).rec_times
 

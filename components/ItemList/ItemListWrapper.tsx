@@ -13,7 +13,6 @@ export default function ItemListWrapper() {
   const showArchivedItems = useItemListConfig.use.showArchivedItems()
   const showCompletedItems = useItemListConfig.use.showCompletedItems()
   const { tasks, goals, dreams, items: allItems, deletedItems } = useItems()
-  console.log("ALL ITEMS", allItems, deletedItems)
 
   const items =
     itemType === "TASK" ? tasks : itemType === "GOAL" ? goals : dreams

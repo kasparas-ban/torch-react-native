@@ -30,23 +30,6 @@ export type ItemResponse = {
   item__c: number
 }
 
-export type SyncMetadata<T> = T & {
-  updatedFields: UpdatedFields
-}
-
-export type UpdatedFields = {
-  title: boolean
-  status: boolean
-  target_date: boolean
-  priority: boolean
-  duration: boolean
-  time_spent: boolean
-  rec_times: boolean
-  rec_period: boolean
-  rec_progress: boolean
-  parent_id: boolean
-}
-
 export type GeneralItem = Omit<ItemResponse, "parent_id"> & {
   progress: number
 }
@@ -81,7 +64,7 @@ export type FormattedItems = {
   tasks: Task[]
   goals: Goal[]
   dreams: Dream[]
-  rawItems: SyncMetadata<ItemResponse>[]
+  rawItems: ItemResponse[]
 }
 
 export type ItemTypeLabel = "Tasks" | "Goals" | "Dreams"

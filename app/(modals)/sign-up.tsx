@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { CustomErrorData } from "@/api-endpoints/utils/errorMsgs"
 import Colors from "@/constants/Colors"
-import { useSignUp } from "@clerk/clerk-expo"
+import { useSignUp } from "@/library/clerk"
 import { zodResolver } from "@hookform/resolvers/zod"
 import dayjs from "dayjs"
 import { LinearGradient } from "expo-linear-gradient"

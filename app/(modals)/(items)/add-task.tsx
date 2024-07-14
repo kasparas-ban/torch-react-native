@@ -95,8 +95,8 @@ export default function AddTaskModal() {
 
     if (editItem?.item_id) {
       const updatedTask = {
+        item_id: editItem.item_id,
         ...task,
-        item_id: editItem?.item_id,
       }
       updateItem(updatedTask)
     } else {

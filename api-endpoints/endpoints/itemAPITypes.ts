@@ -12,7 +12,10 @@ export type UpsertItem = NewItemType | UpdateItemType
 export type NewItemType = NewTaskType | NewGoalType | NewDreamType
 export type UpdateItemType = UpdateTaskType | UpdateGoalType | UpdateDreamType
 
-export type FormattedUpdateItemType = Omit<UpdateItemType, "goal" | "recurring">
+export type FormattedUpdateItemType =
+  | Omit<UpdateTaskType, "goal" | "recurring">
+  | Omit<UpdateGoalType, "dream">
+  | UpdateDreamType
 
 export type AddNewItemType = NewItemType & { type: ItemType }
 

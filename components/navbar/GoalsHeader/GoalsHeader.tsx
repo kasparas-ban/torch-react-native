@@ -189,7 +189,7 @@ function ItemTypeSelector() {
     >
       <View
         onLayout={event => {
-          event.target.measure((x, y, width, height, pageX, pageY) => {
+          event.target?.measure((x, y, width, height, pageX, pageY) => {
             setPosition({ x: x + pageX, y: y + pageY, width, height })
           })
         }}

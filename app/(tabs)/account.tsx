@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 import Colors from "@/constants/Colors"
+import { useAuth, useUser } from "@/library/clerk"
 import useUserInfo from "@/stores/userStore"
-import { useAuth, useUser } from "@clerk/clerk-expo"
 import dayjs from "dayjs"
 import { Image, ImageStyle } from "expo-image"
 import { Redirect, useRouter } from "expo-router"

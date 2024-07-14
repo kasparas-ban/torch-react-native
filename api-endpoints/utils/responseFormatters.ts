@@ -1,11 +1,4 @@
-import {
-  Dream,
-  Goal,
-  ItemResponse,
-  ItemStatus,
-  SyncMetadata,
-  Task,
-} from "@/types/itemTypes"
+import { Dream, Goal, ItemResponse, ItemStatus, Task } from "@/types/itemTypes"
 
 const formatTaskResponse = (tasks: ItemResponse[]) => {
   return tasks.map(task => ({
@@ -63,7 +56,7 @@ const formatDreamResponse = (
   })
 }
 
-export const formatItemResponse = (response: SyncMetadata<ItemResponse>[]) => {
+export const formatItemResponse = (response: ItemResponse[]) => {
   const tasksResp = response.filter(item => item.item_type === "TASK")
   const goalsResp = response.filter(item => item.item_type === "GOAL")
   const dreamsResp = response.filter(item => item.item_type === "DREAM")
