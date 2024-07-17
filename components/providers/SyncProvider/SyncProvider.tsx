@@ -25,7 +25,7 @@ export default function SyncProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!isOnline || !isSignedIn) {
-      console.warn(
+      console.log(
         "Device is offline or not logged in, skipping connection to ws"
       )
       return
@@ -47,7 +47,7 @@ export default function SyncProvider({ children }: { children: ReactNode }) {
             {
               item_id,
               deleteAssociated: false,
-              cl: Infinity, // Fix this
+              cl: Infinity, // Real-time commands always have precedence
             },
             true
           )

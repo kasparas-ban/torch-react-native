@@ -53,16 +53,15 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme()
-
   return (
-    <ConnectionTagProvider>
-      <ClerkProvider>
-        <QueryProvider>
-          <SyncProvider>
-            <ThemeProvider
-              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-            >
-              <GestureHandlerRootView style={{ flex: 1 }}>
+    <ClerkProvider>
+      <QueryProvider>
+        <SyncProvider>
+          <ThemeProvider
+            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+          >
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <ConnectionTagProvider>
                 <BottomSheetModalProvider>
                   <NotifierWrapper>
                     <StorageProvider />
@@ -182,11 +181,11 @@ function RootLayoutNav() {
                     </GlobalLoadingScreen>
                   </NotifierWrapper>
                 </BottomSheetModalProvider>
-              </GestureHandlerRootView>
-            </ThemeProvider>
-          </SyncProvider>
-        </QueryProvider>
-      </ClerkProvider>
-    </ConnectionTagProvider>
+              </ConnectionTagProvider>
+            </GestureHandlerRootView>
+          </ThemeProvider>
+        </SyncProvider>
+      </QueryProvider>
+    </ClerkProvider>
   )
 }

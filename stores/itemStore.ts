@@ -112,9 +112,9 @@ const useItems = () => {
       updatedData: FormattedUpdateItemType,
       local: boolean = false
     ) => {
-      const oldItem = allItems.rawItems.find(
-        i => i.item_id === updatedData.item_id
-      )
+      const oldItem = itemStore
+        .getState()
+        .items.find(i => i.item_id === updatedData.item_id)
       if (!oldItem) return
 
       const newItem: ItemResponse = {
