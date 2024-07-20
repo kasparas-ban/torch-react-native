@@ -94,18 +94,17 @@ export function formatNewItem(item: AddNewItemType, item_id?: string) {
 
 export function getAllAssociatedItems(
   items: ItemResponse[],
-  data: DeleteItemData
+  parentItem: ItemResponse
 ) {
-  const associatedIds = [data]
+  let associatedItems = [parentItem]
 
-  const temp = [data]
-  while (temp.length !== 0) {
-    const associated = items
-      .filter(i => i.parent_id === temp.pop()?.item_id)
-      .map(i => ({ item_id: i.item_id, cl: i.item__c }))
-    temp.concat(associated)
-    associatedIds.concat(associated)
+  let temp = [parentItem]
+  while (temp.length > 0) {
+    const parentId = temp.pop()?.item_id
+    const associated = items.filter(i => i.parent_id === parentId)
+    temp = temp.concat(associated)
+    associatedItems = associatedItems.concat(associated)
   }
 
-  return associatedIds
+  return associatedItems
 }

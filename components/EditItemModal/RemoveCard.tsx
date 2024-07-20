@@ -99,14 +99,8 @@ export default function RemoveCard() {
   )
   const [selItems, setSelItems] = useState<SelectionType>("one")
 
-  // const { data } = useItemsList()
   const { setFocusOn } = useTimerForm()
-
-  const { mutateAsync: updateStatus, isPending: isUpdatePending } =
-    useUpdateItemStatus()
-  // const { mutateAsync: deleteItem, isPending: isDeletePending } =
-  //   useDeleteItem()
-  const { deleteItem } = useItems()
+  const { updateItemStatus, deleteItem } = useItems()
 
   const itemType = editItem?.item_type
   const isArchived = editItem?.status === "ARCHIVED"
@@ -115,30 +109,23 @@ export default function RemoveCard() {
     if (!editItem) return
 
     if (action === "archive") {
-      updateStatus({
+      updateItemStatus({
         item_id: editItem.item_id,
         status: "ARCHIVED",
         updateAssociated: selItems === "all",
         itemType: editItem.item_type,
       })
-        .then(() => {
-          // closeModal()
-          setEditItem(undefined)
-          // toast({
-          //   title: `${capitalize(editItem.type)} archived`,
-          //   description: `It will be removed from the ${editItem.type.toLowerCase()} list.`,
-          // })
-        })
-        .catch(() => {
-          // toast({
-          //   title: `Failed to archive ${editItem.type.toLowerCase()}`,
-          //   description: "Try archiving it later.",
-          // })
-        })
+      router.back()
+      setEditItem(undefined)
+      setFocusOn(null)
+
+      notify({
+        title: `${capitalize(editItem.item_type)} archived`,
+        description: `It will be removed from the ${editItem.item_type.toLowerCase()} list.`,
+      })
     } else {
       deleteItem({
         item_id: editItem.item_id,
-        cl: editItem.item__c,
         deleteAssociated: selItems === "all",
       })
       router.back()

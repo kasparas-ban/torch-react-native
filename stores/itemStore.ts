@@ -7,10 +7,9 @@ import {
 } from "@/api-endpoints/endpoints/itemAPITypes"
 import { formatItemResponse } from "@/api-endpoints/utils/responseFormatters"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { memoize } from "proxy-memoize"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
-import { ItemResponse } from "@/types/itemTypes"
+import { ItemResponse, ItemStatus } from "@/types/itemTypes"
 import { removeElsFromArray } from "@/utils/utils"
 import useItemsSync from "@/components/providers/SyncProvider/useItemsSync"
 
@@ -30,7 +29,7 @@ type Actions = {
   updateItem: (updatedItem: ItemResponse) => void
   deleteItems: (items: { item_id: string; cl: number }[]) => void
   updateItemProgress: (req: UpdateItemProgressReq) => void
-  // updateItemStatus: (req: UpdateItemStatusReq) => void
+  updateItemStatus: (itemIds: string[], status: ItemStatus) => void
 }
 
 const itemStore = create<State & Actions>()(
@@ -72,6 +71,12 @@ const itemStore = create<State & Actions>()(
             i.item_id === req.item_id
               ? { ...i, time_spent: i.time_spent + req.time_spent }
               : i
+          ),
+        })),
+      updateItemStatus: (itemIds: string[], status: ItemStatus) =>
+        set(state => ({
+          items: state.items.map(item =>
+            itemIds.find(id => id === item.item_id) ? { ...item, status } : item
           ),
         })),
     }),
@@ -128,17 +133,21 @@ const useItems = () => {
       const itemToDelete = allItems.find(i => i.item_id === data.item_id)
       if (!itemToDelete) return
 
+      if (data.deleteAssociated) {
+        // Delete all associated items
+        const associatedItems = getAllAssociatedItems(allItems, itemToDelete)
+        const itemsToDelete = associatedItems.map(i => ({
+          item_id: i.item_id,
+          cl: i.item__c,
+        }))
+        store.deleteItems(itemsToDelete)
+        if (!local) itemsToDelete.forEach(data => op.deleteItem(data))
+        return
+      }
+
       const deleteData = {
         item_id: itemToDelete.item_id,
         cl: itemToDelete.item__c,
-      }
-
-      if (data.deleteAssociated) {
-        // Delete all associated items
-        const associatedItems = getAllAssociatedItems(allItems, deleteData)
-        store.deleteItems(associatedItems)
-        associatedItems.forEach(data => op.deleteItem(data))
-        return
       }
 
       store.deleteItems([deleteData])
@@ -147,7 +156,27 @@ const useItems = () => {
     resetItems: itemStore(state => state.resetItems),
     setLastSyncItems: itemStore(state => state.setLastSyncItems),
     updateItemProgress: itemStore(state => state.updateItemProgress),
-    updateItemStatus: (req: UpdateItemStatusReq) => {},
+    updateItemStatus: (req: UpdateItemStatusReq, local: boolean = false) => {
+      const allItems = itemStore.getState().items
+      const updateItem = allItems.find(i => i.item_id === req.item_id)
+      if (!updateItem) return
+
+      if (req.updateAssociated) {
+        const associatedItems = getAllAssociatedItems(allItems, updateItem)
+        associatedItems.forEach(item =>
+          store.updateItem({ ...item, status: req.status })
+        )
+        if (!local)
+          associatedItems.forEach(item =>
+            op.updateItem(updateItem, { ...item, status: req.status })
+          )
+        return
+      }
+
+      store.updateItem({ ...updateItem, status: req.status })
+      if (!local)
+        op.updateItem(updateItem, { ...updateItem, status: req.status })
+    },
   }
 }
 
