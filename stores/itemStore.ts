@@ -82,9 +82,7 @@ const itemStore = create<State & Actions>()(
   )
 )
 
-const getFormattedItems = memoize((state: State) =>
-  formatItemResponse(state.items)
-)
+const getFormattedItems = (state: State) => formatItemResponse(state.items)
 
 const useItems = () => {
   const store = {
@@ -126,23 +124,30 @@ const useItems = () => {
       if (!local) op.updateItem(oldItem, newItem)
     },
     deleteItem: (data: DeleteItemReq, local: boolean = false) => {
+      const allItems = itemStore.getState().items
+      const itemToDelete = allItems.find(i => i.item_id === data.item_id)
+      if (!itemToDelete) return
+
+      const deleteData = {
+        item_id: itemToDelete.item_id,
+        cl: itemToDelete.item__c,
+      }
+
       if (data.deleteAssociated) {
         // Delete all associated items
-        const associatedItems = getAllAssociatedItems(allItems.rawItems, data)
+        const associatedItems = getAllAssociatedItems(allItems, deleteData)
         store.deleteItems(associatedItems)
         associatedItems.forEach(data => op.deleteItem(data))
         return
       }
 
-      store.deleteItems([data])
-      if (!local) op.deleteItem(data)
+      store.deleteItems([deleteData])
+      if (!local) op.deleteItem(deleteData)
     },
     resetItems: itemStore(state => state.resetItems),
     setLastSyncItems: itemStore(state => state.setLastSyncItems),
     updateItemProgress: itemStore(state => state.updateItemProgress),
-    updateItemStatus: (req: UpdateItemStatusReq) => {
-      console.log("NEED TO IMPLEMENT")
-    },
+    updateItemStatus: (req: UpdateItemStatusReq) => {},
   }
 }
 

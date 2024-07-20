@@ -31,13 +31,13 @@ function Item<T extends FormattedItem>({
     )
   }
 
-  const itemSublist = useMemo(() => {
-    return itemType === "GOAL"
+  const itemSublist =
+    itemType === "GOAL"
       ? (item as Goal).tasks
       : item.item_type === "DREAM"
         ? (item as Dream).goals
         : undefined
-  }, [itemType])
+
   const containsSublist = !!itemSublist?.length
 
   const toggleEditClick = (e: GestureResponderEvent) => {

@@ -86,8 +86,8 @@ export function getInsertOps(
   lastSyncItems: ItemResponse[]
 ) {
   const insertItems = localItems.filter(item => {
-    const isExisting = remoteItems.find(i => i.item_id === item.item_id)
-    if (isExisting) return false
+    const remoteItem = remoteItems.find(i => i.item_id === item.item_id)
+    if (remoteItem) return false
 
     const lastSyncedItem = lastSyncItems.find(i => i.item_id === item.item_id)
     if (lastSyncedItem) {

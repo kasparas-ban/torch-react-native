@@ -24,7 +24,8 @@ export type DeleteItemData = {
   cl: number
 }
 
-export type DeleteItemReq = DeleteItemData & {
+export type DeleteItemReq = {
+  item_id: string
   deleteAssociated: boolean
 }
 

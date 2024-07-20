@@ -17,7 +17,8 @@ const wsId = getRandomId()
 export default function SyncProvider({ children }: { children: ReactNode }) {
   useGlobalSync()
 
-  const { addItem, updateItem, deleteItem } = useItems()
+  const { items, addItem, updateItem, deleteItem, setLastSyncItems } =
+    useItems()
 
   const { isOnline } = useDev()
   const { setWs } = useWs()
@@ -25,6 +26,7 @@ export default function SyncProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!isOnline || !isSignedIn) {
+      setLastSyncItems(items)
       console.log(
         "Device is offline or not logged in, skipping connection to ws"
       )
@@ -47,7 +49,6 @@ export default function SyncProvider({ children }: { children: ReactNode }) {
             {
               item_id,
               deleteAssociated: false,
-              cl: Infinity, // Real-time commands always have precedence
             },
             true
           )
