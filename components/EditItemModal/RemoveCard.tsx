@@ -1,6 +1,4 @@
 import { useState } from "react"
-import { useDeleteItem } from "@/api-endpoints/hooks/items/useDeleteItem"
-import { useUpdateItemStatus } from "@/api-endpoints/hooks/items/useUpdateItemStatus"
 import InfoIcon from "@/assets/icons/info.svg"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"

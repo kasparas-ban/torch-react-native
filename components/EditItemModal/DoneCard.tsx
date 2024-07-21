@@ -2,12 +2,15 @@ import InfoIcon from "@/assets/icons/info.svg"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
 import useItems from "@/stores/itemStore"
+import { router } from "expo-router"
 import { StyleSheet, Text, View } from "react-native"
 import Animated from "react-native-reanimated"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
 import { AnimatedButton } from "../AnimatedButton"
 import useEditItem from "../itemModal/hooks/useEditItem"
+import { notify } from "../notifications/Notifications"
+import useTimerForm from "../Timer/hooks/useTimerForm"
 
 const selectOptions = {
   TASK: {
@@ -28,12 +31,11 @@ const selectOptions = {
 
 export default function DoneCard() {
   const { styles, isDark } = useThemeStyles(componentStyles)
-
-  // const { toast } = useToast()
   const { editItem, setEditItem } = useEditItem()
 
   const itemType = editItem?.item_type
   const { updateItemStatus } = useItems()
+  const { setFocusOn } = useTimerForm()
 
   const handleSubmit = () => {
     if (!editItem) return
@@ -44,12 +46,14 @@ export default function DoneCard() {
       updateAssociated: true,
       itemType: editItem.item_type,
     })
-
+    router.back()
     setEditItem(undefined)
-    // toast({
-    //   title: `Marked ${editItem.type.toLowerCase()} as completed`,
-    //   description: selectOptions[editItem.type].description,
-    // })
+    setFocusOn(null)
+
+    notify({
+      title: `Marked ${editItem.item_type.toLowerCase()} as completed`,
+      description: selectOptions[editItem.item_type].description,
+    })
   }
 
   return (
@@ -72,7 +76,11 @@ export default function DoneCard() {
         </View>
       )}
 
-      <AnimatedButton style={styles.confirmBtn} scale={0.96}>
+      <AnimatedButton
+        style={styles.confirmBtn}
+        scale={0.96}
+        onPress={handleSubmit}
+      >
         <Text style={styles.confirmLabel}>Complete</Text>
       </AnimatedButton>
     </Animated.View>
