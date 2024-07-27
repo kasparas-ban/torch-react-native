@@ -6,6 +6,7 @@ import { create } from "zustand"
 import { subscribeWithSelector } from "zustand/middleware"
 import { TimerState } from "@/types/itemTypes"
 import { createSelectors } from "@/utils/zustandUtils"
+import useDev from "@/components/dev/useDev"
 
 import useTimerForm from "./useTimerForm"
 
@@ -147,31 +148,60 @@ const useTimerStoreBase = create<TimerStoreState>()(
 
 const useTimerStore = createSelectors(useTimerStoreBase)
 
-const UPDATE_PERIOD = 60 // seconds
+const UPDATE_PERIOD = 5 // seconds
+
+let timerStateListener: (() => void) | null = null
+
+let incrementInfo: { startTime: Date; endTime: Date } | null = null
+
+let lastStopElapsedTime = 0
+
+let temporary = 0
 
 export const useTimerListener = () => {
+  const { isOnline } = useDev()
   const { focusOn } = useTimerForm()
   const { updateItemProgress } = useItems()
 
   const { updateUserTime } = useUserInfo()
 
-  const updateTime = useCallback(
-    (time_spent: number, item_id?: string) =>
-      item_id
-        ? updateItemProgress({ time_spent, item_id })
-        : updateUserTime(time_spent),
-    [updateItemProgress, updateUserTime]
-  )
+  const updateTime = (time_spent: number, item_id?: string) =>
+    item_id
+      ? updateItemProgress({ time_spent, item_id }, !isOnline)
+      : updateUserTime(time_spent)
 
   useEffect(() => {
-    const timerStateListener = useTimerStore.subscribe(
+    if (timerStateListener) timerStateListener()
+
+    incrementInfo = null
+
+    timerStateListener = useTimerStore.subscribe(
       state => state,
       state => {
-        // Update progress every minute
+        const startTimeDiff =
+          incrementInfo &&
+          dayjs(incrementInfo.startTime).diff(
+            dayjs(state.sessionStartTime),
+            "second"
+          )
+        const endTimeDiff =
+          incrementInfo &&
+          dayjs(incrementInfo.endTime).diff(
+            dayjs(state.sessionEndTime),
+            "second"
+          )
+
+        // Skip update if the there's no time difference
+        if (startTimeDiff === 0 && endTimeDiff === 0) {
+          return
+        }
+
+        // Update progress every increment period
         if (
           state.time % UPDATE_PERIOD === 0 &&
           state.time !== state.initialTime
         ) {
+          lastStopElapsedTime = 0
           let diff = UPDATE_PERIOD
           if (state.sessionStartTime && state.sessionEndTime) {
             const newDiff = dayjs().diff(
@@ -179,8 +209,15 @@ export const useTimerListener = () => {
               "second"
             )
             if (newDiff < diff) diff = newDiff
+
+            incrementInfo = {
+              startTime: state.sessionStartTime,
+              endTime: new Date(),
+            }
           }
+
           updateTime(diff, focusOn?.value)
+          return
         }
 
         // Update progress when the timer is stopped
@@ -189,14 +226,20 @@ export const useTimerListener = () => {
           state.sessionStartTime &&
           state.sessionEndTime
         ) {
-          const elapsedTime = (state.initialTime - state.time) % UPDATE_PERIOD
+          const elapsedTime =
+            ((state.initialTime - state.time) % UPDATE_PERIOD) -
+            lastStopElapsedTime
+
+          lastStopElapsedTime = (state.initialTime - state.time) % UPDATE_PERIOD
           updateTime(elapsedTime, focusOn?.value)
         }
       }
     )
 
-    return () => timerStateListener()
-  }, [focusOn?.value, updateTime])
+    return () => {
+      timerStateListener && timerStateListener()
+    }
+  }, [focusOn?.value, isOnline])
 }
 
 export default useTimerStore

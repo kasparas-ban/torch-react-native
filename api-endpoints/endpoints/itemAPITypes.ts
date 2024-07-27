@@ -40,3 +40,8 @@ export type UpdateItemStatusReq = {
   updateAssociated: boolean
   itemType: ItemType
 }
+
+export type ElapsedTimeData = {
+  item_id: string
+  elapsedTime: number
+}

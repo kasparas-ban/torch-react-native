@@ -30,7 +30,9 @@ export default function SyncProvider({ children }: { children: ReactNode }) {
       console.log(
         "Device is offline or not logged in, skipping connection to ws"
       )
-      return
+      return () => {
+        setWs(undefined)
+      }
     }
 
     // Establish websocket connection

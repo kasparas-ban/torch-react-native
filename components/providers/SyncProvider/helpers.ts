@@ -1,4 +1,7 @@
-import { DeleteItemData } from "@/api-endpoints/endpoints/itemAPITypes"
+import {
+  DeleteItemData,
+  ElapsedTimeData,
+} from "@/api-endpoints/endpoints/itemAPITypes"
 import {
   ItemResponse,
   ItemStatus,
@@ -106,16 +109,55 @@ export function getInsertOps(
 
 export function getUpdateOps(
   updatedItems: string[],
+  elapsedTime: ElapsedTimeData[],
   remoteItems: ItemResponse[],
   localItems: ItemResponse[]
 ) {
-  const updateOps: UpdateOp[] = []
+  let updateOps: UpdateOp[] = []
 
   updatedItems.forEach(id => {
     const localItem = localItems.find(i => i.item_id === id)
     const remoteItem = remoteItems.find(i => i.item_id === id)
     if (localItem && remoteItem && localItem.item__c >= remoteItem.item__c) {
       const updateOp = getUpdateOp(remoteItem, localItem)
+      if (updateOp) updateOps.push(updateOp)
+    }
+  })
+
+  elapsedTime.forEach(data => {
+    const localItem = localItems.find(i => i.item_id === data.item_id)
+    const remoteItem = remoteItems.find(i => i.item_id === data.item_id)
+    if (!remoteItem || !localItem) return
+
+    let isAlreadyUpdated = false
+    updateOps = updateOps.map(op => {
+      if (data.item_id === op.item_id) {
+        isAlreadyUpdated = true
+        return {
+          ...op,
+          diffs: {
+            ...op.diffs,
+            time_spent: {
+              val: remoteItem.time_spent + data.elapsedTime,
+              cl: remoteItem.time_spent__c,
+            },
+          },
+        }
+      }
+
+      return op
+    })
+
+    if (!isAlreadyUpdated) {
+      const localItem = localItems.find(i => i.item_id === data.item_id)
+      const remoteItem = remoteItems.find(i => i.item_id === data.item_id)
+      if (!localItem || !remoteItem) return updateOps
+
+      const newItem = {
+        ...localItem,
+        time_spent: localItem.time_spent + data.elapsedTime,
+      }
+      const updateOp = getUpdateOp(remoteItem, newItem)
       if (updateOp) updateOps.push(updateOp)
     }
   })

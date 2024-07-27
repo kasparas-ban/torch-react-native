@@ -16,6 +16,7 @@ export default function useGlobalSync() {
     items: localItems,
     deletedItems,
     updatedItems,
+    elapsedTime,
     lastSyncItems,
     resetItems,
     setLastSyncItems,
@@ -30,7 +31,12 @@ export default function useGlobalSync() {
 
     const remoteItems = await getAllItems(token)
     const insertOps = getInsertOps(remoteItems, localItems, lastSyncItems)
-    const updateOps = getUpdateOps(updatedItems, remoteItems, localItems)
+    const updateOps = getUpdateOps(
+      updatedItems,
+      elapsedTime,
+      remoteItems,
+      localItems
+    )
     const deleteOps = getDeleteOps(remoteItems, deletedItems)
 
     insertOps.forEach(op => {

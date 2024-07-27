@@ -1,6 +1,7 @@
 import {
   DeleteItemData,
   DeleteItemReq,
+  ElapsedTimeData,
   FormattedUpdateItemType,
   UpdateItemProgressReq,
   UpdateItemStatusReq,
@@ -20,6 +21,7 @@ type State = {
   lastSyncItems: ItemResponse[]
   deletedItems: DeleteItemData[]
   updatedItems: string[]
+  elapsedTime: ElapsedTimeData[]
 }
 
 type Actions = {
@@ -28,7 +30,7 @@ type Actions = {
   addItem: (item: ItemResponse) => void
   updateItem: (updatedItem: ItemResponse) => void
   deleteItems: (items: { item_id: string; cl: number }[]) => void
-  updateItemProgress: (req: UpdateItemProgressReq) => void
+  updateItemProgress: (data: ElapsedTimeData) => void
   updateItemStatus: (itemIds: string[], status: ItemStatus) => void
 }
 
@@ -39,8 +41,14 @@ const itemStore = create<State & Actions>()(
       lastSyncItems: [],
       deletedItems: [],
       updatedItems: [],
+      elapsedTime: [],
       resetItems: (items: ItemResponse[]) =>
-        set(() => ({ items, deletedItems: [], updatedItems: [] })),
+        set(() => ({
+          items,
+          deletedItems: [],
+          updatedItems: [],
+          elapsedTime: [],
+        })),
       addItem: (newItem: ItemResponse) =>
         set(state => ({ items: [...state.items, newItem] })),
       updateItem: (updatedItem: ItemResponse) =>
@@ -65,14 +73,21 @@ const itemStore = create<State & Actions>()(
         })),
       setLastSyncItems: (items: ItemResponse[]) =>
         set(() => ({ lastSyncItems: items })),
-      updateItemProgress: (req: UpdateItemProgressReq) =>
-        set(state => ({
-          items: state.items.map(i =>
-            i.item_id === req.item_id
-              ? { ...i, time_spent: i.time_spent + req.time_spent }
-              : i
-          ),
-        })),
+      updateItemProgress: (data: ElapsedTimeData) =>
+        set(state => {
+          let localUpdated = false
+          let newElapsedTime = state.elapsedTime.map(t => {
+            if (t.item_id === data.item_id) {
+              localUpdated = true
+              return { ...t, elapsedTime: t.elapsedTime + data.elapsedTime }
+            }
+            return t
+          })
+
+          if (!localUpdated) newElapsedTime.push(data)
+
+          return { elapsedTime: newElapsedTime }
+        }),
       updateItemStatus: (itemIds: string[], status: ItemStatus) =>
         set(state => ({
           items: state.items.map(item =>
@@ -94,6 +109,7 @@ const useItems = () => {
     addItem: itemStore(state => state.addItem),
     updateItem: itemStore(state => state.updateItem),
     deleteItems: itemStore(state => state.deleteItems),
+    updateItemProgress: itemStore(state => state.updateItemProgress),
   }
   const allItems = itemStore(getFormattedItems)
   const op = useItemsSync()
@@ -106,6 +122,7 @@ const useItems = () => {
     items: itemStore(state => state.items),
     deletedItems: itemStore(state => state.deletedItems),
     updatedItems: itemStore(state => state.updatedItems),
+    elapsedTime: itemStore(state => state.elapsedTime),
     // Actions
     addItem: (item: ItemResponse, local: boolean = false) => {
       store.addItem(item)
@@ -155,7 +172,29 @@ const useItems = () => {
     },
     resetItems: itemStore(state => state.resetItems),
     setLastSyncItems: itemStore(state => state.setLastSyncItems),
-    updateItemProgress: itemStore(state => state.updateItemProgress),
+    updateItemProgress: (
+      data: UpdateItemProgressReq,
+      local: boolean = false
+    ) => {
+      const allItems = itemStore.getState().items
+      const updateItem = allItems.find(i => i.item_id === data.item_id)
+      if (!updateItem) return
+
+      const updatedItem = {
+        ...updateItem,
+        time_spent: updateItem.time_spent + data.time_spent,
+      }
+
+      store.updateItem(updatedItem)
+      if (local) {
+        store.updateItemProgress({
+          item_id: data.item_id,
+          elapsedTime: data.time_spent,
+        })
+      } else {
+        op.updateItem(updateItem, updatedItem)
+      }
+    },
     updateItemStatus: (req: UpdateItemStatusReq, local: boolean = false) => {
       const allItems = itemStore.getState().items
       const updateItem = allItems.find(i => i.item_id === req.item_id)

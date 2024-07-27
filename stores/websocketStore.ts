@@ -9,7 +9,7 @@ type Actions = {
   setWs: (ws?: WebSocket, id?: string) => void
 }
 
-const wsStore = create<State & Actions>(set => ({
+export const wsStore = create<State & Actions>(set => ({
   ws: undefined,
   id: undefined,
   setWs: (ws?: WebSocket, id?: string) =>
