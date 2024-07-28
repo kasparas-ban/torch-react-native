@@ -7,6 +7,7 @@ import { router } from "expo-router"
 import { GestureResponderEvent, useColorScheme, View } from "react-native"
 import Animated, {
   interpolate,
+  SharedValue,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -21,44 +22,24 @@ const STRIP_HEIGHT = 48
 export default function ItemSublist({
   parent_id,
   subitems,
-  subitemType,
   showSublist,
 }: {
   parent_id: string
   subitems: GeneralItem[]
-  subitemType: "TASK" | "GOAL"
   showSublist: boolean
 }) {
   const { allItems } = useItems()
-  const { setEditItem } = useEditItem()
+  const { editItem, setEditItem } = useEditItem()
 
   const toggleEditClick = (e: GestureResponderEvent, subitem: GeneralItem) => {
     e.stopPropagation()
+    if (editItem) return
     const formattedItem = findItemByID(subitem.item_id, allItems)
     setEditItem(formattedItem)
     router.push("/(modals)/(items)/edit-item")
   }
 
-  const isRecurring = (item: GeneralItem) => !!item.rec_times
-
   const animVal = useSharedValue(0)
-
-  const getAnimatedStyles = useCallback(
-    (idx: number) =>
-      useAnimatedStyle(() => {
-        return {
-          opacity: idx > 1 ? 1 - animVal.value : 1,
-          transform: [
-            { scale: 1 - 0.04 * animVal.value - 0.03 * idx * animVal.value },
-            {
-              translateY:
-                12 * (1 - animVal.value) + animVal.value * (-43 + -61 * idx),
-            },
-          ],
-        }
-      }),
-    []
-  )
 
   useEffect(() => {
     animVal.value = withSpring(showSublist ? 0 : 1, {
@@ -80,46 +61,86 @@ export default function ItemSublist({
   return (
     <Animated.View style={[{ gap: 12, marginBottom: 12 }, animatedHeight]}>
       {subitems.map((subitem, idx) => (
-        <Fragment key={`${parent_id}_${subitem.item_id}`}>
-          <Animated.View
-            style={[
-              {
-                position: "relative",
-                minHeight: STRIP_HEIGHT,
-                flexDirection: "row",
-                zIndex: subitems.length - 1 - idx,
-                alignItems: "center",
-              },
-              getAnimatedStyles(idx),
-            ]}
-          >
-            <BulletPoint
-              idx={idx}
-              showSublist={showSublist}
-              subitems={subitems}
-            />
-            {isRecurring(subitem) ? (
-              <RecurringItemStrip
-                item={subitem as Task}
-                toggleEditClick={e => toggleEditClick(e, subitem)}
-                isSublistCollapsed={!showSublist}
-                isSublistItem
-              />
-            ) : (
-              <ItemStrip
-                item={subitem}
-                itemType={subitemType}
-                toggleEditClick={(e: GestureResponderEvent) => {
-                  toggleEditClick(e, subitem)
-                }}
-                isSublistCollapsed={!showSublist}
-                isSublistItem
-              />
-            )}
-          </Animated.View>
-        </Fragment>
+        <Subitem
+          key={subitem.item_id}
+          parent_id={parent_id}
+          subitem={subitem}
+          idx={idx}
+          showSublist={showSublist}
+          subitems={subitems}
+          animVal={animVal}
+          toggleEditClick={toggleEditClick}
+        />
       ))}
     </Animated.View>
+  )
+}
+
+function Subitem({
+  parent_id,
+  subitem,
+  idx,
+  showSublist,
+  subitems,
+  animVal,
+  toggleEditClick,
+}: {
+  parent_id: string
+  subitem: GeneralItem
+  idx: number
+  showSublist: boolean
+  subitems: GeneralItem[]
+  animVal: SharedValue<number>
+  toggleEditClick: (e: GestureResponderEvent, subitem: GeneralItem) => void
+}) {
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      opacity: idx > 1 ? 1 - animVal.value : 1,
+      transform: [
+        { scale: 1 - 0.04 * animVal.value - 0.03 * idx * animVal.value },
+        {
+          translateY:
+            12 * (1 - animVal.value) + animVal.value * (-43 + -61 * idx),
+        },
+      ],
+    }
+  })
+
+  return (
+    <Fragment key={`${parent_id}_${subitem.item_id}`}>
+      <Animated.View
+        style={[
+          {
+            position: "relative",
+            minHeight: STRIP_HEIGHT,
+            flexDirection: "row",
+            zIndex: subitems.length - 1 - idx,
+            alignItems: "center",
+          },
+          animatedStyles,
+        ]}
+      >
+        <BulletPoint idx={idx} showSublist={showSublist} subitems={subitems} />
+        {!!subitem.rec_times ? (
+          <RecurringItemStrip
+            item={subitem as Task}
+            toggleEditClick={e => toggleEditClick(e, subitem)}
+            isSublistCollapsed={!showSublist}
+            isSublistItem
+          />
+        ) : (
+          <ItemStrip
+            item={subitem}
+            itemType={subitem.item_type}
+            toggleEditClick={(e: GestureResponderEvent) => {
+              toggleEditClick(e, subitem)
+            }}
+            isSublistCollapsed={!showSublist}
+            isSublistItem
+          />
+        )}
+      </Animated.View>
+    </Fragment>
   )
 }
 

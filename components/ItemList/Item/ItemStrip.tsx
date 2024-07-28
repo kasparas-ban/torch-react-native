@@ -36,6 +36,7 @@ function ItemStrip<T extends GeneralItem>({
   isSublistCollapsed?: boolean
 }) {
   const isActive = item.status === "ACTIVE"
+  const isCompleted = item.status === "COMPLETED"
 
   const stripBgColor = getStripBgColor(item.status, false)
   const stripPercentageColor = getStripPercentageColor(item.status, false)
@@ -92,7 +93,7 @@ function ItemStrip<T extends GeneralItem>({
           animatedStyles,
         ]}
       >
-        <ItemProgress progress={item.progress || 0} />
+        {!isCompleted && <ItemProgress progress={item.progress || 0} />}
         <View style={{ paddingVertical: 14, flex: 1 }}>
           <TextTicker
             style={{ color: Colors.gray[800] }}

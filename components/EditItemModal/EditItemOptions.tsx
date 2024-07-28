@@ -2,6 +2,7 @@ import AddItemIcon from "@/assets/icons/add_item.svg"
 import ArrowIcon from "@/assets/icons/chevronRight.svg"
 import DeleteIcon from "@/assets/icons/delete.svg"
 import EditIcon from "@/assets/icons/edit.svg"
+import MakeActiveIcon from "@/assets/icons/makeActive.svg"
 import StatsIcon from "@/assets/icons/stats.svg"
 import TickIcon from "@/assets/icons/tick.svg"
 import { FadeIn, FadeOut } from "@/constants/Animations"
@@ -15,7 +16,9 @@ import { AnimatedButton } from "@/components/AnimatedButton"
 import useEditItem from "../itemModal/hooks/useEditItem"
 
 type CardProps = {
-  setCard: React.Dispatch<React.SetStateAction<"DONE" | "REMOVE" | undefined>>
+  setCard: React.Dispatch<
+    React.SetStateAction<"DONE" | "REMOVE" | "ACTIVE" | undefined>
+  >
 }
 
 export default function EditItemOptionsCard({ setCard }: CardProps) {
@@ -67,26 +70,54 @@ export default function EditItemOptionsCard({ setCard }: CardProps) {
           marginTop: 6,
         }}
       >
-        <AnimatedButton
-          style={{
-            alignItems: "center",
-            flexDirection: "row",
-            paddingVertical: 12,
-            gap: 8,
-          }}
-          scale={0.98}
-          onPress={() => setCard("DONE")}
-        >
-          <TickIcon
-            color={isDark ? Colors.gray[100] : Colors.gray[800]}
-            style={styles.editIcon}
-          />
-          <Text style={styles.editlabel}>Done</Text>
-          <ArrowIcon
-            color={isDark ? Colors.gray[100] : Colors.gray[800]}
-            style={styles.arrowIcon}
-          />
-        </AnimatedButton>
+        {editItem?.status === "ACTIVE" && (
+          <>
+            <AnimatedButton
+              style={{
+                alignItems: "center",
+                flexDirection: "row",
+                paddingVertical: 12,
+                gap: 8,
+              }}
+              scale={0.98}
+              onPress={() => setCard("DONE")}
+            >
+              <TickIcon
+                color={isDark ? Colors.gray[100] : Colors.gray[800]}
+                style={styles.editIcon}
+              />
+              <Text style={styles.editlabel}>Done</Text>
+              <ArrowIcon
+                color={isDark ? Colors.gray[100] : Colors.gray[800]}
+                style={styles.arrowIcon}
+              />
+            </AnimatedButton>
+            <View style={styles.separator} />
+          </>
+        )}
+
+        {editItem?.status !== "ACTIVE" && (
+          <AnimatedButton
+            style={{
+              alignItems: "center",
+              flexDirection: "row",
+              paddingVertical: 12,
+              gap: 8,
+            }}
+            scale={0.98}
+            onPress={() => setCard("ACTIVE")}
+          >
+            <MakeActiveIcon
+              color={isDark ? Colors.gray[100] : Colors.gray[800]}
+              style={styles.editIcon}
+            />
+            <Text style={styles.editlabel}>Make active</Text>
+            <ArrowIcon
+              color={isDark ? Colors.gray[100] : Colors.gray[800]}
+              style={styles.arrowIcon}
+            />
+          </AnimatedButton>
+        )}
 
         <View style={styles.separator} />
 

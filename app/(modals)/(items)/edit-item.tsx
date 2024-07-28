@@ -7,6 +7,7 @@ import { StyleSheet, View } from "react-native"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { rgbToRGBA } from "@/utils/utils"
 import { AnimatedButton } from "@/components/AnimatedButton"
+import ActiveCard from "@/components/EditItemModal/ActiveCard"
 import DoneCard from "@/components/EditItemModal/DoneCard"
 import EditItemInfo from "@/components/EditItemModal/EditItemInfo"
 import EditItemOptions from "@/components/EditItemModal/EditItemOptions"
@@ -16,6 +17,7 @@ import useEditItem from "@/components/itemModal/hooks/useEditItem"
 const CARD_COMPONENTS = {
   DONE: DoneCard,
   REMOVE: RemoveCard,
+  ACTIVE: ActiveCard,
 }
 
 export default function EditItemModal() {

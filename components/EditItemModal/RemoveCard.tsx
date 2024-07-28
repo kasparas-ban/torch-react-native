@@ -6,6 +6,7 @@ import useItems from "@/stores/itemStore"
 import { router } from "expo-router"
 import { StyleSheet, Text, View } from "react-native"
 import Animated from "react-native-reanimated"
+import { ItemType } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { capitalize } from "@/utils/utils"
 
@@ -83,7 +84,7 @@ const selectOptions = {
       },
     },
   },
-}
+} as const
 
 type ActionType = "archive" | "delete"
 type SelectionType = "one" | "all"
@@ -336,19 +337,19 @@ export default function RemoveCard() {
         </View>
       )}
 
-      <View style={styles.section}>
-        <View style={{ width: 30 }}>
-          <InfoIcon
-            color={isDark ? Colors.amber[500] : Colors.amber[400]}
-            style={{ width: 28, height: 28 }}
-          />
+      {itemType && (
+        <View style={styles.section}>
+          <View style={{ width: 30 }}>
+            <InfoIcon
+              color={isDark ? Colors.amber[500] : Colors.amber[400]}
+              style={{ width: 28, height: 28 }}
+            />
+          </View>
+          <Text style={styles.sectionText}>
+            {getInfoText(itemType, action, selItems)}
+          </Text>
         </View>
-        <Text style={styles.sectionText}>
-          This goal and all associated tasks will be marked as completed and
-          their progress will be locked. Their information will remain and you
-          will be able to bring them back to an active status.
-        </Text>
-      </View>
+      )}
 
       <AnimatedButton
         style={styles.confirmBtn}
@@ -359,6 +360,20 @@ export default function RemoveCard() {
       </AnimatedButton>
     </Animated.View>
   )
+}
+
+function getInfoText(
+  itemType: ItemType,
+  action: ActionType,
+  selItems: SelectionType
+) {
+  if (itemType === "TASK") {
+    return selectOptions.TASK.info[action]
+  }
+  if (itemType === "GOAL") {
+    return selectOptions.GOAL.info[selItems][action]
+  }
+  return selectOptions.DREAM.info[selItems][action]
 }
 
 const componentStyles = ({ isDark }: ThemeStylesProps) =>

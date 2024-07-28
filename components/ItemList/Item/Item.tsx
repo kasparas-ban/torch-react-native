@@ -17,7 +17,7 @@ function Item<T extends FormattedItem>({
   item: T
   itemType: ItemType
 }) {
-  const { setEditItem } = useEditItem()
+  const { editItem, setEditItem } = useEditItem()
   const isItemCollapsed = useItemListConfig.use.isItemCollapsed()
   const saveCollapseState = useItemListConfig.use.saveCollapseState()
   const [showSublist, setShowSublist] = useState(!isItemCollapsed(item))
@@ -42,6 +42,7 @@ function Item<T extends FormattedItem>({
 
   const toggleEditClick = (e: GestureResponderEvent) => {
     e.stopPropagation()
+    if (editItem) return
     setEditItem(item)
     router.push("/(modals)/(items)/edit-item")
   }
@@ -73,7 +74,6 @@ function Item<T extends FormattedItem>({
               parent_id={item.item_id}
               key={`${itemType}_${item.item_id}_sublist`}
               subitems={itemSublist || []}
-              subitemType={itemType === "DREAM" ? "GOAL" : "TASK"}
               showSublist={showSublist}
             />
           )}
@@ -85,7 +85,6 @@ function Item<T extends FormattedItem>({
               parent_id={item.item_id}
               key={`${itemType}_${item.item_id}_sublist`}
               subitems={itemSublist || []}
-              subitemType={itemType === "DREAM" ? "GOAL" : "TASK"}
               showSublist={showSublist}
             />
           )}
