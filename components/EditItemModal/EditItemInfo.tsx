@@ -56,8 +56,6 @@ export default function EditItemFunction() {
     [editItem]
   )
 
-  console.log("edit Item", timeLeft)
-
   return (
     <Animated.View
       style={styles.background}
@@ -151,7 +149,7 @@ export default function EditItemFunction() {
                 {isRecurring
                   ? editItem.rec_progress
                   : formatSpentTime(
-                      (editItem as Goal).totaltime_spent || editItem.time_spent
+                      (editItem as Goal).totalTimeSpent || editItem.time_spent
                     )}
               </Text>
             </View>

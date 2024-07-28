@@ -1,10 +1,10 @@
-import dayjs from "dayjs"
 import {
   Dream,
   FormattedItems,
   GeneralItem,
   Goal,
   GroupedItems,
+  ItemOptionType,
   ItemResponse,
   ItemStatus,
   ItemType,
@@ -24,6 +24,7 @@ export const groupItemsByParent = (
     | GroupedItems<Goal>
     | GroupedItems<Task>
     | GroupedItems<Dream>
+
   if (itemType === "GOAL") {
     const groupedItems = (items as Goal[]).reduce((prev, curr) => {
       const dreamTitle = curr.dream?.title || "Other"
@@ -90,10 +91,10 @@ export const getItemsByType = ({
     selectedItems?.map(item => ({
       label: item.title,
       value: item.item_id,
-      type: item.type,
+      type: item.item_type,
       progress: item.progress,
-      time_spent: item.time_spent,
-      totaltime_spent: (item as Goal)?.totaltime_spent,
+      timeSpent: item.time_spent,
+      totalTimeSpent: (item as Goal)?.totalTimeSpent,
       containsTasks:
         !!(item as Goal).tasks?.length ||
         !!(item as Dream).goals?.find(goal => !!(goal as Goal).tasks?.length),
@@ -109,20 +110,40 @@ export const getItemsByType = ({
   if (grouped) {
     if (focusType === "ALL" || focusType === "DREAMS") return filteredItems
 
-    const parents =
-      focusType === "TASKS"
-        ? allGoals.filter(goal =>
-            filteredItems.find(item => item.parent === goal.item_id)
-          )
-        : allDreams.filter(dream =>
-            filteredItems.find(item => item.parent === dream.item_id)
-          )
+    const groupedItems = filteredItems.reduce(
+      (prev, curr) => {
+        const parent =
+          curr.type === "TASK"
+            ? allGoals.find(goal => goal.item_id === curr.parent)
+            : allDreams.find(dream => dream.item_id === curr.parent)
 
-    const groupedItems = parents.map(parent => ({
-      label: parent.title,
-      value: parent.item_id,
-      options: filteredItems.filter(item => item.parent === parent.item_id),
-    }))
+        if (!parent) {
+          const otherGroup = {
+            label: "Other",
+            value: "other",
+            options: [
+              ...(prev.find(gr => gr.value === "other")?.options || []),
+              curr,
+            ],
+          }
+
+          return [...prev.filter(gr => gr.value !== "other"), otherGroup]
+        }
+
+        if (prev.find(group => group.value === parent?.item_id)) {
+          return prev.map(group => ({
+            ...group,
+            options: [...group.options, curr],
+          }))
+        } else {
+          return [
+            ...prev,
+            { label: parent?.title, value: parent?.item_id, options: [curr] },
+          ]
+        }
+      },
+      [] as { label: string; value: string; options: ItemOptionType[] }[]
+    )
 
     return groupedItems
   }

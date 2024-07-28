@@ -26,7 +26,7 @@
         "created_at": "2024-03-11 11:52:56",
         "progress": 0.609,
         "dream": null,
-        "totaltime_spent": 215001
+        "totalTimeSpent": 215001
       }
     },
     {
@@ -55,7 +55,7 @@
         "created_at": "2024-03-11 11:52:56",
         "progress": 0.609,
         "dream": null,
-        "totaltime_spent": 215001
+        "totalTimeSpent": 215001
       }
     },
     {
@@ -84,7 +84,7 @@
         "created_at": "2024-03-11 11:52:56",
         "progress": 0.609,
         "dream": null,
-        "totaltime_spent": 215001
+        "totalTimeSpent": 215001
       }
     },
     {
@@ -130,7 +130,7 @@
           "status": "ACTIVE",
           "created_at": "2024-03-11 11:52:56"
         },
-        "totaltime_spent": 39000
+        "totalTimeSpent": 39000
       }
     },
     {
@@ -176,7 +176,7 @@
           "status": "ACTIVE",
           "created_at": "2024-03-11 11:52:56"
         },
-        "totaltime_spent": 39000
+        "totalTimeSpent": 39000
       }
     },
     {
@@ -222,7 +222,7 @@
           "status": "ACTIVE",
           "created_at": "2024-03-11 11:52:56"
         },
-        "totaltime_spent": 39000
+        "totalTimeSpent": 39000
       }
     },
     {
@@ -273,7 +273,7 @@
           "status": "ACTIVE",
           "created_at": "2024-03-11 11:52:56"
         },
-        "totaltime_spent": 0
+        "totalTimeSpent": 0
       }
     }
   ],
@@ -291,7 +291,7 @@
       "created_at": "2024-03-11 11:52:56",
       "progress": 0.609,
       "dream": null,
-      "totaltime_spent": 215001,
+      "totalTimeSpent": 215001,
       "tasks": [
         {
           "item_id": "15ax1usfu2uk",
@@ -350,7 +350,7 @@
       "created_at": "2024-03-11 11:52:56",
       "progress": 0,
       "dream": null,
-      "totaltime_spent": 0,
+      "totalTimeSpent": 0,
       "tasks": []
     },
     {
@@ -378,9 +378,9 @@
         "status": "ACTIVE",
         "created_at": "2024-03-11 11:52:56",
         "progress": 0.361,
-        "totaltime_spent": 39000
+        "totalTimeSpent": 39000
       },
-      "totaltime_spent": 39000,
+      "totalTimeSpent": 39000,
       "tasks": [
         {
           "item_id": "18ax1usfu2uk",
@@ -451,9 +451,9 @@
         "status": "ACTIVE",
         "created_at": "2024-03-11 11:52:56",
         "progress": 0.361,
-        "totaltime_spent": 39000
+        "totalTimeSpent": 39000
       },
-      "totaltime_spent": 0,
+      "totalTimeSpent": 0,
       "tasks": []
     },
     {
@@ -481,9 +481,9 @@
         "status": "ACTIVE",
         "created_at": "2024-03-11 11:52:56",
         "progress": 0.361,
-        "totaltime_spent": 39000
+        "totalTimeSpent": 39000
       },
-      "totaltime_spent": 0,
+      "totalTimeSpent": 0,
       "tasks": []
     },
     {
@@ -511,9 +511,9 @@
         "status": "ACTIVE",
         "created_at": "2024-03-11 11:52:56",
         "progress": 0.361,
-        "totaltime_spent": 39000
+        "totalTimeSpent": 39000
       },
-      "totaltime_spent": 0,
+      "totalTimeSpent": 0,
       "tasks": []
     },
     {
@@ -541,9 +541,9 @@
         "status": "ACTIVE",
         "created_at": "2024-03-11 11:52:56",
         "progress": 0.361,
-        "totaltime_spent": 39000
+        "totalTimeSpent": 39000
       },
-      "totaltime_spent": 0,
+      "totalTimeSpent": 0,
       "tasks": []
     },
     {
@@ -571,9 +571,9 @@
         "status": "ACTIVE",
         "created_at": "2024-03-11 11:52:56",
         "progress": 0.361,
-        "totaltime_spent": 39000
+        "totalTimeSpent": 39000
       },
-      "totaltime_spent": 0,
+      "totalTimeSpent": 0,
       "tasks": []
     },
     {
@@ -601,9 +601,9 @@
         "status": "ACTIVE",
         "created_at": "2024-03-11 11:52:56",
         "progress": 0.361,
-        "totaltime_spent": 39000
+        "totalTimeSpent": 39000
       },
-      "totaltime_spent": 0,
+      "totalTimeSpent": 0,
       "tasks": []
     },
     {
@@ -631,9 +631,9 @@
         "status": "ACTIVE",
         "created_at": "2024-03-11 11:52:56",
         "progress": 0.361,
-        "totaltime_spent": 39000
+        "totalTimeSpent": 39000
       },
-      "totaltime_spent": 0,
+      "totalTimeSpent": 0,
       "tasks": []
     },
     {
@@ -661,9 +661,9 @@
         "status": "ACTIVE",
         "created_at": "2024-03-11 11:52:56",
         "progress": 0.361,
-        "totaltime_spent": 39000
+        "totalTimeSpent": 39000
       },
-      "totaltime_spent": 0,
+      "totalTimeSpent": 0,
       "tasks": []
     },
     {
@@ -691,9 +691,9 @@
         "status": "ACTIVE",
         "created_at": "2024-03-11 11:52:56",
         "progress": 0,
-        "totaltime_spent": 0
+        "totalTimeSpent": 0
       },
-      "totaltime_spent": 0,
+      "totalTimeSpent": 0,
       "tasks": [
         {
           "item_id": "21ax1usfu2uk",
@@ -741,9 +741,9 @@
         "status": "ACTIVE",
         "created_at": "2024-03-11 11:52:56",
         "progress": 0,
-        "totaltime_spent": 0
+        "totalTimeSpent": 0
       },
-      "totaltime_spent": 0,
+      "totalTimeSpent": 0,
       "tasks": []
     },
     {
@@ -771,9 +771,9 @@
         "status": "ACTIVE",
         "created_at": "2024-03-11 11:52:56",
         "progress": 0,
-        "totaltime_spent": 0
+        "totalTimeSpent": 0
       },
-      "totaltime_spent": 0,
+      "totalTimeSpent": 0,
       "tasks": []
     },
     {
@@ -789,7 +789,7 @@
       "created_at": "2024-03-11 11:52:56",
       "progress": 0,
       "dream": null,
-      "totaltime_spent": 0,
+      "totalTimeSpent": 0,
       "tasks": []
     },
     {
@@ -805,7 +805,7 @@
       "created_at": "2024-03-11 11:52:56",
       "progress": 0,
       "dream": null,
-      "totaltime_spent": 0,
+      "totalTimeSpent": 0,
       "tasks": []
     }
   ],
@@ -823,7 +823,7 @@
       "status": "ACTIVE",
       "created_at": "2024-03-11 11:52:56",
       "progress": 0.361,
-      "totaltime_spent": 39000,
+      "totalTimeSpent": 39000,
       "goals": [
         {
           "item_id": "6bax1usfu2uk",
@@ -856,7 +856,7 @@
             "status": "ACTIVE",
             "created_at": "2024-03-11 11:52:56"
           },
-          "totaltime_spent": 39000
+          "totalTimeSpent": 39000
         },
         {
           "item_id": "7bax1usfu2uk",
@@ -889,7 +889,7 @@
             "status": "ACTIVE",
             "created_at": "2024-03-11 11:52:56"
           },
-          "totaltime_spent": 0
+          "totalTimeSpent": 0
         },
         {
           "item_id": "8bax1usfu2uk",
@@ -922,7 +922,7 @@
             "status": "ACTIVE",
             "created_at": "2024-03-11 11:52:56"
           },
-          "totaltime_spent": 0
+          "totalTimeSpent": 0
         },
         {
           "item_id": "9bax1usfu2uk",
@@ -955,7 +955,7 @@
             "status": "ACTIVE",
             "created_at": "2024-03-11 11:52:56"
           },
-          "totaltime_spent": 0
+          "totalTimeSpent": 0
         }
       ]
     },
@@ -972,7 +972,7 @@
       "status": "ACTIVE",
       "created_at": "2024-03-11 11:52:56",
       "progress": 0,
-      "totaltime_spent": 0,
+      "totalTimeSpent": 0,
       "goals": [
         {
           "item_id": "10ax1usfu2uk",
@@ -1005,7 +1005,7 @@
             "status": "ACTIVE",
             "created_at": "2024-03-11 11:52:56"
           },
-          "totaltime_spent": 0
+          "totalTimeSpent": 0
         }
       ]
     },
@@ -1022,7 +1022,7 @@
       "status": "ACTIVE",
       "created_at": "2024-03-11 11:52:56",
       "progress": 0,
-      "totaltime_spent": 0,
+      "totalTimeSpent": 0,
       "goals": [
         {
           "item_id": "11ax1usfu2uk",
@@ -1055,7 +1055,7 @@
             "status": "ACTIVE",
             "created_at": "2024-03-11 11:52:56"
           },
-          "totaltime_spent": 0
+          "totalTimeSpent": 0
         },
         {
           "item_id": "12ax1usfu2uk",
@@ -1088,7 +1088,7 @@
             "status": "ACTIVE",
             "created_at": "2024-03-11 11:52:56"
           },
-          "totaltime_spent": 0
+          "totalTimeSpent": 0
         }
       ]
     }

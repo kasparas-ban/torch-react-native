@@ -2,337 +2,23 @@ import React, { useRef } from "react"
 import { getItemsByType } from "@/api-endpoints/utils/helpers"
 import CloseIcon from "@/assets/icons/close.svg"
 import Colors from "@/constants/Colors"
+import useItems from "@/stores/itemStore"
 import { BottomSheetModal } from "@gorhom/bottom-sheet"
 import { ScrollView, StyleSheet, Text, View } from "react-native"
 import TextTicker from "react-native-text-ticker"
-import { ItemOptionType, ItemType } from "@/types/itemTypes"
+import { ItemOptionType } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { toPercent } from "@/utils/utils"
 import { BottomModal } from "@/components/SelectModal/BottomModal"
 
 import { AnimatedButton } from "../../AnimatedButton"
 import ToggleSelect from "../../UI/ToggleSelect"
-import useTimerStore from "../hooks/useTimer"
 import useTimerForm, { FocusType } from "../hooks/useTimerForm"
-
-const MOCK_DATA = [
-  {
-    label: "Learn Spanish",
-    value: "1ax1usfu2uku",
-    options: [
-      {
-        label: "Learn Spanish vocabulary",
-        value: "6bax1usfu2uk",
-        type: "GOAL" as ItemType,
-        progress: 0.361,
-        time_spent: 0,
-        totaltime_spent: 39000,
-        containsTasks: true,
-        duration: 108000,
-        parent: "1ax1usfu2uku",
-      },
-      {
-        label: "Learn Spanish grammar",
-        value: "9bax1usfu113",
-        type: "GOAL" as ItemType,
-        progress: 0,
-        time_spent: 0,
-        totaltime_spent: 0,
-        containsTasks: false,
-        duration: 0,
-        parent: "1ax1usfu2uku",
-      },
-      {
-        label: "Spanish language comprehension",
-        value: "9bax1usfu123",
-        type: "GOAL" as ItemType,
-        progress: 0,
-        time_spent: 0,
-        totaltime_spent: 0,
-        containsTasks: false,
-        duration: 0,
-        parent: "1ax1usfu2uku",
-      },
-      {
-        label: "Spanish writing",
-        value: "9bax1usfu111",
-        type: "GOAL" as ItemType,
-        progress: 0,
-        time_spent: 0,
-        totaltime_spent: 0,
-        containsTasks: false,
-        duration: 0,
-        parent: "1ax1usfu2uku",
-      },
-    ],
-  },
-  {
-    label: "Get fit",
-    value: "2ax1usfu2uku",
-    options: [
-      {
-        label: "Build muscle",
-        value: "10ax1usfu2uk",
-        type: "GOAL" as ItemType,
-        progress: 0,
-        time_spent: 0,
-        totaltime_spent: 0,
-        containsTasks: true,
-        duration: 0,
-        parent: "2ax1usfu2uku",
-      },
-    ],
-  },
-  {
-    label: "Get good at math",
-    value: "3ax1usfu2uku",
-    options: [
-      {
-        label: "Learn Linear Algebra",
-        value: "11ax1usfu2uk",
-        type: "GOAL" as ItemType,
-        progress: 0,
-        time_spent: 0,
-        totaltime_spent: 0,
-        containsTasks: false,
-        duration: 0,
-        parent: "3ax1usfu2uku",
-      },
-      {
-        label: "Learn Calculus",
-        value: "12ax1usfu2uk",
-        type: "GOAL" as ItemType,
-        progress: 0,
-        time_spent: 0,
-        totaltime_spent: 0,
-        containsTasks: false,
-        duration: 0,
-        parent: "3ax1usfu2uku",
-      },
-    ],
-  },
-]
-
-const MOCK_ALL = [
-  {
-    label: "Make a Figma design sketch",
-    value: "15ax1usfu2uk",
-    type: "TASK" as ItemType,
-    progress: 0.893,
-    time_spent: 90000,
-    containsTasks: false,
-    duration: 100800,
-    parent: "4bax1usfu2uk",
-  },
-  {
-    label: "Code MVP frontend",
-    value: "16ax1usfu2uk",
-    type: "TASK" as ItemType,
-    progress: 0.59,
-    time_spent: 85001,
-    containsTasks: false,
-    duration: 144000,
-    parent: "4bax1usfu2uk",
-  },
-  {
-    label: "Make MVP backend",
-    value: "17ax1usfu2uk",
-    type: "TASK" as ItemType,
-    progress: 0.37,
-    time_spent: 40000,
-    containsTasks: false,
-    duration: 108000,
-    parent: "4bax1usfu2uk",
-  },
-  {
-    label: "Learn common Spanish greeting phrases",
-    value: "18ax1usfu2uk",
-    type: "TASK" as ItemType,
-    progress: 0.222,
-    time_spent: 8000,
-    containsTasks: false,
-    duration: 36000,
-    parent: "6bax1usfu2uk",
-  },
-  {
-    label: "Memorize a list of essential words",
-    value: "19ax1usfu2uk",
-    type: "TASK" as ItemType,
-    progress: 0.028,
-    time_spent: 1000,
-    containsTasks: false,
-    duration: 36000,
-    parent: "6bax1usfu2uk",
-  },
-  {
-    label: "Learn Spanish pronunciation",
-    value: "20ax1usfu2uk",
-    type: "TASK" as ItemType,
-    progress: 0.833,
-    time_spent: 30000,
-    containsTasks: false,
-    duration: 36000,
-    parent: "6bax1usfu2uk",
-  },
-  {
-    label: "Do weight lifting",
-    value: "21ax1usfu2uk",
-    type: "TASK" as ItemType,
-    progress: 0,
-    time_spent: 0,
-    containsTasks: false,
-    parent: "10ax1usfu2uk",
-  },
-  {
-    label: "Make a todo/timer app",
-    value: "4bax1usfu2uk",
-    type: "GOAL" as ItemType,
-    progress: 0.609,
-    time_spent: 0,
-    totaltime_spent: 215001,
-    containsTasks: true,
-    duration: 352800,
-  },
-  {
-    label: "Learn chess",
-    value: "5bax1usfu2uk",
-    type: "GOAL" as ItemType,
-    progress: 0,
-    time_spent: 0,
-    totaltime_spent: 0,
-    containsTasks: false,
-    duration: 0,
-  },
-  {
-    label: "Learn Spanish vocabulary",
-    value: "6bax1usfu2uk",
-    type: "GOAL" as ItemType,
-    progress: 0.361,
-    time_spent: 0,
-    totaltime_spent: 39000,
-    containsTasks: true,
-    duration: 108000,
-    parent: "1ax1usfu2uku",
-  },
-  {
-    label: "Learn Spanish grammar",
-    value: "7bax1usfu2uk",
-    type: "GOAL" as ItemType,
-    progress: 0,
-    time_spent: 0,
-    totaltime_spent: 0,
-    containsTasks: false,
-    duration: 0,
-    parent: "1ax1usfu2uku",
-  },
-  {
-    label: "Spanish language comprehension",
-    value: "8bax1usfu2uk",
-    type: "GOAL" as ItemType,
-    progress: 0,
-    time_spent: 0,
-    totaltime_spent: 0,
-    containsTasks: false,
-    duration: 0,
-    parent: "1ax1usfu2uku",
-  },
-  {
-    label: "Spanish writing",
-    value: "9bax1usfu2uk",
-    type: "GOAL" as ItemType,
-    progress: 0,
-    time_spent: 0,
-    totaltime_spent: 0,
-    containsTasks: false,
-    duration: 0,
-    parent: "1ax1usfu2uku",
-  },
-  {
-    label: "Build muscle",
-    value: "10ax1usfu2uk",
-    type: "GOAL" as ItemType,
-    progress: 0,
-    time_spent: 0,
-    totaltime_spent: 0,
-    containsTasks: true,
-    duration: 0,
-    parent: "2ax1usfu2uku",
-  },
-  {
-    label: "Learn Linear Algebra",
-    value: "11ax1usfu2uk",
-    type: "GOAL" as ItemType,
-    progress: 0,
-    time_spent: 0,
-    totaltime_spent: 0,
-    containsTasks: false,
-    duration: 0,
-    parent: "3ax1usfu2uku",
-  },
-  {
-    label: "Learn Calculus",
-    value: "12ax1usfu2uk",
-    type: "GOAL" as ItemType,
-    progress: 0,
-    time_spent: 0,
-    totaltime_spent: 0,
-    containsTasks: false,
-    duration: 0,
-    parent: "3ax1usfu2uku",
-  },
-  {
-    label: 'Read "Demons" by Dostoevsky',
-    value: "13ax1usfu2uk",
-    type: "GOAL" as ItemType,
-    progress: 0,
-    time_spent: 0,
-    totaltime_spent: 0,
-    containsTasks: false,
-    duration: 0,
-  },
-  {
-    label: 'Read "The Shape of Space"',
-    value: "14ax1usfu2uk",
-    type: "GOAL" as ItemType,
-    progress: 0,
-    time_spent: 0,
-    totaltime_spent: 0,
-    containsTasks: false,
-    duration: 0,
-  },
-  {
-    label: "Learn Spanish",
-    value: "1ax1usfu2uku",
-    type: "DREAM" as ItemType,
-    progress: 0.361,
-    time_spent: 0,
-    totaltime_spent: 39000,
-    containsTasks: false,
-  },
-  {
-    label: "Get fit",
-    value: "2ax1usfu2uku",
-    type: "DREAM" as ItemType,
-    progress: 0,
-    time_spent: 0,
-    totaltime_spent: 0,
-    containsTasks: false,
-  },
-  {
-    label: "Get good at math",
-    value: "3ax1usfu2uku",
-    type: "DREAM" as ItemType,
-    progress: 0,
-    time_spent: 0,
-    totaltime_spent: 0,
-    containsTasks: false,
-  },
-]
 
 type GroupedItem = {
   label: string
   value: string
-  options: ItemOptionType[]
+  options?: ItemOptionType[]
 }
 
 const focusTypeOptions = [
@@ -348,16 +34,15 @@ export default function FocusSelect() {
 
   const { styles, isDark } = useThemeStyles(componentStyles)
 
-  // const timerState = useTimerStore.use.timerState()
   const { focusOn, setFocusOn, focusType, setFocusType } = useTimerForm()
-  // const { allItems } = useItems()
+  const { allItems } = useItems()
 
   const isGrouped = focusType === "TASKS" || focusType === "GOALS"
-  // const items = getItemsByType({
-  //   itemData: allItems,
-  //   focusType,
-  //   grouped: isGrouped,
-  // })
+  const items = getItemsByType({
+    itemData: allItems,
+    focusType,
+    grouped: isGrouped,
+  })
 
   return (
     <View>
@@ -443,14 +128,14 @@ export default function FocusSelect() {
 
               {isGrouped ? (
                 <GroupedItems
-                  items={MOCK_DATA}
+                  items={items}
                   selectedItem={focusOn}
                   onSelectItem={setFocusOn}
                   isDark={isDark}
                 />
               ) : (
                 <SingleItems
-                  items={MOCK_ALL}
+                  items={items as any}
                   selectedItem={focusOn}
                   onSelectItem={setFocusOn}
                   isDark={isDark}
@@ -490,7 +175,7 @@ function GroupedItems({
             {item.label}
           </Text>
           <View style={{ gap: 4 }}>
-            {item.options.map(option => (
+            {item.options?.map(option => (
               <AnimatedButton
                 key={option.value}
                 style={[

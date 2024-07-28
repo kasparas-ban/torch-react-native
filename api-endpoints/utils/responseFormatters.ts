@@ -25,7 +25,7 @@ const formatGoalResponse = (
       ...goal,
       progress: getProgress(tasksSpentTime, tasksDuration),
       dream: dreams.find(dream => dream.item_id === goal.parent_id) || null,
-      totaltime_spent: goal.time_spent + tasksSpentTime,
+      totalTimeSpent: goal.time_spent + tasksSpentTime,
     }
   })
 }
@@ -51,7 +51,7 @@ const formatDreamResponse = (
     return {
       ...dream,
       progress: getProgress(tasksSpentTime, tasksDuration),
-      totaltime_spent: dream.time_spent + tasksSpentTime,
+      totalTimeSpent: dream.time_spent + tasksSpentTime,
     }
   })
 }

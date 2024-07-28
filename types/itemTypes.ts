@@ -39,13 +39,13 @@ export type Task = GeneralItem & {
 }
 
 export type Goal = GeneralItem & {
-  totaltime_spent: number
+  totalTimeSpent: number
   tasks: GeneralItem[]
   dream: GeneralItem | null
 }
 
 export type Dream = GeneralItem & {
-  totaltime_spent: number
+  totalTimeSpent: number
   goals: GeneralItem[]
 }
 
@@ -79,8 +79,8 @@ export type ItemOptionType = {
   type: ItemType
   containsTasks: boolean
   progress?: number
-  time_spent?: number
-  totaltime_spent?: number
+  timeSpent?: number
+  totalTimeSpent?: number
   duration?: number
 }
 
