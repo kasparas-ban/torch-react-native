@@ -34,10 +34,6 @@ export type SignUpUserData = {
   description: string | null
 }
 
-export type RegisterUserReq = SignUpUserData & {
-  clerkID: string
-}
-
 export type UpdateProfileReq = {
   username: string
   birthday: string | null

@@ -1,19 +1,15 @@
 import { getUserInfo, registerUser } from "@/api-endpoints/endpoints/userAPI"
 import { useAuth } from "@clerk/clerk-react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import {
-  ProfileResp,
-  RegisterUserReq,
-  UpdateProfileReq,
-} from "@/types/userTypes"
+import { SignUpUserData } from "@/types/userTypes"
 
 import { updateUser, updateUserTime } from "../../endpoints/userAPI"
 import { CustomError, UserUpdateServerErrorMsg } from "../../utils/errorMsgs"
 
 export const useRegisterUser = () => {
-  const fetcher = async (data: RegisterUserReq) => {
+  const fetcher = async (data: SignUpUserData) => {
     try {
-      await registerUser(data)
+      return await registerUser(data)
     } catch (err: any) {
       throw new CustomError(err, {
         title: "Registration failed",
@@ -24,7 +20,7 @@ export const useRegisterUser = () => {
   }
 
   return useMutation({
-    mutationFn: (data: RegisterUserReq) => fetcher(data),
+    mutationFn: (data: SignUpUserData) => fetcher(data),
   })
 }
 
@@ -96,21 +92,21 @@ export const useRegisterUser = () => {
 //   })
 // }
 
-// export default function useUserInfo() {
-//   const { getToken } = useAuth()
+export default function useUserInfo() {
+  const { getToken } = useAuth()
 
-//   const fetchUserInfo = async () => {
-//     const token = await getToken()
-//     if (token) {
-//       const userInfo = await getUserInfo(token)
-//       return userInfo
-//     }
-//     throw Error("Failed to get user info")
-//   }
+  const fetchUserInfo = async () => {
+    const token = await getToken()
+    if (token) {
+      const userInfo = await getUserInfo(token)
+      return userInfo
+    }
+    throw Error("Failed to get user info")
+  }
 
-//   return useQuery({
-//     queryKey: ["user"],
-//     queryFn: fetchUserInfo,
-//     staleTime: Infinity,
-//   })
-// }
+  return useQuery({
+    queryKey: ["user"],
+    queryFn: fetchUserInfo,
+    staleTime: Infinity,
+  })
+}

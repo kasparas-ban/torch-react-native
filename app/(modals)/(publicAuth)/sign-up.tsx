@@ -1,4 +1,8 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { getUserInfo } from "@/api-endpoints/endpoints/userAPI"
+import useUserInfo, {
+  useRegisterUser,
+} from "@/api-endpoints/hooks/user/useUser"
 import { CustomErrorData } from "@/api-endpoints/utils/errorMsgs"
 import Colors from "@/constants/Colors"
 import { useSignUp } from "@/library/clerk"
@@ -62,6 +66,7 @@ export default function SignUpModal() {
   const { signUp } = useSignUp()
   const { setUserData } = useSignUpData()
   const [isLoading, setIsLoading] = useState(false)
+  const { mutateAsync } = useRegisterUser()
 
   const { scrollHandler, headerTitleStyle, headerGradientStyle } =
     useScrollViewHeader()
@@ -94,6 +99,11 @@ export default function SignUpModal() {
       city: data.city || null,
       description: data.description || null,
     }
+
+    mutateAsync(userData).then(res => {
+      setUserData(userData)
+      router.push("/(modals)/sign-up-confirm")
+    })
 
     try {
       await signUp?.create({

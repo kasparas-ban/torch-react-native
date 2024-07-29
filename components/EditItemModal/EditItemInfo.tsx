@@ -37,7 +37,7 @@ export default function EditItemFunction() {
       label: editItem.title,
       type: editItem.item_type,
       progress: editItem.progress,
-      time_spent: editItem.time_spent,
+      timeSpent: editItem.time_spent,
       duration: (editItem as Task).duration ?? undefined,
       containsTasks: !!(editItem as Goal).tasks?.length,
     }
@@ -48,11 +48,13 @@ export default function EditItemFunction() {
 
   const timeLeft = useMemo(
     () =>
-      editItem?.item_type === "GOAL"
-        ? getTasksTimeLeft((editItem as any).tasks)
-        : editItem?.item_type === "DREAM"
-          ? getGoalsTimeLeft((editItem as any).goals)
-          : undefined,
+      editItem?.item_type === "TASK"
+        ? Math.max((editItem.duration || 0) - editItem.time_spent, 0)
+        : editItem?.item_type === "GOAL"
+          ? getTasksTimeLeft((editItem as any).tasks)
+          : editItem?.item_type === "DREAM"
+            ? getGoalsTimeLeft((editItem as any).goals)
+            : undefined,
     [editItem]
   )
 

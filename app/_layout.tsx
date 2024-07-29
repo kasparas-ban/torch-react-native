@@ -72,36 +72,12 @@ function RootLayoutNav() {
                           options={{ headerShown: false }}
                         />
                         <Stack.Screen
-                          name="(modals)/sign-in"
-                          options={{
-                            presentation: "modal",
-                            headerTransparent: true,
-                            title: "",
-                          }}
+                          name="(modals)/(publicAuth)"
+                          options={{ headerShown: false }}
                         />
                         <Stack.Screen
-                          name="(modals)/sign-up"
-                          options={{
-                            presentation: "modal",
-                            headerTransparent: true,
-                            title: "",
-                          }}
-                        />
-                        <Stack.Screen
-                          name="(modals)/sign-up-confirm"
-                          options={{
-                            presentation: "modal",
-                            headerTransparent: true,
-                            title: "",
-                          }}
-                        />
-                        <Stack.Screen
-                          name="(modals)/password-reset"
-                          options={{
-                            presentation: "modal",
-                            headerTransparent: true,
-                            title: "",
-                          }}
+                          name="(modals)/(privateAuth)"
+                          options={{ headerShown: false }}
                         />
                         <Stack.Screen
                           name="(modals)/timer-settings"
@@ -151,30 +127,6 @@ function RootLayoutNav() {
                             headerTransparent: true,
                             title: "",
                             headerBackVisible: false,
-                          }}
-                        />
-                        <Stack.Screen
-                          name="(modals)/edit-profile"
-                          options={{
-                            presentation: "modal",
-                            headerTransparent: true,
-                            title: "",
-                          }}
-                        />
-                        <Stack.Screen
-                          name="(modals)/change-password"
-                          options={{
-                            presentation: "modal",
-                            headerTransparent: true,
-                            title: "",
-                          }}
-                        />
-                        <Stack.Screen
-                          name="(modals)/delete-account"
-                          options={{
-                            presentation: "modal",
-                            headerTransparent: true,
-                            title: "",
                           }}
                         />
                       </Stack>

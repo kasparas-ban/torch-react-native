@@ -1,7 +1,8 @@
 import { useMemo } from "react"
+import useUserInfo from "@/api-endpoints/hooks/user/useUser"
 import Colors from "@/constants/Colors"
 import { useAuth, useUser } from "@/library/clerk"
-import useUserInfo from "@/stores/userStore"
+// import useUserInfo from "@/stores/userStore"
 import dayjs from "dayjs"
 import { Image, ImageStyle } from "expo-image"
 import { Redirect, useRouter } from "expo-router"
@@ -32,7 +33,8 @@ export default function AccountScreen() {
 
   const router = useRouter()
   const { user } = useUser()
-  const { user: userInfo } = useUserInfo()
+  const { data: userInfo } = useUserInfo()
+  console.log("userInfo", userInfo)
 
   const handleLogout = async () => {
     showGlobalLoading("Logging out...")
