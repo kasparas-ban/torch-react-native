@@ -4,11 +4,12 @@ export type ProfileResp = {
   email: string
   birthday: string | null
   gender: GenderType | null
-  created_at: string
   countryCode: string | null
   city: string | null
   focusTime: number
   description: string | null
+  createdAt: string
+  updatedAt: string
 }
 
 type GenderType = "MALE" | "FEMALE" | "OTHER"
@@ -24,6 +25,7 @@ export type AddUserReq = {
 }
 
 export type SignUpUserData = {
+  clerkID?: string
   username: string
   email: string
   password: string

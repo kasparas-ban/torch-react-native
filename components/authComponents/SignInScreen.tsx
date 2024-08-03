@@ -33,7 +33,10 @@ export default function SignInScreen() {
   })
 
   const onSignInPress = async (data: SignInFormType) => {
-    if (!signIn) return
+    if (!signIn) {
+      console.error("Clerk not loaded")
+      return
+    }
     Keyboard.dismiss()
 
     try {
@@ -53,6 +56,8 @@ export default function SignInScreen() {
       setIsLoading(false)
     }
   }
+
+  if (!signIn) return null
 
   return (
     <View style={styles.wrapper}>

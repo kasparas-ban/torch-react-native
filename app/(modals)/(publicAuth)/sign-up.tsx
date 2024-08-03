@@ -1,8 +1,5 @@
-import { useEffect, useState } from "react"
-import { getUserInfo } from "@/api-endpoints/endpoints/userAPI"
-import useUserInfo, {
-  useRegisterUser,
-} from "@/api-endpoints/hooks/user/useUser"
+import { useState } from "react"
+import { useRegisterUser } from "@/api-endpoints/hooks/user/useUser"
 import { CustomErrorData } from "@/api-endpoints/utils/errorMsgs"
 import Colors from "@/constants/Colors"
 import { useSignUp } from "@/library/clerk"
@@ -14,6 +11,7 @@ import { Controller, useForm } from "react-hook-form"
 import { Dimensions, Keyboard, StyleSheet, Text, View } from "react-native"
 import Animated from "react-native-reanimated"
 import { z } from "zod"
+import { SignUpUserData } from "@/types/userTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import useKeyboard from "@/utils/useKeyboard"
 import { formatDate } from "@/utils/utils"
@@ -89,7 +87,7 @@ export default function SignUpModal() {
     Keyboard.dismiss()
     setIsLoading(true)
 
-    const userData = {
+    const userData: SignUpUserData = {
       username: data.username,
       email: data.email,
       password: data.password,
@@ -99,11 +97,6 @@ export default function SignUpModal() {
       city: data.city || null,
       description: data.description || null,
     }
-
-    mutateAsync(userData).then(res => {
-      setUserData(userData)
-      router.push("/(modals)/sign-up-confirm")
-    })
 
     try {
       await signUp?.create({

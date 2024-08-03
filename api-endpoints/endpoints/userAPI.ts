@@ -19,13 +19,19 @@ export const addUser = (token: string, user: AddUserReq) =>
 export const registerUser = (user: SignUpUserData) =>
   fetch(`${HOST}/register-user`, {
     method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
     body: JSON.stringify(user),
   }).then(res => handleFetch<ProfileResp>(res, "Failed to register user"))
 
 export const updateUser = (token: string, user: UpdateProfileReq) =>
   fetch(`${HOST}/update-user`, {
     method: "PUT",
-    headers: { Authorization: `Bearer ${token}` },
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-type": "application/json",
+    },
     body: JSON.stringify(user),
   }).then(res => handleFetch<ProfileResp>(res, "Failed to update user"))
 

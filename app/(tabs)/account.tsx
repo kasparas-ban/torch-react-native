@@ -2,10 +2,9 @@ import { useMemo } from "react"
 import useUserInfo from "@/api-endpoints/hooks/user/useUser"
 import Colors from "@/constants/Colors"
 import { useAuth, useUser } from "@/library/clerk"
-// import useUserInfo from "@/stores/userStore"
 import dayjs from "dayjs"
 import { Image, ImageStyle } from "expo-image"
-import { Redirect, useRouter } from "expo-router"
+import { useRouter } from "expo-router"
 import { StyleSheet, Text, View } from "react-native"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import {
@@ -29,12 +28,19 @@ export default function AccountScreen() {
   const { styles, isDark } = useThemeStyles(componentStyles)
   const { showGlobalLoading, hideGlobalLoading } = useGlobalLoading()
 
-  const { signOut, sessionId, isSignedIn } = useAuth()
+  const { signOut, sessionId } = useAuth()
 
   const router = useRouter()
   const { user } = useUser()
   const { data: userInfo } = useUserInfo()
-  console.log("userInfo", userInfo)
+
+  const userFocusTime = userInfo
+    ? {
+        hours: userInfo.focusTime % (60 * 60),
+        minutes:
+          (userInfo.focusTime % 60) - (userInfo.focusTime % (60 * 60)) * 60,
+      }
+    : null
 
   const handleLogout = async () => {
     showGlobalLoading("Logging out...")
@@ -74,8 +80,6 @@ export default function AccountScreen() {
     [userInfo?.countryCode]
   )
 
-  if (!isSignedIn) return <Redirect href="/(modals)/sign-in" />
-
   return (
     <View style={styles.wrapper}>
       <View style={styles.summaryBox}>
@@ -89,9 +93,15 @@ export default function AccountScreen() {
         <View>
           <Text style={styles.username}>{userInfo?.username}</Text>
           <View style={styles.progress}>
-            <Text style={styles.number}>32</Text>
+            <Text style={styles.number}>
+              {userFocusTime?.hours !== undefined ? userFocusTime?.hours : "-"}
+            </Text>
             <Text style={[styles.numberLabel, { marginRight: 8 }]}>h</Text>
-            <Text style={styles.number}>44</Text>
+            <Text style={styles.number}>
+              {userFocusTime?.minutes !== undefined
+                ? userFocusTime?.minutes
+                : "-"}
+            </Text>
             <Text style={styles.numberLabel}>min</Text>
           </View>
           <View style={styles.membershipContainer}>
@@ -128,8 +138,8 @@ export default function AccountScreen() {
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.detailLabel}>Joined since</Text>
           <Text style={styles.detailData}>
-            {userInfo?.created_at
-              ? dayjs(userInfo.created_at).format("MMMM D, YYYY")
+            {userInfo?.createdAt
+              ? dayjs(userInfo.createdAt).format("MMMM D, YYYY")
               : "-"}
           </Text>
         </View>

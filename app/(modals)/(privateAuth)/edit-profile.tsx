@@ -1,7 +1,7 @@
 import { useState } from "react"
+import useUserInfo, { useUpdateUser } from "@/api-endpoints/hooks/user/useUser"
 import Colors from "@/constants/Colors"
 import { useUser } from "@/library/clerk"
-import useUserInfo from "@/stores/userStore"
 import { zodResolver } from "@hookform/resolvers/zod"
 import dayjs from "dayjs"
 import { LinearGradient } from "expo-linear-gradient"
@@ -56,7 +56,8 @@ export default function EditProfileScreen() {
   const { styles, isDark } = useThemeStyles(componentStyles)
 
   const [isLoading, setIsLoading] = useState(false)
-  const { user: userInfo, updateUser } = useUserInfo()
+  const { mutateAsync } = useUpdateUser()
+  const { data: userInfo } = useUserInfo()
   const { user } = useUser()
 
   const { scrollHandler, headerTitleStyle, headerGradientStyle } =
@@ -98,7 +99,7 @@ export default function EditProfileScreen() {
         })
       }
 
-      updateUser(updatedProfile)
+      await mutateAsync(updatedProfile)
       router.replace("/(tabs)/account")
       notify({ title: "Profile info updated successfully" })
     } catch (e) {

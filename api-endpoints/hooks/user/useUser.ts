@@ -1,9 +1,9 @@
 import { getUserInfo, registerUser } from "@/api-endpoints/endpoints/userAPI"
 import { useAuth } from "@clerk/clerk-react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { SignUpUserData } from "@/types/userTypes"
+import { SignUpUserData, UpdateProfileReq } from "@/types/userTypes"
 
-import { updateUser, updateUserTime } from "../../endpoints/userAPI"
+import { updateUser } from "../../endpoints/userAPI"
 import { CustomError, UserUpdateServerErrorMsg } from "../../utils/errorMsgs"
 
 export const useRegisterUser = () => {
@@ -24,46 +24,25 @@ export const useRegisterUser = () => {
   })
 }
 
-// export const useUpdateUser = () => {
-//   const { getToken } = useAuth()
-//   const queryClient = useQueryClient()
+export const useUpdateUser = () => {
+  const { getToken } = useAuth()
+  const queryClient = useQueryClient()
 
-//   const fetcher = async (data: UpdateProfileReq) => {
-//     try {
-//       const token = await getToken()
-//       if (!token) throw new Error("Token not found")
-//       const updatedUser = await updateUser(token, data)
+  const fetcher = async (data: UpdateProfileReq) => {
+    try {
+      const token = await getToken()
+      if (!token) throw new Error("Token not found")
+      return await updateUser(token, data)
+    } catch (err) {
+      throw new CustomError(err as string, UserUpdateServerErrorMsg)
+    }
+  }
 
-//       return {
-//         ...updatedUser,
-//         updated_at: new Date().toISOString(),
-//         isSynced: true,
-//       }
-//     } catch (err) {
-//       throw new CustomError(err as string, UserUpdateServerErrorMsg)
-//     }
-//   }
-
-//   return useMutation({
-//     networkMode: "always",
-//     mutationFn: (data: UpdateProfileReq) => fetcher(data),
-//     onMutate: async (data: UpdateProfileReq) => {
-//       await queryClient.cancelQueries({ queryKey: ["user"] })
-
-//       const oldData = queryClient.getQueryData(["user"]) as
-//         | ProfileResp
-//         | undefined
-
-//       queryClient.setQueryData(["user"], {
-//         ...oldData,
-//         ...data,
-//         updated_at: new Date().toISOString(),
-//         isSynced: false,
-//       })
-//     },
-//     onSuccess: data => queryClient.setQueryData(["user"], data),
-//   })
-// }
+  return useMutation({
+    mutationFn: (data: UpdateProfileReq) => fetcher(data),
+    onSuccess: data => queryClient.setQueryData(["user"], data),
+  })
+}
 
 // export const useUpdateUserTime = () => {
 //   const { getToken } = useAuth()
@@ -107,6 +86,6 @@ export default function useUserInfo() {
   return useQuery({
     queryKey: ["user"],
     queryFn: fetchUserInfo,
-    staleTime: Infinity,
+    // staleTime: Infinity,
   })
 }
