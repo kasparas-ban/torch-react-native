@@ -1,15 +1,17 @@
 export type ProfileResp = {
-  userID: string
+  user_id: string
   username: string
   email: string
   birthday: string | null
   gender: GenderType | null
-  countryCode: string | null
+  country_id: string | null
   city: string | null
-  focusTime: number
+  focus_time: number
   description: string | null
-  createdAt: string
-  updatedAt: string
+  created_at: string
+  updated_at: string
+  // Clocks
+  focus_time__c: number
 }
 
 type GenderType = "MALE" | "FEMALE" | "OTHER"

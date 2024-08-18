@@ -1,11 +1,18 @@
 import { useEffect } from "react"
 import { getAllItems } from "@/api-endpoints/endpoints/itemsAPI"
+import { getUserInfo } from "@/api-endpoints/endpoints/userAPI"
 import { useAuth } from "@/library/clerk"
 import useItems from "@/stores/itemStore"
+import useUserInfo from "@/stores/userStore"
 import useWs from "@/stores/websocketStore"
 import useDev from "@/components/dev/useDev"
 
-import { getDeleteOps, getInsertOps, getUpdateOps } from "./helpers"
+import {
+  getDeleteOps,
+  getInsertOps,
+  getUpdateOps,
+  getUserUpdateOp,
+} from "./helpers"
 
 export default function useGlobalSync() {
   const { isOnline } = useDev()
@@ -21,6 +28,12 @@ export default function useGlobalSync() {
     resetItems,
     setLastSyncItems,
   } = useItems()
+
+  const {
+    user: currentUser,
+    elapsedTime: elapsedUserTime,
+    setUser,
+  } = useUserInfo()
 
   const syncItems = async (ws: WebSocket) => {
     const token = await getToken()
@@ -54,7 +67,30 @@ export default function useGlobalSync() {
     setLastSyncItems(remoteItems)
   }
 
+  const syncUser = async (ws: WebSocket) => {
+    if (!currentUser) return
+
+    const token = await getToken()
+    if (!token) throw Error("Sync error: auth token not found")
+    if (!isOnline) {
+      throw Error("Device if offline, skipping sync")
+    }
+
+    const user = await getUserInfo(token)
+    if (!user) return
+
+    const updateOp = getUserUpdateOp(currentUser, user, elapsedUserTime)
+    if (updateOp) {
+      ws.send(JSON.stringify(updateOp))
+    }
+
+    setUser(user)
+  }
+
   useEffect(() => {
-    if (ws) syncItems(ws)
+    if (ws) {
+      syncItems(ws)
+      syncUser(ws)
+    }
   }, [ws])
 }

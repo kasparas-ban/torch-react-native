@@ -2,7 +2,8 @@ import { ItemStatus, ItemType, ReccuringPeriod } from "@/types/itemTypes"
 
 export type InsertOp = {
   op: "INSERT"
-  item_id: string
+  row_id: string
+  table: "items"
   data: {
     title: string
     item_type: ItemType
@@ -18,7 +19,8 @@ export type InsertOp = {
 
 export type UpdateOp = {
   op: "UPDATE"
-  item_id: string
+  row_id: string
+  table: "items" | "users"
   diffs: FieldDiff
 }
 
@@ -33,6 +35,7 @@ export type UpdateDiffs = {
   rec_period?: ReccuringPeriod
   rec_progress?: number
   rec_updated_at?: string
+  focus_time?: number
 }
 
 export type FieldDiff = {
@@ -44,6 +47,7 @@ export type FieldDiff = {
 
 export type DeleteOp = {
   op: "DELETE"
-  item_id: string
+  row_id: string
+  table: "items"
   cl: number
 }

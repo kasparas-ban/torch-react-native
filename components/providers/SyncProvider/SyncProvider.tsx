@@ -3,9 +3,11 @@ import { FormattedUpdateItemType } from "@/api-endpoints/endpoints/itemAPITypes"
 import { BE_HOST } from "@/api-endpoints/utils/apiConfig"
 import { useAuth } from "@/library/clerk"
 import useItems from "@/stores/itemStore"
+import useUserInfo from "@/stores/userStore"
 import useWs from "@/stores/websocketStore"
 import { Platform } from "react-native"
 import { ItemResponse } from "@/types/itemTypes"
+import { ProfileResp } from "@/types/userTypes"
 import { getRandomId } from "@/utils/randomId"
 import useDev from "@/components/dev/useDev"
 
@@ -19,6 +21,8 @@ export default function SyncProvider({ children }: { children: ReactNode }) {
 
   const { items, addItem, updateItem, deleteItem, setLastSyncItems } =
     useItems()
+
+  const { updateUser } = useUserInfo()
 
   const { isOnline } = useDev()
   const { setWs } = useWs()
@@ -43,6 +47,7 @@ export default function SyncProvider({ children }: { children: ReactNode }) {
       initNewWs(
         token,
         (ws?: WebSocket, id?: string) => setWs(ws, id),
+        (data: Partial<ProfileResp>) => updateUser(data, true),
         (item: ItemResponse) => addItem(item, true),
         (data: Partial<ItemResponse>) =>
           updateItem(data as FormattedUpdateItemType, true),
@@ -70,6 +75,7 @@ export default function SyncProvider({ children }: { children: ReactNode }) {
 const initNewWs = (
   token: string,
   setWs: (ws?: WebSocket, id?: string) => void,
+  updateUser: (user: Partial<ProfileResp>) => void,
   addItem: (item: ItemResponse) => void,
   updateItem: (item: Partial<ItemResponse>) => void,
   deleteItem: (item_id: string) => void
@@ -85,6 +91,7 @@ const initNewWs = (
     handleServerMsg(
       JSON.parse(event.data),
       wsId,
+      updateUser,
       addItem,
       updateItem,
       deleteItem

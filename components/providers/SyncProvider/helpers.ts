@@ -8,12 +8,14 @@ import {
   ItemType,
   ReccuringPeriod,
 } from "@/types/itemTypes"
+import { ProfileResp } from "@/types/userTypes"
 
 import { getDeleteOp, getInsertOp, getUpdateOp } from "./opFormatters"
 
 type InsertOp = {
   op: "INSERT"
-  item_id: string
+  row_id: string
+  table: "users" | "items"
   data: {
     title: string
     item_type: ItemType
@@ -29,7 +31,8 @@ type InsertOp = {
 
 type UpdateOp = {
   op: "UPDATE"
-  item_id: string
+  row_id: string
+  table: "users" | "items"
   diffs: FieldDiff
 }
 
@@ -44,6 +47,7 @@ type UpdateDiffs = {
   rec_period?: ReccuringPeriod
   rec_progress?: number
   rec_updated_at?: string
+  focus_time?: number
 }
 
 type FieldDiff = {
@@ -55,11 +59,12 @@ type FieldDiff = {
 
 type IncomingDeleteOp = {
   op: "DELETE"
-  item_id: string
+  table: "users" | "items"
+  row_id: string
 }
 
 type ServerOp = (IncomingInsertOp | IncomingUpdateOp | IncomingDeleteOp) & {
-  wsId: string
+  wsID: string
 }
 
 type IncomingInsertOp = Omit<InsertOp, "data"> & { diffs: ItemResponse }
@@ -131,7 +136,7 @@ export function getUpdateOps(
 
     let isAlreadyUpdated = false
     updateOps = updateOps.map(op => {
-      if (data.item_id === op.item_id) {
+      if (data.item_id === op.row_id) {
         isAlreadyUpdated = true
         return {
           ...op,
@@ -168,26 +173,53 @@ export function getUpdateOps(
 export function handleServerMsg(
   op: ServerOp,
   wsId: string,
+  updateUser: (user: Partial<ProfileResp>) => void,
   addItem: (item: ItemResponse) => void,
   updateItem: (item: Partial<ItemResponse>) => void,
   deleteItem: (item_id: string) => void
 ) {
   console.log("Handling server msg: ", wsId, op)
 
+  if (op.table === "users" && op.op === "UPDATE") {
+    updateUser(op.diffs)
+  }
+
   if (op.op === "INSERT") {
     const newItem = {
       ...op.diffs,
-      item_id: op.item_id,
+      item_id: op.row_id,
     }
     addItem(newItem)
   }
 
   if (op.op === "UPDATE") {
-    const newItem = { item_id: op.item_id, ...op.diffs }
+    const newItem = { item_id: op.row_id, ...op.diffs }
     updateItem(newItem)
   }
 
   if (op.op === "DELETE") {
-    deleteItem(op.item_id)
+    deleteItem(op.row_id)
   }
+}
+
+export function getUserUpdateOp(
+  currentData: ProfileResp,
+  incommingData: ProfileResp,
+  elapsedTime: number
+) {
+  if (!elapsedTime) return null
+
+  const updateOp: UpdateOp = {
+    op: "UPDATE",
+    table: "users",
+    row_id: currentData.user_id,
+    diffs: {
+      focus_time: {
+        val: incommingData.focus_time + elapsedTime,
+        cl: incommingData.focus_time__c,
+      },
+    },
+  }
+
+  return updateOp
 }

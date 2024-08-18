@@ -1,12 +1,14 @@
 import { DeleteItemData } from "@/api-endpoints/endpoints/itemAPITypes"
 import { ItemResponse } from "@/types/itemTypes"
+import { ProfileResp } from "@/types/userTypes"
 
 import { DeleteOp, FieldDiff, InsertOp, UpdateOp } from "./opTypes"
 
 export function getInsertOp(item: ItemResponse): InsertOp {
   return {
     op: "INSERT",
-    item_id: item.item_id,
+    row_id: item.item_id,
+    table: "items",
     data: {
       title: item.title,
       item_type: item.item_type,
@@ -25,7 +27,8 @@ export function getInsertOp(item: ItemResponse): InsertOp {
 export function getDeleteOp(item: DeleteItemData): DeleteOp {
   return {
     op: "DELETE",
-    item_id: item.item_id,
+    table: "items",
+    row_id: item.item_id,
     cl: item.cl,
   }
 }
@@ -64,7 +67,22 @@ export function getUpdateOp(
 
   return {
     op: "UPDATE",
-    item_id: newItem.item_id,
+    row_id: newItem.item_id,
+    table: "items",
     diffs,
+  }
+}
+
+export function getUserUpdateOp(newData: ProfileResp): UpdateOp {
+  return {
+    op: "UPDATE",
+    row_id: newData.user_id,
+    table: "users",
+    diffs: {
+      focus_time: {
+        val: newData.focus_time,
+        cl: newData.focus_time__c,
+      },
+    },
   }
 }
