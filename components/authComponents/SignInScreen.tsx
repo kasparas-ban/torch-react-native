@@ -47,6 +47,9 @@ export default function SignInScreen() {
         password: data.password,
       })
 
+      // TODO: attempt to get user information from the DB.
+      // If the user does not exist create it!
+
       await setActive({ session: completeSignIn.createdSessionId })
       router.replace("/(tabs)/timer")
       notify({ title: "Login successful!" })

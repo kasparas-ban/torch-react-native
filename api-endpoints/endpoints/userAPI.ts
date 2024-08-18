@@ -49,7 +49,7 @@ export const getUserInfo = (token: string) =>
   }).then(async res => {
     const data = await res.json()
     if (!res.ok) throw new Error(data.error)
-    return data as ProfileResp
+    return data as ProfileResp | undefined
   })
 
 export const deleteAccount = (token: string) =>
