@@ -1,5 +1,6 @@
 import React from "react"
 import Colors from "@/constants/Colors"
+import { useAuth } from "@/library/clerk"
 import { Link } from "expo-router"
 import {
   ImageBackground,
@@ -14,6 +15,8 @@ import { AnimatedButton } from "./AnimatedButton"
 export function ComingSoon() {
   const colorScheme = useColorScheme()
   const isDark = colorScheme === "dark"
+
+  const { isSignedIn } = useAuth()
 
   return (
     <View style={styles.container}>
@@ -34,29 +37,33 @@ export function ComingSoon() {
           isDark ? styles.paragraphDark : styles.paragraphLight,
         ]}
       >
-        Sign up now and you'll be the first to know when it goes live!
+        {!isSignedIn
+          ? "Sign up now and you'll be the first to know when it goes live!"
+          : "You'll be the first to know when it goes live!"}
       </Text>
-      <Link href="/sign-up" asChild>
-        <AnimatedButton style={styles.button}>
-          <ImageBackground
-            source={require("@/assets/images/gradient_animation.gif")}
-            style={styles.buttonBackground}
-          >
-            <View
-              style={{
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                backgroundColor: "black",
-                position: "absolute",
-                opacity: isDark ? 0.2 : 0,
-              }}
-            />
-            <Text style={styles.buttonText}>Sign Up</Text>
-          </ImageBackground>
-        </AnimatedButton>
-      </Link>
+      {!isSignedIn && (
+        <Link href="/sign-up" asChild>
+          <AnimatedButton style={styles.button}>
+            <ImageBackground
+              source={require("@/assets/images/gradient_animation.gif")}
+              style={styles.buttonBackground}
+            >
+              <View
+                style={{
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  backgroundColor: "black",
+                  position: "absolute",
+                  opacity: isDark ? 0.2 : 0,
+                }}
+              />
+              <Text style={styles.buttonText}>Sign Up</Text>
+            </ImageBackground>
+          </AnimatedButton>
+        </Link>
+      )}
     </View>
   )
 }

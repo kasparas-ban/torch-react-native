@@ -21,7 +21,7 @@ import { AnimatedButton } from "../AnimatedButton"
 import useEditItem from "../itemModal/hooks/useEditItem"
 import useTimerForm from "../Timer/hooks/useTimerForm"
 
-export default function EditItemFunction() {
+export default function EditItemInfo() {
   const { styles, isDark } = useThemeStyles(componentStyles)
   const { editItem } = useEditItem()
 
