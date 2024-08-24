@@ -1,20 +1,22 @@
 import React, { ReactNode } from "react"
 import Colors from "@/constants/Colors"
-import { Link as BaseLink, Href, LinkProps } from "expo-router"
+import { Link as BaseLink } from "expo-router"
+import { LinkProps } from "expo-router/build/link/Link"
+import { ExpoRouter } from "expo-router/types/expo-router"
 import { PressableProps, StyleSheet, Text, TextProps } from "react-native"
 import { AnimatedProps } from "react-native-reanimated"
 
 import { AnimatedButton } from "../AnimatedButton"
 
-type Props<T> = AnimatedProps<LinkProps<T>> &
+type Props = AnimatedProps<LinkProps> &
   Omit<PressableProps, "children"> & {
     children: ReactNode
-    href: Href<T>
+    href: ExpoRouter.Href
     scale?: number
     textProps?: TextProps
   }
 
-export default function Link<T>(props: Props<T>) {
+export default function Link<T>(props: Props) {
   const { textProps, scale, children, ...pressableProps } = props
 
   return (

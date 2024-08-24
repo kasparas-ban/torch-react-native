@@ -4,7 +4,7 @@ export type ProfileResp = {
   email: string
   birthday: string | null
   gender: GenderType | null
-  country_id: string | null
+  country_code: string | null
   city: string | null
   focus_time: number
   description: string | null

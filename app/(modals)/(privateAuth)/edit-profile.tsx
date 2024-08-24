@@ -68,7 +68,7 @@ export default function EditProfileScreen() {
     username: userInfo?.username,
     birthday: userInfo?.birthday,
     gender: userInfo?.gender,
-    country: userInfo?.countryCode,
+    country: userInfo?.country_code,
     city: userInfo?.city,
     description: userInfo?.description,
   }

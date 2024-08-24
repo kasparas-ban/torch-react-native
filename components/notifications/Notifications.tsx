@@ -4,8 +4,7 @@ import AlertIcon from "@/assets/icons/exclamationCircle.svg"
 import ErrorIcon from "@/assets/icons/xCircle.svg"
 import Colors from "@/constants/Colors"
 import { Dimensions, SafeAreaView, StyleSheet, Text, View } from "react-native"
-import { Notifier } from "react-native-notifier"
-import { ShowNotificationParams } from "react-native-notifier/lib/typescript/types"
+import { Notifier, ShowNotificationParams } from "react-native-notifier"
 
 type NotificationType = "SUCCESS" | "ALERT" | "ERROR"
 

@@ -13,19 +13,20 @@ type Actions = {
   setUser: (user: ProfileResp) => void
   updateUser: (user: Partial<ProfileResp>) => void
   updateUserTime: (time_spent: number) => void
+  resetElapsedTime: () => void
 }
 
-const itemStore = create<State & Actions>()(
+const userStore = create<State & Actions>()(
   persist(
     (set, get) => ({
       user: undefined,
       elapsedTime: 0,
       setUser: (user: ProfileResp) => set(() => ({ user })),
-      updateUser: (user: Partial<ProfileResp>, local: boolean = false) =>
+      updateUser: (user: Partial<ProfileResp>) =>
         set(state => {
           if (!state.user) return state
 
-          return { user: { ...state.user, ...user } }
+          return { user: { ...state.user, ...user }, elapsedTime: 0 }
         }),
       updateUserTime: (time_spent: number) =>
         set(state => {
@@ -39,6 +40,7 @@ const itemStore = create<State & Actions>()(
             elapsedTime: state.elapsedTime + time_spent,
           }
         }),
+      resetElapsedTime: () => set(() => ({ elapsedTime: 0 })),
     }),
     {
       name: "user-store",
@@ -49,11 +51,12 @@ const itemStore = create<State & Actions>()(
 
 const useUserInfo = () => {
   const store = {
-    user: itemStore(state => state.user),
-    elapsedTime: itemStore(state => state.elapsedTime),
-    setUser: itemStore(state => state.setUser),
-    updateUser: itemStore(state => state.updateUser),
-    updateUserTime: itemStore(state => state.updateUserTime),
+    user: userStore(state => state.user),
+    elapsedTime: userStore(state => state.elapsedTime),
+    setUser: userStore(state => state.setUser),
+    updateUser: userStore(state => state.updateUser),
+    updateUserTime: userStore(state => state.updateUserTime),
+    resetElapsedTime: userStore(state => state.resetElapsedTime),
   }
 
   const op = useUserSync()
@@ -63,24 +66,27 @@ const useUserInfo = () => {
     elapsedTime: store.elapsedTime,
     setUser: store.setUser,
     updateUser: (data: Partial<ProfileResp>, local: boolean = false) => {
-      if (!store.user) return
-      const newUser = { ...store.user, ...data }
+      const currentUser = userStore.getState().user
+      if (!currentUser) return
+      const newUser = { ...currentUser, ...data }
       store.setUser(newUser)
       if (!local) op.updateUser(newUser)
     },
     updateUserTime: (time: number, local: boolean = false) => {
-      if (!store.user) return
+      const currentUser = userStore.getState().user
+      if (!currentUser) return
 
       if (local) {
         store.updateUserTime(time)
       } else {
         const newUser = {
-          ...store.user,
-          focus_time: store.user.focus_time + time,
+          ...currentUser,
+          focus_time: currentUser.focus_time + time,
         }
         op.updateUser(newUser)
       }
     },
+    resetElapsedTime: store.resetElapsedTime,
   }
 }
 

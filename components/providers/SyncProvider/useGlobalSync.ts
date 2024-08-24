@@ -17,7 +17,7 @@ import {
 export default function useGlobalSync() {
   const { isOnline } = useDev()
   const { ws } = useWs()
-  const { getToken } = useAuth()
+  const { getToken, signOut, isSignedIn } = useAuth()
 
   const {
     items: localItems,
@@ -33,6 +33,7 @@ export default function useGlobalSync() {
     user: currentUser,
     elapsedTime: elapsedUserTime,
     setUser,
+    resetElapsedTime,
   } = useUserInfo()
 
   const syncItems = async (ws: WebSocket) => {
@@ -68,8 +69,6 @@ export default function useGlobalSync() {
   }
 
   const syncUser = async (ws: WebSocket) => {
-    if (!currentUser) return
-
     const token = await getToken()
     if (!token) throw Error("Sync error: auth token not found")
     if (!isOnline) {
@@ -77,7 +76,17 @@ export default function useGlobalSync() {
     }
 
     const user = await getUserInfo(token)
-    if (!user) return
+    if (!user) {
+      if (isSignedIn) signOut()
+      resetElapsedTime()
+      return
+    }
+
+    if (!currentUser) {
+      setUser(user)
+      resetElapsedTime()
+      return
+    }
 
     const updateOp = getUserUpdateOp(currentUser, user, elapsedUserTime)
     if (updateOp) {
@@ -85,6 +94,7 @@ export default function useGlobalSync() {
     }
 
     setUser(user)
+    resetElapsedTime()
   }
 
   useEffect(() => {

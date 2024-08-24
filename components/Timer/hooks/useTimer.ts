@@ -156,8 +156,6 @@ let incrementInfo: { startTime: Date; endTime: Date } | null = null
 
 let lastStopElapsedTime = 0
 
-let temporary = 0
-
 export const useTimerListener = () => {
   const { isOnline } = useDev()
   const { focusOn } = useTimerForm()
@@ -168,7 +166,7 @@ export const useTimerListener = () => {
   const updateTime = (time_spent: number, item_id?: string) =>
     item_id
       ? updateItemProgress({ time_spent, item_id }, !isOnline)
-      : updateUserTime(time_spent)
+      : updateUserTime(time_spent, !isOnline)
 
   useEffect(() => {
     if (timerStateListener) timerStateListener()

@@ -36,9 +36,10 @@ export default function AccountScreen() {
 
   const userFocusTime = userInfo
     ? {
-        hours: userInfo.focusTime % (60 * 60),
+        hours: Math.floor(userInfo.focus_time / (60 * 60)),
         minutes:
-          (userInfo.focusTime % 60) - (userInfo.focusTime % (60 * 60)) * 60,
+          Math.floor(userInfo.focus_time / 60) -
+          Math.floor(userInfo.focus_time / (60 * 60)) * 60,
       }
     : null
 
@@ -76,8 +77,8 @@ export default function AccountScreen() {
 
   const country = useMemo(
     () =>
-      userInfo?.countryCode ? getCountry(userInfo?.countryCode) : undefined,
-    [userInfo?.countryCode]
+      userInfo?.country_code ? getCountry(userInfo?.country_code) : undefined,
+    [userInfo?.country_code]
   )
 
   return (
@@ -138,8 +139,8 @@ export default function AccountScreen() {
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.detailLabel}>Joined since</Text>
           <Text style={styles.detailData}>
-            {userInfo?.createdAt
-              ? dayjs(userInfo.createdAt).format("MMMM D, YYYY")
+            {userInfo?.created_at
+              ? dayjs(userInfo.created_at).format("MMMM D, YYYY")
               : "-"}
           </Text>
         </View>
