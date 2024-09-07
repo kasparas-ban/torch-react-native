@@ -60,8 +60,6 @@ export default function SignInScreen() {
     }
   }
 
-  if (!signIn) return null
-
   return (
     <View style={styles.wrapper}>
       <View style={styles.container}>
