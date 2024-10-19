@@ -1,5 +1,6 @@
 import { useEffect } from "react"
 import { DarkTheme } from "@/constants/Themes"
+import NotificationProvider from "@/notifications/NotificationProvider"
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native"
 import { useFonts } from "expo-font"
@@ -64,6 +65,7 @@ function RootLayoutNav() {
               <ConnectionTagProvider>
                 <BottomSheetModalProvider>
                   <NotifierWrapper>
+                    <NotificationProvider />
                     <StorageProvider />
                     <GlobalLoadingScreen>
                       <Stack>

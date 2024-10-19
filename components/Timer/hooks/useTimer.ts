@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react"
+import { useEffect } from "react"
 import useItems from "@/stores/itemStore"
 import useUserInfo from "@/stores/userStore"
 import dayjs from "dayjs"
@@ -46,7 +46,7 @@ const defaultTime = DEFAULT_TIME * 60
 const breakTime = DEFAULT_BREAK_TIME * 60
 const longBreakTime = DEFAULT_LONG_BREAK_TIME * 60
 
-const useTimerStoreBase = create<TimerStoreState>()(
+export const useTimerStoreBase = create<TimerStoreState>()(
   subscribeWithSelector(set => ({
     time: defaultTime,
     initialTime: defaultTime,
