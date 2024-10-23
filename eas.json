@@ -1,0 +1,25 @@
+{
+  "cli": {
+    "version": ">= 9.0.7"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_bGVuaWVudC1vY3RvcHVzLTI1LmNsZXJrLmFjY291bnRzLmRldiQ",
+        "EXPO_PUBLIC_BE_HOSTNAME": "EXPO_PUBLIC_BE_HOSTNAME"
+      }
+    },
+    "production": {}
+  },
+  "submit": {
+    "production": {}
+  }
+}

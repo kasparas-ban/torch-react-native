@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "timer-app",
+    "name": "Torch",
     "slug": "timer-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -33,6 +33,14 @@
     "plugins": ["expo-router", "expo-font", "expo-asset"],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "16a414e8-6cad-466e-9212-6f3e6a850519"
+      }
     }
   }
 }

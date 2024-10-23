@@ -19,6 +19,20 @@ export default {
   default: {
     light: "#f2f2f2",
   },
+  notifications: {
+    rose: {
+      300: "#fda4af",
+      500: "#f43f5e",
+    },
+    sky: {
+      300: "#7dd3fc",
+      500: "#0ea5e9",
+    },
+    gray: {
+      50: "#f9fafb",
+      950: "#030712",
+    },
+  },
   slate: {
     100: "rgb(241 245 249)",
     200: "rgb(226 232 240)",

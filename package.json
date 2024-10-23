@@ -1,5 +1,5 @@
 {
-  "name": "timer-app",
+  "name": "torch-app",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
