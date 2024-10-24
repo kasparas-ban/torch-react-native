@@ -20,3 +20,7 @@
 
 - [ ] Improve error handling
   - [ ] Highlight incorrect fields in signup process
+
+# Build
+
+Build APK with `eas build -p android --profile preview --local`
