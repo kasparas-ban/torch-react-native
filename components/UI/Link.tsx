@@ -1,26 +1,29 @@
 import React, { ReactNode } from "react"
 import Colors from "@/constants/Colors"
-import { Link as BaseLink } from "expo-router"
+import { Link as BaseLink, Href } from "expo-router"
 import { LinkProps } from "expo-router/build/link/Link"
-import { ExpoRouter } from "expo-router/types/expo-router"
 import { PressableProps, StyleSheet, Text, TextProps } from "react-native"
 import { AnimatedProps } from "react-native-reanimated"
 
 import { AnimatedButton } from "../AnimatedButton"
 
-type Props = AnimatedProps<LinkProps> &
+type Props<T extends string | object> = AnimatedProps<LinkProps<T>> &
   Omit<PressableProps, "children"> & {
     children: ReactNode
-    href: ExpoRouter.Href
+    href: Href<T>
     scale?: number
     textProps?: TextProps
   }
 
-export default function Link<T>(props: Props) {
+export default function Link<T extends string | object>(props: Props<T>) {
   const { textProps, scale, children, ...pressableProps } = props
 
   return (
-    <BaseLink href={props.href} style={[pressableProps.style as any]} asChild>
+    <BaseLink
+      href={props.href as any}
+      style={[pressableProps.style as any]}
+      asChild
+    >
       <AnimatedButton
         scale={scale || 0.98}
         entering={props.entering}

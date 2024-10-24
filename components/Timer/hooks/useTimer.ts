@@ -158,12 +158,12 @@ let lastStopElapsedTime = 0
 
 export const useTimerListener = () => {
   const { isOnline } = useDev()
-  const { focusOn } = useTimerForm()
+  const { focusItemId } = useTimerForm()
   const { updateItemProgress } = useItems()
 
   const { updateUserTime } = useUserInfo()
 
-  const updateTime = (time_spent: number, item_id?: string) =>
+  const updateTime = (time_spent: number, item_id?: string | null) =>
     item_id
       ? updateItemProgress({ time_spent, item_id }, !isOnline)
       : updateUserTime(time_spent, !isOnline)
@@ -214,7 +214,7 @@ export const useTimerListener = () => {
             }
           }
 
-          updateTime(diff, focusOn?.value)
+          updateTime(diff, focusItemId)
           return
         }
 
@@ -229,7 +229,7 @@ export const useTimerListener = () => {
             lastStopElapsedTime
 
           lastStopElapsedTime = (state.initialTime - state.time) % UPDATE_PERIOD
-          updateTime(elapsedTime, focusOn?.value)
+          updateTime(elapsedTime, focusItemId)
         }
       }
     )
@@ -237,7 +237,7 @@ export const useTimerListener = () => {
     return () => {
       timerStateListener && timerStateListener()
     }
-  }, [focusOn?.value, isOnline])
+  }, [focusItemId, isOnline])
 }
 
 export default useTimerStore

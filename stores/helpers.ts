@@ -2,26 +2,13 @@ import {
   AddNewItemType,
   DeleteItemData,
 } from "@/api-endpoints/endpoints/itemAPITypes"
-import { ItemResponse } from "@/types/itemTypes"
+import { Dream, Goal, ItemResponse, Task } from "@/types/itemTypes"
 import { getRandomId } from "@/utils/randomId"
 import {
   NewDreamType,
   NewGoalType,
   NewTaskType,
 } from "@/components/itemModal/itemForms/schemas"
-
-const defaultUpdateMetadata = {
-  title: false,
-  status: false,
-  target_date: false,
-  priority: false,
-  duration: false,
-  time_spent: false,
-  rec_times: false,
-  rec_period: false,
-  rec_progress: false,
-  parent_id: false,
-}
 
 export function formatNewItem(item: AddNewItemType, item_id?: string) {
   const { type, ...rest } = item
@@ -107,4 +94,25 @@ export function getAllAssociatedItems(
   }
 
   return associatedItems
+}
+
+export function findFormattedItem(
+  allItems: {
+    tasks: Task[]
+    goals: Goal[]
+    dreams: Dream[]
+    rawItems: ItemResponse[]
+  },
+  itemId?: string | null
+) {
+  if (!itemId) return undefined
+
+  const itemType = allItems.rawItems.find(i => i.item_id === itemId)?.item_type
+  if (!itemType) return undefined
+
+  return itemType === "TASK"
+    ? allItems.tasks.find(i => i.item_id === itemId)
+    : itemType === "GOAL"
+      ? allItems.goals.find(i => i.item_id === itemId)
+      : allItems.dreams.find(i => i.item_id === itemId)
 }

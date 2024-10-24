@@ -32,17 +32,7 @@ export default function EditItemInfo() {
   const handleTimerClick = () => {
     if (!editItem) return
 
-    const itemOption: ItemOptionType = {
-      value: editItem.item_id,
-      label: editItem.title,
-      type: editItem.item_type,
-      progress: editItem.progress,
-      timeSpent: editItem.time_spent,
-      duration: (editItem as Task).duration ?? undefined,
-      containsTasks: !!(editItem as Goal).tasks?.length,
-    }
-
-    setFocusOn(itemOption)
+    setFocusOn(editItem.item_id)
     router.push("/(tabs)/timer")
   }
 

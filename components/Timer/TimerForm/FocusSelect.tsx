@@ -2,11 +2,12 @@ import React, { useRef } from "react"
 import { getItemsByType } from "@/api-endpoints/utils/helpers"
 import CloseIcon from "@/assets/icons/close.svg"
 import Colors from "@/constants/Colors"
+import { findFormattedItem } from "@/stores/helpers"
 import useItems from "@/stores/itemStore"
 import { BottomSheetModal } from "@gorhom/bottom-sheet"
 import { ScrollView, StyleSheet, Text, View } from "react-native"
 import TextTicker from "react-native-text-ticker"
-import { ItemOptionType } from "@/types/itemTypes"
+import { FormattedItem, ItemOptionType } from "@/types/itemTypes"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { toPercent } from "@/utils/utils"
 import { BottomModal } from "@/components/SelectModal/BottomModal"
@@ -34,8 +35,10 @@ export default function FocusSelect() {
 
   const { styles, isDark } = useThemeStyles(componentStyles)
 
-  const { focusOn, setFocusOn, focusType, setFocusType } = useTimerForm()
+  const { focusItemId, setFocusOn, focusType, setFocusType } = useTimerForm()
   const { allItems } = useItems()
+
+  const focusItem = findFormattedItem(allItems, focusItemId)
 
   const isGrouped = focusType === "TASKS" || focusType === "GOALS"
   const items = getItemsByType({
@@ -72,7 +75,7 @@ export default function FocusSelect() {
             <TextTicker
               style={[
                 styles.inputText,
-                focusOn && {
+                focusItemId && {
                   color: isDark ? Colors.gray[200] : Colors.gray[700],
                   fontWeight: "600",
                 },
@@ -83,10 +86,10 @@ export default function FocusSelect() {
               loop
               bounce={false}
             >
-              {focusOn?.label ?? "Select..."}
+              {focusItem?.title ?? "Select..."}
             </TextTicker>
           </View>
-          {focusOn && (
+          {focusItem && (
             <AnimatedButton
               style={{
                 width: 28,
@@ -129,14 +132,14 @@ export default function FocusSelect() {
               {isGrouped ? (
                 <GroupedItems
                   items={items}
-                  selectedItem={focusOn}
+                  selectedItem={focusItem}
                   onSelectItem={setFocusOn}
                   isDark={isDark}
                 />
               ) : (
                 <SingleItems
                   items={items as any}
-                  selectedItem={focusOn}
+                  selectedItem={focusItem}
                   onSelectItem={setFocusOn}
                   isDark={isDark}
                 />
@@ -156,8 +159,8 @@ function GroupedItems({
   isDark,
 }: {
   items: GroupedItem[]
-  selectedItem: ItemOptionType | null
-  onSelectItem: (focus: ItemOptionType | null) => void
+  selectedItem?: FormattedItem
+  onSelectItem: (focusItemId: string | null) => void
   isDark: boolean
 }) {
   return (
@@ -189,12 +192,12 @@ function GroupedItems({
                     alignItems: "center",
                     paddingRight: 12,
                   },
-                  option.value === selectedItem?.value && {
+                  option.value === selectedItem?.item_id && {
                     backgroundColor: Colors.rose[400],
                   },
                 ]}
                 scale={0.99}
-                onPress={() => onSelectItem(option as ItemOptionType)}
+                onPress={() => onSelectItem(option.value)}
               >
                 <Text
                   style={[
@@ -207,7 +210,7 @@ function GroupedItems({
                       fontSize: 18,
                       marginRight: 12,
                     },
-                    option.value === selectedItem?.value && {
+                    option.value === selectedItem?.item_id && {
                       color: Colors.gray[50],
                     },
                   ]}
@@ -217,7 +220,7 @@ function GroupedItems({
                 <TextTicker
                   style={[
                     { color: isDark ? Colors.gray[300] : Colors.gray[700] },
-                    option.value === selectedItem?.value && {
+                    option.value === selectedItem?.item_id && {
                       color: Colors.gray[50],
                       fontWeight: "600",
                     },
@@ -246,8 +249,8 @@ function SingleItems({
   isDark,
 }: {
   items: ItemOptionType[]
-  selectedItem: ItemOptionType | null
-  onSelectItem: (focus: ItemOptionType | null) => void
+  selectedItem?: FormattedItem
+  onSelectItem: (focusItemId: string | null) => void
   isDark: boolean
 }) {
   return (
@@ -263,12 +266,12 @@ function SingleItems({
               flexDirection: "row",
               alignItems: "center",
             },
-            option.value === selectedItem?.value && {
+            option.value === selectedItem?.item_id && {
               backgroundColor: Colors.rose[400],
             },
           ]}
           scale={0.99}
-          onPress={() => onSelectItem(option as ItemOptionType)}
+          onPress={() => onSelectItem(option.value)}
         >
           <Text
             style={[
@@ -280,7 +283,7 @@ function SingleItems({
                 fontWeight: "700",
                 fontSize: 18,
               },
-              option.value === selectedItem?.value && {
+              option.value === selectedItem?.item_id && {
                 color: Colors.gray[50],
               },
             ]}
@@ -293,7 +296,7 @@ function SingleItems({
                 marginLeft: 12,
                 color: isDark ? Colors.gray[300] : Colors.gray[700],
               },
-              option.value === selectedItem?.value && {
+              option.value === selectedItem?.item_id && {
                 color: Colors.gray[50],
                 fontWeight: "600",
               },

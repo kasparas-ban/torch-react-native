@@ -38,7 +38,6 @@ export default function NotificationProvider() {
       pervTime === 0 &&
       !!vibrateChanId
     ) {
-      console.log("VIBRATE")
       displayNotification({
         channelId: vibrateChanId,
         timerState,
