@@ -52,7 +52,7 @@ export default function PictureInput(props: PictureInputProps) {
           <Image
             style={styles.picture as any}
             source={(value as ImagePicker.ImagePickerAsset)?.uri || value}
-            placeholder={defaultProfileImage}
+            placeholder={{ blurhash: defaultProfileImage }}
             contentFit="cover"
             transition={200}
           />

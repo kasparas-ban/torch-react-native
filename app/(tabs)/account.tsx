@@ -86,7 +86,9 @@ export default function AccountScreen() {
       <View style={styles.summaryBox}>
         <Image
           style={styles.profilePicture as ImageStyle}
-          source={user?.hasImage ? user?.imageUrl : defaultProfileImage}
+          source={
+            user?.hasImage ? user?.imageUrl : { blurhash: defaultProfileImage }
+          }
           contentFit="cover"
           transition={800}
         />
