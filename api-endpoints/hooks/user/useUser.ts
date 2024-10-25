@@ -1,5 +1,5 @@
 import { getUserInfo, registerUser } from "@/api-endpoints/endpoints/userAPI"
-import { useAuth } from "@clerk/clerk-react"
+import { useAuth } from "@/library/clerk"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { SignUpUserData, UpdateProfileReq } from "@/types/userTypes"
 
