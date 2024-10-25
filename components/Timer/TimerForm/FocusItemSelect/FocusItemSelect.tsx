@@ -12,9 +12,9 @@ import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { toPercent } from "@/utils/utils"
 import { BottomModal } from "@/components/SelectModal/BottomModal"
 
-import { AnimatedButton } from "../../AnimatedButton"
-import ToggleSelect from "../../UI/ToggleSelect"
-import useTimerForm, { FocusType } from "../hooks/useTimerForm"
+import { AnimatedButton } from "../../../AnimatedButton"
+import ToggleSelect from "../../../UI/ToggleSelect"
+import useTimerForm, { FocusType } from "../../hooks/useTimerForm"
 
 type GroupedItem = {
   label: string
@@ -23,13 +23,20 @@ type GroupedItem = {
 }
 
 const focusTypeOptions = [
-  { label: "Tasks", value: "TASKS" as FocusType },
-  { label: "Goals", value: "GOALS" as FocusType },
-  { label: "Dreams", value: "DREAMS" as FocusType },
-  { label: "All", value: "ALL" as FocusType },
-]
+  { label: "Tasks", value: "TASKS" },
+  { label: "Goals", value: "GOALS" },
+  { label: "Dreams", value: "DREAMS" },
+  { label: "All", value: "ALL" },
+] satisfies { label: string; value: FocusType }[]
 
-export default function FocusSelect() {
+const emptyListLabelOptions = {
+  TASKS: "No tasks found",
+  GOALS: "No goals found",
+  DREAMS: "No dreams found",
+  ALL: "No work items found",
+}
+
+export default function FocusItemSelect() {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null)
   const openSelectModal = () => bottomSheetModalRef.current?.present()
 
@@ -46,6 +53,8 @@ export default function FocusSelect() {
     focusType,
     grouped: isGrouped,
   })
+
+  const emptyListLabel = emptyListLabelOptions[focusType]
 
   return (
     <View>
@@ -143,6 +152,19 @@ export default function FocusSelect() {
                   onSelectItem={setFocusOn}
                   isDark={isDark}
                 />
+              )}
+
+              {!items.length && (
+                <View style={{ paddingVertical: 28 }}>
+                  <Text
+                    style={{
+                      alignSelf: "center",
+                      color: isDark ? Colors.gray[400] : Colors.gray[500],
+                    }}
+                  >
+                    {emptyListLabel}
+                  </Text>
+                </View>
               )}
             </View>
           </ScrollView>

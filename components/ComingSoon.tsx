@@ -118,14 +118,14 @@ const styles = StyleSheet.create({
   buttonBackground: {
     borderRadius: 12,
     overflow: "hidden",
-    height: 50,
+    height: 42,
     width: 120,
     alignItems: "center",
     justifyContent: "center",
   },
   buttonText: {
     fontWeight: "900",
-    fontSize: 20,
+    fontSize: 18,
     color: Colors.gray[50],
     userSelect: "none",
   },

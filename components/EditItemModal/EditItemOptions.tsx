@@ -3,7 +3,6 @@ import ArrowIcon from "@/assets/icons/chevronRight.svg"
 import DeleteIcon from "@/assets/icons/delete.svg"
 import EditIcon from "@/assets/icons/edit.svg"
 import MakeActiveIcon from "@/assets/icons/makeActive.svg"
-import StatsIcon from "@/assets/icons/stats.svg"
 import TickIcon from "@/assets/icons/tick.svg"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
@@ -97,54 +96,58 @@ export default function EditItemOptionsCard({ setCard }: CardProps) {
         )}
 
         {editItem?.status !== "ACTIVE" && (
-          <AnimatedButton
-            style={{
-              alignItems: "center",
-              flexDirection: "row",
-              paddingVertical: 12,
-              gap: 8,
-            }}
-            scale={0.98}
-            onPress={() => setCard("ACTIVE")}
-          >
-            <MakeActiveIcon
-              color={isDark ? Colors.gray[100] : Colors.gray[800]}
-              style={styles.editIcon}
-            />
-            <Text style={styles.editlabel}>Make active</Text>
-            <ArrowIcon
-              color={isDark ? Colors.gray[100] : Colors.gray[800]}
-              style={styles.arrowIcon}
-            />
-          </AnimatedButton>
+          <>
+            <AnimatedButton
+              style={{
+                alignItems: "center",
+                flexDirection: "row",
+                paddingVertical: 12,
+                gap: 8,
+              }}
+              scale={0.98}
+              onPress={() => setCard("ACTIVE")}
+            >
+              <MakeActiveIcon
+                color={isDark ? Colors.gray[100] : Colors.gray[800]}
+                style={styles.editIcon}
+              />
+              <Text style={styles.editlabel}>Make active</Text>
+              <ArrowIcon
+                color={isDark ? Colors.gray[100] : Colors.gray[800]}
+                style={styles.arrowIcon}
+              />
+            </AnimatedButton>
+            <View style={styles.separator} />
+          </>
         )}
-
-        <View style={styles.separator} />
 
         {(editItem?.item_type === "GOAL" ||
           editItem?.item_type === "DREAM") && (
-          <AnimatedButton
-            style={{
-              alignItems: "center",
-              flexDirection: "row",
-              gap: 8,
-              paddingVertical: 12,
-            }}
-            scale={0.98}
-            onPress={handleAddSubitem}
-          >
-            <AddItemIcon
-              color={isDark ? Colors.gray[100] : Colors.gray[800]}
-              style={styles.editIcon}
-            />
-            <Text style={styles.editlabel}>
-              {editItem?.item_type === "GOAL" ? "Add task" : "Add goal"}
-            </Text>
-            <ArrowIcon
-              color={isDark ? Colors.gray[100] : Colors.gray[800]}
-              style={styles.arrowIcon}
-            />
-          </AnimatedButton>
+          <>
+            <AnimatedButton
+              style={{
+                alignItems: "center",
+                flexDirection: "row",
+                gap: 8,
+                paddingVertical: 12,
+              }}
+              scale={0.98}
+              onPress={handleAddSubitem}
+            >
+              <AddItemIcon
+                color={isDark ? Colors.gray[100] : Colors.gray[800]}
+                style={styles.editIcon}
+              />
+              <Text style={styles.editlabel}>
+                {editItem?.item_type === "GOAL" ? "Add task" : "Add goal"}
+              </Text>
+              <ArrowIcon
+                color={isDark ? Colors.gray[100] : Colors.gray[800]}
+                style={styles.arrowIcon}
+              />
+            </AnimatedButton>
+            <View style={styles.separator} />
+          </>
         )}
 
         {/* <View style={styles.separator} />
@@ -164,8 +167,6 @@ export default function EditItemOptionsCard({ setCard }: CardProps) {
           </Text>
           <ArrowIcon color={Colors.gray[300]} style={styles.arrowIcon} />
         </AnimatedButton> */}
-
-        <View style={styles.separator} />
 
         <AnimatedButton
           style={{
@@ -245,8 +246,9 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       height: 20,
     },
     separator: {
-      backgroundColor: isDark ? Colors.gray[400] : Colors.gray[500],
-      height: StyleSheet.hairlineWidth,
+      backgroundColor: isDark ? Colors.gray[400] : Colors.gray[300],
+      // height: StyleSheet.hairlineWidth,
+      height: 1,
       width: "100%",
     },
   })

@@ -168,12 +168,13 @@ export default function EditItemInfo() {
           justifyContent: "center",
           alignItems: "center",
           paddingVertical: 6,
+          paddingHorizontal: 12,
         }}
       >
         <View
           style={{
             backgroundColor: Colors.gray[500],
-            width: 140,
+            width: "100%",
             height: StyleSheet.hairlineWidth,
           }}
         />
@@ -359,6 +360,7 @@ const tagStyles = ({ isDark }: ThemeStylesProps) =>
       paddingVertical: 10,
       maxWidth: 240,
       justifyContent: "center",
+      alignSelf: "center",
     },
     tag: {
       backgroundColor: isDark ? Colors.gray[300] : Colors.gray[200],
