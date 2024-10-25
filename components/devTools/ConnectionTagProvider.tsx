@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 import Colors from "@/constants/Colors"
-import { Pressable, StyleSheet, Text, View } from "react-native"
+import { StyleSheet, Text } from "react-native"
 
 import { AnimatedButton } from "../AnimatedButton"
 import useDev from "./useDev"

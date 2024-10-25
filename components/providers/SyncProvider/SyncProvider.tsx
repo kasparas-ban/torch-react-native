@@ -9,7 +9,7 @@ import { Platform } from "react-native"
 import { ItemResponse } from "@/types/itemTypes"
 import { ProfileResp } from "@/types/userTypes"
 import { getRandomId } from "@/utils/randomId"
-import useDev from "@/components/dev/useDev"
+import useDev from "@/components/devTools/useDev"
 
 import { handleServerMsg } from "./helpers"
 import useGlobalSync from "./useGlobalSync"

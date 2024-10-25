@@ -1,7 +1,7 @@
 import { DeleteItemData } from "@/api-endpoints/endpoints/itemAPITypes"
 import { wsStore } from "@/stores/websocketStore"
 import { ItemResponse } from "@/types/itemTypes"
-import useDev from "@/components/dev/useDev"
+import useDev from "@/components/devTools/useDev"
 
 import { getDeleteOp, getInsertOp, getUpdateOp } from "./opFormatters"
 

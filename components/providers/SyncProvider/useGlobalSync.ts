@@ -5,7 +5,7 @@ import { useAuth } from "@/library/clerk"
 import useItems from "@/stores/itemStore"
 import useUserInfo from "@/stores/userStore"
 import useWs from "@/stores/websocketStore"
-import useDev from "@/components/dev/useDev"
+import useDev from "@/components/devTools/useDev"
 
 import {
   getDeleteOps,

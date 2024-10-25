@@ -6,7 +6,7 @@ import { create } from "zustand"
 import { subscribeWithSelector } from "zustand/middleware"
 import { TimerState } from "@/types/itemTypes"
 import { createSelectors } from "@/utils/zustandUtils"
-import useDev from "@/components/dev/useDev"
+import useDev from "@/components/devTools/useDev"
 
 import useTimerForm from "./useTimerForm"
 
