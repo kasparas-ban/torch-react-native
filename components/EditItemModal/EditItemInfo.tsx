@@ -108,7 +108,7 @@ export default function EditItemInfo() {
             <View style={{ flexDirection: "row" }}>
               <Text
                 style={{
-                  color: Colors.gray[500],
+                  color: isDark ? Colors.gray[300] : Colors.gray[500],
                   marginRight: 4,
                   marginLeft: "auto",
                 }}
@@ -150,10 +150,17 @@ export default function EditItemInfo() {
                 style={{ flexDirection: "row", alignItems: "center", gap: 4 }}
               >
                 <TimerIcon
-                  color={Colors.gray[500]}
-                  style={{ width: 18, height: 18 }}
+                  color={isDark ? Colors.gray[300] : Colors.gray[500]}
+                  style={{
+                    width: 18,
+                    height: 18,
+                  }}
                 />
-                <Text style={{ color: Colors.gray[500] }}>
+                <Text
+                  style={{
+                    color: isDark ? Colors.gray[300] : Colors.gray[500],
+                  }}
+                >
                   {formatSpentTime(timeLeft)}
                 </Text>
               </View>
@@ -173,7 +180,7 @@ export default function EditItemInfo() {
       >
         <View
           style={{
-            backgroundColor: Colors.gray[500],
+            backgroundColor: isDark ? Colors.gray[300] : Colors.gray[500],
             width: "100%",
             height: StyleSheet.hairlineWidth,
           }}
@@ -371,7 +378,7 @@ const tagStyles = ({ isDark }: ThemeStylesProps) =>
       alignSelf: "flex-start",
     },
     tagText: {
-      color: isDark ? Colors.gray[100] : Colors.gray[600],
+      color: Colors.gray[600],
       fontWeight: "700",
     },
   })

@@ -136,8 +136,8 @@ function ItemStrip<T extends GeneralItem>({
             style={{
               justifyContent: "center",
               alignItems: "center",
-              height: 30,
-              width: 30,
+              height: 38,
+              width: 38,
               borderRadius: 100,
             }}
           >
