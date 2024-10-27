@@ -1,4 +1,4 @@
-import { useAuth } from "@clerk/clerk-react"
+import { useAuth } from "@/library/clerk"
 import { useMutation } from "@tanstack/react-query"
 
 import { notifyUser } from "../../endpoints/userAPI"

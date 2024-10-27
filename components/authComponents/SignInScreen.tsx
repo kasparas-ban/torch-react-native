@@ -35,6 +35,11 @@ export default function SignInScreen() {
   const onSignInPress = async (data: SignInFormType) => {
     if (!signIn) {
       console.error("Clerk not loaded")
+      notify({
+        title: "Sign in failed",
+        description: "Internal system error",
+        type: "ERROR",
+      })
       return
     }
     Keyboard.dismiss()

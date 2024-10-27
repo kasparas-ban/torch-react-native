@@ -13,8 +13,10 @@
 - [ ] Add App Settings option to account page (to enable dark mode)
 - [ ] Add input validation for City input field
 - [ ] Deleting account - delete local data as well?
-  - [ ] Add an option to clear all data without deleting the account
+- [ ] Add an option to clear all data without deleting the account
 - [ ] How to handle errors in React Native? What if a page throws an error? Need this for ClerkProvider loading Clerk key
+
+- [ ] Replace screen header for screen with scroll (Edit User screen for example)
 
 ## Low priority
 
