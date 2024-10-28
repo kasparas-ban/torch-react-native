@@ -1,5 +1,5 @@
-import { useAuth } from "@/library/clerk"
 import { useMutation } from "@tanstack/react-query"
+import { useAuth } from "@/lib/clerk"
 
 import { notifyUser } from "../../endpoints/userAPI"
 import { CustomError, NotifyFetchErrorMsg } from "../../utils/errorMsgs"

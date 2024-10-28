@@ -1,6 +1,5 @@
 import React from "react"
 import Colors from "@/constants/Colors"
-import { useAuth } from "@/library/clerk"
 import { Link } from "expo-router"
 import {
   ImageBackground,
@@ -9,6 +8,7 @@ import {
   useColorScheme,
   View,
 } from "react-native"
+import { useAuth } from "@/lib/clerk"
 
 import { AnimatedButton } from "./AnimatedButton"
 

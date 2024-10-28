@@ -1,7 +1,7 @@
-import { getUserInfo, registerUser } from "@/api-endpoints/endpoints/userAPI"
-import { useAuth } from "@/library/clerk"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { SignUpUserData, UpdateProfileReq } from "@/types/userTypes"
+import { useAuth } from "@/lib/clerk"
+import { getUserInfo, registerUser } from "@/api/endpoints/userAPI"
 
 import { updateUser } from "../../endpoints/userAPI"
 import { CustomError, UserUpdateServerErrorMsg } from "../../utils/errorMsgs"

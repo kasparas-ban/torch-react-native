@@ -1,11 +1,11 @@
 import React, { useState } from "react"
 import Colors from "@/constants/Colors"
-import { useSignIn } from "@/library/clerk"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
 import { Keyboard, StyleSheet, Text, View } from "react-native"
 import { z } from "zod"
+import { useSignIn } from "@/lib/clerk"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 
 import { notify } from "../notifications/Notifications"

@@ -1,11 +1,11 @@
 import { useMemo } from "react"
-import useUserInfo from "@/api-endpoints/hooks/user/useUser"
 import Colors from "@/constants/Colors"
-import { useAuth, useUser } from "@/library/clerk"
 import dayjs from "dayjs"
 import { Image, ImageStyle } from "expo-image"
 import { useRouter } from "expo-router"
 import { StyleSheet, Text, View } from "react-native"
+import { useAuth, useUser } from "@/lib/clerk"
+import useUserInfo from "@/api/hooks/user/useUser"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import {
   capitalize,

@@ -15,7 +15,7 @@ function hideWarnings() {
     const warn = console.warn
     console.warn = (...arg) => {
       for (const warning of ignoreWarns) {
-        if (arg[0].startsWith(warning)) {
+        if (arg[0]?.startsWith(warning)) {
           return
         }
       }

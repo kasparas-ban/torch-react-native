@@ -1,5 +1,4 @@
 import React, { Fragment, useCallback, useEffect } from "react"
-import { findItemByID } from "@/api-endpoints/utils/helpers"
 import RotateIcon from "@/assets/icons/rotate.svg"
 import Colors from "@/constants/Colors"
 import useItems from "@/stores/itemStore"
@@ -13,6 +12,7 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated"
 import { GeneralItem, Task } from "@/types/itemTypes"
+import { findItemByID } from "@/api/utils/helpers"
 import useEditItem from "@/components/itemModal/hooks/useEditItem"
 
 import { ItemStrip, RecurringItemStrip } from "./ItemStrip"

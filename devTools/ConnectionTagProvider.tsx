@@ -1,8 +1,8 @@
 import { ReactNode } from "react"
 import Colors from "@/constants/Colors"
 import { StyleSheet, Text } from "react-native"
+import { AnimatedButton } from "@/components/AnimatedButton"
 
-import { AnimatedButton } from "../AnimatedButton"
 import useDev from "./useDev"
 
 export default function ConnectionTagProvider({

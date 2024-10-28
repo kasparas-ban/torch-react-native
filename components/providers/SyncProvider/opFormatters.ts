@@ -1,6 +1,6 @@
-import { DeleteItemData } from "@/api-endpoints/endpoints/itemAPITypes"
 import { ItemResponse } from "@/types/itemTypes"
 import { ProfileResp } from "@/types/userTypes"
+import { DeleteItemData } from "@/api/endpoints/itemAPITypes"
 
 import { DeleteOp, FieldDiff, InsertOp, UpdateOp } from "./opTypes"
 

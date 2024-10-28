@@ -1,11 +1,11 @@
 import { useEffect } from "react"
-import { getAllItems } from "@/api-endpoints/endpoints/itemsAPI"
-import { getUserInfo } from "@/api-endpoints/endpoints/userAPI"
-import { useAuth } from "@/library/clerk"
+import useDev from "@/devTools/useDev"
 import useItems from "@/stores/itemStore"
 import useUserInfo from "@/stores/userStore"
 import useWs from "@/stores/websocketStore"
-import useDev from "@/components/devTools/useDev"
+import { useAuth } from "@/lib/clerk"
+import { getAllItems } from "@/api/endpoints/itemsAPI"
+import { getUserInfo } from "@/api/endpoints/userAPI"
 
 import {
   getDeleteOps,

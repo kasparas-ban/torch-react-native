@@ -1,7 +1,6 @@
 import { ReactNode } from "react"
 import { FadeIn, FadeOut } from "@/constants/Animations"
 import Colors from "@/constants/Colors"
-import { useAuth } from "@/library/clerk"
 import {
   BottomTabBarProps,
   BottomTabHeaderProps,
@@ -13,6 +12,7 @@ import { LinearGradient } from "expo-linear-gradient"
 import { Link } from "expo-router"
 import { Pressable, Text, useColorScheme, View } from "react-native"
 import Animated from "react-native-reanimated"
+import { useAuth } from "@/lib/clerk"
 
 import AccountIcon from "../../assets/icons/navigationIcons/account.svg"
 import GoalsIcon from "../../assets/icons/navigationIcons/goals.svg"

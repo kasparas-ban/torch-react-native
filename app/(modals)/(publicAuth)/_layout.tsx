@@ -1,5 +1,5 @@
-import { useAuth } from "@/library/clerk"
 import { Redirect, Stack } from "expo-router"
+import { useAuth } from "@/lib/clerk"
 
 export default function PublicAuthLayout() {
   const { isSignedIn } = useAuth()

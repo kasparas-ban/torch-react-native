@@ -1,3 +1,7 @@
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { create } from "zustand"
+import { createJSONStorage, persist } from "zustand/middleware"
+import { ItemResponse, ItemStatus } from "@/types/itemTypes"
 import {
   DeleteItemData,
   DeleteItemReq,
@@ -5,12 +9,8 @@ import {
   FormattedUpdateItemType,
   UpdateItemProgressReq,
   UpdateItemStatusReq,
-} from "@/api-endpoints/endpoints/itemAPITypes"
-import { formatItemResponse } from "@/api-endpoints/utils/responseFormatters"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { create } from "zustand"
-import { createJSONStorage, persist } from "zustand/middleware"
-import { ItemResponse, ItemStatus } from "@/types/itemTypes"
+} from "@/api/endpoints/itemAPITypes"
+import { formatItemResponse } from "@/api/utils/responseFormatters"
 import { removeElsFromArray } from "@/utils/utils"
 import useItemsSync from "@/components/providers/SyncProvider/useItemsSync"
 

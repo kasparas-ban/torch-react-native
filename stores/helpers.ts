@@ -1,8 +1,5 @@
-import {
-  AddNewItemType,
-  DeleteItemData,
-} from "@/api-endpoints/endpoints/itemAPITypes"
 import { Dream, Goal, ItemResponse, Task } from "@/types/itemTypes"
+import { AddNewItemType, DeleteItemData } from "@/api/endpoints/itemAPITypes"
 import { getRandomId } from "@/utils/randomId"
 import {
   NewDreamType,
