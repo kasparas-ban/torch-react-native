@@ -1,3 +1,5 @@
+import "@/components/devTools/hideWarnings"
+
 import { useEffect } from "react"
 import { DarkTheme } from "@/constants/Themes"
 import NotificationProvider from "@/notifications/NotificationProvider"
