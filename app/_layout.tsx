@@ -1,6 +1,7 @@
 import "@/devTools/hideWarnings"
 
 import { useEffect } from "react"
+import Colors from "@/constants/Colors"
 import { DarkTheme } from "@/constants/Themes"
 import ConnectionTagProvider from "@/devTools/ConnectionTagProvider"
 import NotificationProvider from "@/notifications/NotificationProvider"
@@ -9,6 +10,7 @@ import { DefaultTheme, ThemeProvider } from "@react-navigation/native"
 import { useFonts } from "expo-font"
 import { Stack } from "expo-router"
 import * as SplashScreen from "expo-splash-screen"
+import * as SystemUI from "expo-system-ui"
 import { useColorScheme } from "react-native"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { NotifierWrapper } from "react-native-notifier"
@@ -32,6 +34,7 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
+  const colorScheme = useColorScheme()
   const [loaded, error] = useFonts({
     Gabarito: require("../assets/fonts/Gabarito-VariableFont_wght.ttf"),
     GabaritoSemibold: require("../assets/fonts/Gabarito-SemiBold.ttf"),
@@ -46,6 +49,12 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) SplashScreen.hideAsync()
   }, [loaded])
+
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync(
+      colorScheme === "dark" ? Colors.gray[900] : Colors.light.background
+    )
+  }, [])
 
   if (!loaded) {
     return null

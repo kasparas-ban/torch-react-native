@@ -161,7 +161,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     emptyLabel: {
       textAlign: "center",
       fontSize: 16,
-      color: Colors.gray[500],
+      color: isDark ? Colors.gray[300] : Colors.gray[500],
     },
     addNewLabel: {
       color: isDark ? Colors.gray[200] : Colors.gray[600],
