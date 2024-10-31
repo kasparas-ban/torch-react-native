@@ -9,8 +9,12 @@ const CLERK_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY
 const tokenCache = {
   async getToken(key: string) {
     try {
-      return SecureStore.getItemAsync(key)
-    } catch (err) {
+      const item = await SecureStore.getItemAsync(key)
+      if (!item) await SecureStore.deleteItemAsync(key)
+      return item
+    } catch (error) {
+      console.error("SecureStore get item error: ", error)
+      await SecureStore.deleteItemAsync(key)
       return null
     }
   },

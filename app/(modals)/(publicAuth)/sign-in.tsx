@@ -6,7 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "expo-router"
 import { ErrorBoundary, FallbackProps } from "react-error-boundary"
 import { Controller, useForm } from "react-hook-form"
-import { Keyboard, StyleSheet, Text, View } from "react-native"
+import {
+  ActivityIndicator,
+  Keyboard,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native"
 import { z } from "zod"
 import { useSignIn } from "@/lib/clerk"
 import InternalError, { isInternalError } from "@/lib/InternalError"
@@ -52,7 +58,7 @@ function SignInError({ error, resetErrorBoundary }: FallbackProps) {
   const err = isInternalError(error) ? error : undefined
   const { styles } = useThemeStyles(componentStyles)
   const { isOnline } = useDev()
-  const { signIn } = useSignIn()
+  const { signIn, setActive } = useSignIn()
 
   useEffect(() => {
     if (isOnline && signIn) resetErrorBoundary()
@@ -74,19 +80,31 @@ function SignInError({ error, resetErrorBoundary }: FallbackProps) {
   )
 }
 
+function SignInLoading() {
+  const { styles } = useThemeStyles(componentStyles)
+
+  return (
+    <View
+      style={{
+        height: "70%",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "row",
+        gap: 10,
+      }}
+    >
+      <ActivityIndicator color={Colors.gray[50]} />
+      <Text style={styles.errorTitle}>Loading...</Text>
+    </View>
+  )
+}
+
 function SignInForm() {
   const router = useRouter()
-  const { signIn, setActive } = useSignIn()
+  const { signIn, isLoaded, setActive } = useSignIn()
   const { styles } = useThemeStyles(componentStyles)
   const [isLoading, setIsLoading] = useState(false)
   const { isOnline } = useDev()
-
-  if (!isOnline) {
-    throw new InternalError({
-      title: "No internet connection",
-      description: "Go online to sign in",
-    })
-  }
 
   if (!signIn) {
     throw new InternalError({
@@ -105,6 +123,7 @@ function SignInForm() {
 
     try {
       setIsLoading(true)
+
       const completeSignIn = await signIn.create({
         strategy: "password",
         identifier: data.email,
@@ -112,19 +131,43 @@ function SignInForm() {
       })
 
       // Attempt to get user info from the DB
-
-      // TODO: attempt to get user information from the DB.
       // If the user does not exist create it!
 
       await setActive({ session: completeSignIn.createdSessionId })
       router.replace("/(tabs)/timer")
       notify({ title: "Login successful!" })
     } catch (err) {
-      notify({ title: "Incorrect username or password", type: "ERROR" })
+      if (isInternalError(err)) {
+        notify({
+          title: err.title,
+          description: err.description,
+          type: "ERROR",
+        })
+      } else {
+        notify({ title: "Incorrect username or password", type: "ERROR" })
+      }
     } finally {
       setIsLoading(false)
     }
   }
+
+  if (!isLoaded) return <SignInLoading />
+
+  if (!isOnline)
+    return (
+      <View
+        style={{
+          height: "70%",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 10,
+        }}
+      >
+        <AlertIcon color={Colors.gray[50]} style={styles.errorIcon} />
+        <Text style={styles.errorTitle}>No internet connection</Text>
+        <Text style={styles.errorDescription}>Go online to sign in</Text>
+      </View>
+    )
 
   return (
     <>

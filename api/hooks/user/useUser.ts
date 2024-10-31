@@ -44,33 +44,6 @@ export const useUpdateUser = () => {
   })
 }
 
-// export const useUpdateUserTime = () => {
-//   const { getToken } = useAuth()
-//   const queryClient = useQueryClient()
-
-//   const fetcher = async (time_spent: number) => {
-//     try {
-//       const token = await getToken()
-//       if (!token) throw new Error("Token not found")
-//       const updatedUser = await updateUserTime(token, { time_spent })
-
-//       return updatedUser
-//     } catch (err) {
-//       throw new CustomError(err as string, {
-//         title: "Failed to update focus time",
-//         description: "Your last focus time will not be saved.",
-//       })
-//     }
-//   }
-
-//   return useMutation({
-//     mutationFn: fetcher,
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ["user"] })
-//     },
-//   })
-// }
-
 export default function useUserInfo() {
   const { getToken } = useAuth()
 
