@@ -4,7 +4,8 @@ import dayjs from "dayjs"
 import { Image, ImageStyle } from "expo-image"
 import { useRouter } from "expo-router"
 import { StyleSheet, Text, View } from "react-native"
-import { useAuth, useUser } from "@/lib/clerk"
+import { useUser } from "@/lib/clerk"
+import { useCustomAuth } from "@/lib/useCustomAuth"
 import useUserInfo from "@/api/hooks/user/useUser"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import {
@@ -27,8 +28,7 @@ import UserIcon from "../../assets/icons/userCircle.svg"
 export default function AccountScreen() {
   const { styles, isDark } = useThemeStyles(componentStyles)
   const { showGlobalLoading, hideGlobalLoading } = useGlobalLoading()
-
-  const { signOut, sessionId } = useAuth()
+  const { signOut } = useCustomAuth()
 
   const router = useRouter()
   const { user } = useUser()
@@ -46,9 +46,7 @@ export default function AccountScreen() {
   const handleLogout = async () => {
     showGlobalLoading("Logging out...")
     try {
-      if (!sessionId) throw new Error("Logout failed")
-
-      await signOut({ sessionId })
+      await signOut()
       queryClient.invalidateQueries({ queryKey: ["user"] })
       router.replace("/(tabs)/timer")
       notify({ title: "You've been logged out" })

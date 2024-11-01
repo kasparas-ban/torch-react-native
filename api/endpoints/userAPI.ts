@@ -16,6 +16,28 @@ export const addUser = (token: string, user: AddUserReq) =>
     body: JSON.stringify(user),
   }).then(res => res.json() as Promise<ProfileResp>)
 
+export const confirmSignIn = async (
+  token: string,
+  data: {
+    clerkId: string
+    email: string
+  }
+) => {
+  return fetch(`${HOST}/confirm-sign-in`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify(data),
+  }).then(async res => {
+    if (res.status !== 204) {
+      const data = await res.json()
+      throw Error(data.error)
+    }
+  })
+}
+
 export const registerUser = (user: SignUpUserData) =>
   fetch(`${HOST}/register-user`, {
     method: "POST",

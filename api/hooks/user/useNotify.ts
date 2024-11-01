@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query"
-import { useAuth } from "@/lib/clerk"
+import { useCustomAuth } from "@/lib/useCustomAuth"
 
 import { notifyUser } from "../../endpoints/userAPI"
 import { CustomError, NotifyFetchErrorMsg } from "../../utils/errorMsgs"
 
 export const useNotify = () => {
-  const { getToken } = useAuth()
+  const { getToken } = useCustomAuth()
 
   const fetcher = async (email: string) => {
     try {

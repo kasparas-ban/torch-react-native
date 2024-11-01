@@ -6,7 +6,7 @@ import useWs from "@/stores/websocketStore"
 import { Platform } from "react-native"
 import { ItemResponse } from "@/types/itemTypes"
 import { ProfileResp } from "@/types/userTypes"
-import { useAuth } from "@/lib/clerk"
+import { useCustomAuth } from "@/lib/useCustomAuth"
 import { FormattedUpdateItemType } from "@/api/endpoints/itemAPITypes"
 import { BE_HOST } from "@/api/utils/apiConfig"
 import { getRandomId } from "@/utils/randomId"
@@ -26,7 +26,7 @@ export default function SyncProvider({ children }: { children: ReactNode }) {
 
   const { isOnline } = useDev()
   const { setWs } = useWs()
-  const { getToken, isSignedIn } = useAuth()
+  const { getToken, isSignedIn } = useCustomAuth()
 
   useEffect(() => {
     if (!isOnline || !isSignedIn) {

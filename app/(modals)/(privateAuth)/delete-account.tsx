@@ -6,7 +6,7 @@ import { router } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
 import { Keyboard, StyleSheet, Text, View } from "react-native"
 import { z } from "zod"
-import { useAuth } from "@/lib/clerk"
+import { useCustomAuth } from "@/lib/useCustomAuth"
 import { deleteAccount } from "@/api/endpoints/userAPI"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { notify } from "@/components/notifications/Notifications"
@@ -24,7 +24,7 @@ const getDeleteAccountFormSchema = (username: string) =>
 export default function DeleteAccountScreen() {
   const { styles } = useThemeStyles(componentStyles)
 
-  const { getToken, signOut } = useAuth()
+  const { getToken, signOut } = useCustomAuth()
   const { user } = useUserInfo()
   const [isLoading, setIsLoading] = useState(false)
 

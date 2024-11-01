@@ -8,7 +8,7 @@ import {
   useColorScheme,
   View,
 } from "react-native"
-import { useAuth } from "@/lib/clerk"
+import { useCustomAuth } from "@/lib/useCustomAuth"
 
 import { AnimatedButton } from "./AnimatedButton"
 
@@ -16,7 +16,7 @@ export function ComingSoon() {
   const colorScheme = useColorScheme()
   const isDark = colorScheme === "dark"
 
-  const { isSignedIn } = useAuth()
+  const { isSignedIn } = useCustomAuth()
 
   return (
     <View style={styles.container}>

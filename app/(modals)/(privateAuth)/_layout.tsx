@@ -1,8 +1,8 @@
 import { Redirect, Stack } from "expo-router"
-import { useAuth } from "@/lib/clerk"
+import { useCustomAuth } from "@/lib/useCustomAuth"
 
 export default function PrivateAuthLayout() {
-  const { isSignedIn } = useAuth()
+  const { isSignedIn } = useCustomAuth()
 
   if (!isSignedIn) return <Redirect href="/(modals)/(publicAuth)/sign-in" />
 

@@ -7,7 +7,8 @@ import { router } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
 import { StyleSheet, Text, View } from "react-native"
 import { z } from "zod"
-import { useAuth, useUser } from "@/lib/clerk"
+import { useUser } from "@/lib/clerk"
+import { useCustomAuth } from "@/lib/useCustomAuth"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import useKeyboard from "@/utils/useKeyboard"
 import { notify } from "@/components/notifications/Notifications"
@@ -47,7 +48,7 @@ export default function ChangePasswordScreen() {
 
   const { user } = useUser()
   const queryClient = useQueryClient()
-  const { signOut, sessionId } = useAuth()
+  const { signOut } = useCustomAuth()
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<PasswordFormType>({
@@ -64,14 +65,14 @@ export default function ChangePasswordScreen() {
     setIsLoading(true)
 
     try {
-      if (!user || !sessionId) throw new Error("User not found")
+      if (!user) throw new Error("User not found")
 
       await user.updatePassword({
         newPassword: data.newPassword,
         currentPassword: data.currentPassword,
         signOutOfOtherSessions: true,
       })
-      await signOut({ sessionId })
+      await signOut()
       queryClient.invalidateQueries({ queryKey: ["user"] })
 
       router.back()

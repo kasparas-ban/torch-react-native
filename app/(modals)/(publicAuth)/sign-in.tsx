@@ -3,7 +3,6 @@ import AlertIcon from "@/assets/icons/exclamationCircle.svg"
 import Colors from "@/constants/Colors"
 import useDev from "@/devTools/useDev"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useRouter } from "expo-router"
 import { ErrorBoundary, FallbackProps } from "react-error-boundary"
 import { Controller, useForm } from "react-hook-form"
 import {
@@ -16,6 +15,7 @@ import {
 import { z } from "zod"
 import { useSignIn } from "@/lib/clerk"
 import InternalError, { isInternalError } from "@/lib/InternalError"
+import { useClerkSignIn } from "@/lib/useCustomAuth"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { notify } from "@/components/notifications/Notifications"
 import PasswordInput from "@/components/PasswordInput"
@@ -58,7 +58,7 @@ function SignInError({ error, resetErrorBoundary }: FallbackProps) {
   const err = isInternalError(error) ? error : undefined
   const { styles } = useThemeStyles(componentStyles)
   const { isOnline } = useDev()
-  const { signIn, setActive } = useSignIn()
+  const { signIn } = useSignIn()
 
   useEffect(() => {
     if (isOnline && signIn) resetErrorBoundary()
@@ -100,8 +100,7 @@ function SignInLoading() {
 }
 
 function SignInForm() {
-  const router = useRouter()
-  const { signIn, isLoaded, setActive } = useSignIn()
+  const { signIn, isLoaded } = useClerkSignIn()
   const { styles } = useThemeStyles(componentStyles)
   const [isLoading, setIsLoading] = useState(false)
   const { isOnline } = useDev()
@@ -123,29 +122,17 @@ function SignInForm() {
 
     try {
       setIsLoading(true)
-
-      const completeSignIn = await signIn.create({
-        strategy: "password",
-        identifier: data.email,
+      await signIn({
+        email: data.email,
         password: data.password,
       })
-
-      // Attempt to get user info from the DB
-      // If the user does not exist create it!
-
-      await setActive({ session: completeSignIn.createdSessionId })
-      router.replace("/(tabs)/timer")
-      notify({ title: "Login successful!" })
     } catch (err) {
-      if (isInternalError(err)) {
-        notify({
-          title: err.title,
-          description: err.description,
-          type: "ERROR",
-        })
-      } else {
-        notify({ title: "Incorrect username or password", type: "ERROR" })
-      }
+      const error = isInternalError(err) ? err : undefined
+      notify({
+        title: error?.title || "Incorrect username or password",
+        description: error?.description || undefined,
+        type: "ERROR",
+      })
     } finally {
       setIsLoading(false)
     }

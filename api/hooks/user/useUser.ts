@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { SignUpUserData, UpdateProfileReq } from "@/types/userTypes"
-import { useAuth } from "@/lib/clerk"
+import { useCustomAuth } from "@/lib/useCustomAuth"
 import { getUserInfo, registerUser } from "@/api/endpoints/userAPI"
 
 import { updateUser } from "../../endpoints/userAPI"
@@ -25,7 +25,7 @@ export const useRegisterUser = () => {
 }
 
 export const useUpdateUser = () => {
-  const { getToken } = useAuth()
+  const { getToken } = useCustomAuth()
   const queryClient = useQueryClient()
 
   const fetcher = async (data: UpdateProfileReq) => {
@@ -45,7 +45,7 @@ export const useUpdateUser = () => {
 }
 
 export default function useUserInfo() {
-  const { getToken } = useAuth()
+  const { getToken } = useCustomAuth()
 
   const fetchUserInfo = async () => {
     const token = await getToken()
@@ -59,6 +59,5 @@ export default function useUserInfo() {
   return useQuery({
     queryKey: ["user"],
     queryFn: fetchUserInfo,
-    // staleTime: Infinity,
   })
 }

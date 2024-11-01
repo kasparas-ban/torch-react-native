@@ -1,8 +1,8 @@
 import { Redirect, Stack } from "expo-router"
-import { useAuth } from "@/lib/clerk"
+import { useCustomAuth } from "@/lib/useCustomAuth"
 
 export default function PublicAuthLayout() {
-  const { isSignedIn } = useAuth()
+  const { isSignedIn } = useCustomAuth()
 
   if (isSignedIn) return <Redirect href="/(tabs)/account" />
 
