@@ -48,12 +48,14 @@ export default function useUserInfo() {
   const { getToken } = useCustomAuth()
 
   const fetchUserInfo = async () => {
-    const token = await getToken()
-    if (token) {
+    try {
+      const token = await getToken()
+      if (!token) throw Error("Failed to get user info")
       const userInfo = await getUserInfo(token)
       return userInfo
+    } catch (e) {
+      throw Error("Failed to get user info")
     }
-    throw Error("Failed to get user info")
   }
 
   return useQuery({

@@ -4,7 +4,7 @@ import { useAuth, useSignIn, useUser } from "@/lib/clerk"
 import { confirmSignIn } from "@/api/endpoints/userAPI"
 import { notify } from "@/components/notifications/Notifications"
 
-import InternalError, { isInternalError } from "./InternalError"
+import InternalError from "./InternalError"
 
 type State = {
   isSignInConfirmed: boolean
@@ -45,20 +45,27 @@ export const useClerkSignIn = () => {
       })
     }
 
-    const signInAttempt = await clerkSignIn.create({
-      strategy: "password",
-      identifier: email,
-      password: password,
-    })
+    try {
+      const signInAttempt = await clerkSignIn.create({
+        strategy: "password",
+        identifier: email,
+        password: password,
+      })
 
-    if (!signInAttempt.id || signInAttempt.status !== "complete") {
+      if (!signInAttempt.id || signInAttempt.status !== "complete") {
+        throw new InternalError({
+          title: "Sign in failed",
+          description: "Try logging in later",
+        })
+      }
+
+      await setActive({ session: signInAttempt.createdSessionId })
+    } catch (e) {
       throw new InternalError({
-        title: "Sign in failed",
-        description: "Try logging in later",
+        title: "Server connection failed",
+        description: "Make sure internet connection is available and try again",
       })
     }
-
-    await setActive({ session: signInAttempt.createdSessionId })
   }
 
   useEffect(() => {
@@ -92,10 +99,9 @@ export const useClerkSignIn = () => {
         setIsSignedInConfirmed(true)
         signInComplete = true
       } catch (e) {
-        const error = isInternalError(e) ? e : undefined
         notify({
-          title: error?.title || "Internal error",
-          description: error?.description || "Sign in failed",
+          title: "Internal error",
+          description: "Sign in failed",
         })
         await signOut()
       } finally {

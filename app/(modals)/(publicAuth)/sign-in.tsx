@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import AlertIcon from "@/assets/icons/exclamationCircle.svg"
 import Colors from "@/constants/Colors"
 import useDev from "@/devTools/useDev"
@@ -100,9 +100,8 @@ function SignInLoading() {
 }
 
 function SignInForm() {
-  const { signIn, isLoaded } = useClerkSignIn()
+  const { signIn, isLoaded, isLoading } = useClerkSignIn()
   const { styles } = useThemeStyles(componentStyles)
-  const [isLoading, setIsLoading] = useState(false)
   const { isOnline } = useDev()
 
   if (!signIn) {
@@ -121,20 +120,18 @@ function SignInForm() {
     Keyboard.dismiss()
 
     try {
-      setIsLoading(true)
       await signIn({
         email: data.email,
         password: data.password,
       })
     } catch (err) {
+      console.log("THIS IS AN ERROR", err)
       const error = isInternalError(err) ? err : undefined
       notify({
         title: error?.title || "Incorrect username or password",
         description: error?.description || undefined,
         type: "ERROR",
       })
-    } finally {
-      setIsLoading(false)
     }
   }
 
