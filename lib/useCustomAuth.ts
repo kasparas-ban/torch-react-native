@@ -39,6 +39,7 @@ export const useClerkSignIn = () => {
     setIsSignInLoading(true)
 
     if (!clerkSignIn) {
+      setIsSignInLoading(false)
       throw new InternalError({
         title: "Server connection failed",
         description: "Make sure internet connection is available and try again",
@@ -61,10 +62,9 @@ export const useClerkSignIn = () => {
 
       await setActive({ session: signInAttempt.createdSessionId })
     } catch (e) {
-      throw new InternalError({
-        title: "Server connection failed",
-        description: "Make sure internet connection is available and try again",
-      })
+      throw new InternalError({ title: "Incorrect username or password" })
+    } finally {
+      setIsSignInLoading(false)
     }
   }
 
