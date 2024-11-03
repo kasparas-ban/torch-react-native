@@ -125,7 +125,6 @@ function SignInForm() {
         password: data.password,
       })
     } catch (err) {
-      console.log("THIS IS AN ERROR", err)
       const error = isInternalError(err) ? err : undefined
       notify({
         title: error?.title || "Incorrect username or password",

@@ -13,8 +13,8 @@ export const useRegisterUser = () => {
     } catch (err: any) {
       throw new CustomError(err, {
         title: "Registration failed",
-        description: err.data.error,
-        field: err.data.field.param_name,
+        description: err.data?.error,
+        field: err.data?.field.param_name,
       })
     }
   }

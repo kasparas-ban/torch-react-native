@@ -79,8 +79,7 @@ export const deleteAccount = (token: string) =>
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   }).then(async res => {
-    const data = await res.json()
-    if (!res.ok) throw new Error(data.error)
+    if (!res.ok) throw new Error("Failed to delete the account")
   })
 
 export const notifyUser = (token: string, email: string) =>

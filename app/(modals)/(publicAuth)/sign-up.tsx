@@ -113,8 +113,8 @@ export default function SignUpModal() {
         : (e.data as CustomErrorData)
 
       notify({
-        title: errorData?.title || "",
-        description: errorData?.description || "",
+        title: errorData?.title || "Sign up failed",
+        description: errorData?.description || "Try registering later",
         type: "ERROR",
         duration: 5000,
       })
@@ -426,7 +426,6 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       flex: 1,
       justifyContent: "flex-start",
       alignItems: "center",
-      paddingHorizontal: 24,
       maxWidth: 400,
       width: "100%",
     },

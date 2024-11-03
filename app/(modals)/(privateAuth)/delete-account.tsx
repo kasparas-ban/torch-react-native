@@ -22,7 +22,7 @@ const getDeleteAccountFormSchema = (username: string) =>
   })
 
 export default function DeleteAccountScreen() {
-  const { styles } = useThemeStyles(componentStyles)
+  const { styles, isDark } = useThemeStyles(componentStyles)
 
   const { getToken, signOut } = useCustomAuth()
   const { user } = useUserInfo()
@@ -50,12 +50,13 @@ export default function DeleteAccountScreen() {
         router.push("/")
         notify({ title: "Account deleted successfully" })
       })
-      .catch(() =>
+      .catch(() => {
         notify({
           title: "Failed to delete your account",
           description: "Unexpected error has occured.",
+          type: "ERROR",
         })
-      )
+      })
       .finally(() => setIsLoading(false))
   }
 
@@ -77,11 +78,16 @@ export default function DeleteAccountScreen() {
           style={{
             textAlign: "center",
             marginBottom: 12,
-            color: Colors.gray[600],
+            color: isDark ? Colors.gray[300] : Colors.gray[600],
           }}
         >
           This action{" "}
-          <Text style={{ fontWeight: "700", color: Colors.gray[800] }}>
+          <Text
+            style={{
+              fontWeight: "700",
+              color: isDark ? Colors.gray[100] : Colors.gray[800],
+            }}
+          >
             cannot
           </Text>{" "}
           be undone. This will permanently delete your account and all
@@ -91,12 +97,17 @@ export default function DeleteAccountScreen() {
         <Text
           style={{
             textAlign: "center",
-            color: Colors.gray[600],
+            color: isDark ? Colors.gray[300] : Colors.gray[600],
             marginBottom: 18,
           }}
         >
           Please type{" "}
-          <Text style={{ fontWeight: "700", color: Colors.gray[800] }}>
+          <Text
+            style={{
+              fontWeight: "700",
+              color: isDark ? Colors.gray[100] : Colors.gray[800],
+            }}
+          >
             {defaultCheckText}
           </Text>{" "}
           to confirm.

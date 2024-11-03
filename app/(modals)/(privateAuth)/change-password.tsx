@@ -182,7 +182,7 @@ export default function ChangePasswordScreen() {
           )}
         />
 
-        {!isKeyboardOpen && (
+        {isKeyboardOpen && (
           <View
             style={{
               position: "absolute",
@@ -230,6 +230,6 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     },
     infoText: {
       fontWeight: "500",
-      color: Colors.gray[600],
+      color: isDark ? Colors.gray[300] : Colors.gray[600],
     },
   })

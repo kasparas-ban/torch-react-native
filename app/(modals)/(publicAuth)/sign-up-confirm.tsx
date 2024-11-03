@@ -130,12 +130,13 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       textAlign: "center",
     },
     infoText: {
-      color: Colors.gray[700],
+      color: isDark ? Colors.gray[300] : Colors.gray[700],
       width: "100%",
       textAlign: "center",
       lineHeight: 24,
     },
     emailText: {
       fontWeight: "700",
+      color: isDark ? Colors.gray[100] : Colors.gray[700],
     },
   })

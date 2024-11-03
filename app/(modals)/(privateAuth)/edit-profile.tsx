@@ -343,7 +343,6 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       flex: 1,
       justifyContent: "flex-start",
       alignItems: "center",
-      paddingHorizontal: 24,
       maxWidth: 400,
       width: "100%",
     },

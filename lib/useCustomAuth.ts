@@ -62,9 +62,8 @@ export const useClerkSignIn = () => {
 
       await setActive({ session: signInAttempt.createdSessionId })
     } catch (e) {
-      throw new InternalError({ title: "Incorrect username or password" })
-    } finally {
       setIsSignInLoading(false)
+      throw new InternalError({ title: "Incorrect username or password" })
     }
   }
 
