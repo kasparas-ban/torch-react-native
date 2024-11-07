@@ -1,32 +1,46 @@
-import { useEffect, useMemo, useState } from "react"
-import { create } from "zustand"
+import { useEffect, useState } from "react"
 import { useAuth, useSignIn, useUser } from "@/lib/clerk"
 import { confirmSignIn } from "@/api/endpoints/userAPI"
+import useUserInfo from "@/api/hooks/user/useUser"
 import { notify } from "@/components/notifications/Notifications"
 
 import InternalError from "./InternalError"
 
-type State = {
-  isSignInConfirmed: boolean
-  setIsSignInConfirmed: (val: boolean) => void
+let isSignInConfirmed = false
+
+export function useCustomAuth() {
+  const isUserSignedIn = useIsUserSignedIn()
+
+  const defaultAuth = useAuth()
+  const signedOutAuth = {
+    isLoaded: defaultAuth.isLoaded,
+    isSignedIn: false,
+    userId: undefined,
+    sessionId: undefined,
+    actor: undefined,
+    orgId: undefined,
+    orgRole: undefined,
+    orgSlug: undefined,
+    has: undefined,
+    signOut: async (_?: { sessionId?: string; redirectUrl?: string }) => {},
+    getToken: async () => {},
+  }
+
+  return isUserSignedIn ? defaultAuth : signedOutAuth
 }
 
-export const authStore = create<State>(set => ({
-  isSignInConfirmed: false,
-  setIsSignInConfirmed: (val: boolean) =>
-    set(() => ({
-      isSignInConfirmed: val,
-    })),
-}))
+function useIsUserSignedIn() {
+  const { data: user } = useUserInfo()
+  const { isSignedIn } = useAuth()
 
-let signInComplete = false
+  return user ? isSignedIn : false
+}
 
-export const useClerkSignIn = () => {
-  const { user } = useUser()
+export function useClerkSignIn() {
+  const { user: clerkUser } = useUser()
+  const { refetch } = useUserInfo()
   const { getToken, signOut } = useAuth()
   const { signIn: clerkSignIn, isLoaded, setActive } = useSignIn()
-  const isSignInConfirmed = authStore(state => state.isSignInConfirmed)
-  const setIsSignedInConfirmed = authStore(state => state.setIsSignInConfirmed)
   const [isSignInLoading, setIsSignInLoading] = useState(false)
 
   const signIn = async ({
@@ -62,20 +76,16 @@ export const useClerkSignIn = () => {
 
       await setActive({ session: signInAttempt.createdSessionId })
     } catch (e) {
+      await signOut()
       setIsSignInLoading(false)
       throw new InternalError({ title: "Incorrect username or password" })
     }
   }
 
   useEffect(() => {
-    if (
-      isSignInConfirmed ||
-      !user?.id ||
-      !user.primaryEmailAddress?.emailAddress ||
-      signInComplete
-    ) {
-      return
-    }
+    const isUserDataValid =
+      clerkUser?.id && clerkUser.primaryEmailAddress?.emailAddress
+    if (!isUserDataValid || isSignInConfirmed) return
 
     // User logged in successfully - attempt to get user info from the DB
     // If it does not exist - create it
@@ -92,15 +102,17 @@ export const useClerkSignIn = () => {
         }
 
         await confirmSignIn(token, {
-          clerkId: user.id,
-          email: user.primaryEmailAddress!.emailAddress,
+          clerkId: clerkUser!.id,
+          email: clerkUser!.primaryEmailAddress!.emailAddress,
         })
-        setIsSignedInConfirmed(true)
-        signInComplete = true
+
+        isSignInConfirmed = true
+        refetch()
       } catch (e) {
         notify({
           title: "Internal error",
-          description: "Sign in failed",
+          description: "Server could not confirm sign in",
+          type: "ERROR",
         })
         await signOut()
       } finally {
@@ -109,34 +121,7 @@ export const useClerkSignIn = () => {
     }
 
     confirmFn()
-  }, [user])
+  }, [clerkUser])
 
   return { signIn, isLoaded, isLoading: isSignInLoading }
-}
-
-export function useCustomAuth() {
-  const isSignInConfirmed = authStore(state => state.isSignInConfirmed)
-  const setIsSignedInConfirmed = authStore(state => state.setIsSignInConfirmed)
-  const defaultAuth = useAuth()
-  const handleSignOut = async () => {
-    setIsSignedInConfirmed(false)
-    signInComplete = false
-    try {
-      await defaultAuth.signOut({
-        sessionId: defaultAuth.sessionId || undefined,
-      })
-    } catch (e) {
-      throw new InternalError({
-        title: "Internal error",
-        description: "Failed to logout",
-      })
-    }
-  }
-
-  const memoAuth = useMemo(
-    () => ({ ...defaultAuth, signOut: handleSignOut }),
-    [isSignInConfirmed]
-  )
-
-  return defaultAuth.isSignedIn ? memoAuth : defaultAuth
 }

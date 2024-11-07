@@ -6,7 +6,7 @@ export const BE_HOST = `${
     : Platform.OS === "ios"
       ? process.env.EXPO_PUBLIC_BE_HOSTNAME_IOS
       : process.env.EXPO_PUBLIC_BE_HOSTNAME_WEB
-}:${process.env.EXPO_PUBLIC_BE_PORT}`
+}`
 
 export const HOST = `${process.env.EXPO_PUBLIC_BE_PROTOCOL}://${BE_HOST}`
 

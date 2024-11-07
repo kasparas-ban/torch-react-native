@@ -32,7 +32,9 @@ export const confirmSignIn = async (
     body: JSON.stringify(data),
   }).then(async res => {
     if (res.status !== 204) {
-      const data = await res.json()
+      const data = await res.json().catch(() => {
+        throw Error("Failed to read data message")
+      })
       throw Error(data.error)
     }
   })

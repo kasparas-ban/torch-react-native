@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { SignUpUserData, UpdateProfileReq } from "@/types/userTypes"
-import { useCustomAuth } from "@/lib/useCustomAuth"
+import { useAuth } from "@/lib/clerk"
 import { getUserInfo, registerUser } from "@/api/endpoints/userAPI"
 
 import { updateUser } from "../../endpoints/userAPI"
@@ -9,7 +9,8 @@ import { CustomError, UserUpdateServerErrorMsg } from "../../utils/errorMsgs"
 export const useRegisterUser = () => {
   const fetcher = async (data: SignUpUserData) => {
     try {
-      return await registerUser(data)
+      const user = await registerUser(data)
+      return user
     } catch (err: any) {
       throw new CustomError(err, {
         title: "Registration failed",
@@ -25,7 +26,7 @@ export const useRegisterUser = () => {
 }
 
 export const useUpdateUser = () => {
-  const { getToken } = useCustomAuth()
+  const { getToken } = useAuth()
   const queryClient = useQueryClient()
 
   const fetcher = async (data: UpdateProfileReq) => {
@@ -45,7 +46,7 @@ export const useUpdateUser = () => {
 }
 
 export default function useUserInfo() {
-  const { getToken } = useCustomAuth()
+  const { getToken } = useAuth()
 
   const fetchUserInfo = async () => {
     try {
