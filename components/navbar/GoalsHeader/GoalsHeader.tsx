@@ -17,6 +17,7 @@ import Animated, {
 } from "react-native-reanimated"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { capitalize, rgbToRGBA } from "@/utils/utils"
+import WebSocketStatusTag from "@/components/WebSocketStatusTag/WebSocketStatusTag"
 
 import { AnimatedButton } from "../../AnimatedButton"
 import useItemListConfig from "../../ItemList/hooks/useItemListConfig"
@@ -47,6 +48,7 @@ export default function GoalsHeader() {
         height: 112,
         paddingHorizontal: 24,
         justifyContent: "flex-end",
+        position: "relative",
       }}
     >
       <View
@@ -144,6 +146,10 @@ export default function GoalsHeader() {
       </View>
 
       <ListFilterSection showFilters={isFiltersOpen} />
+
+      <View style={{ position: "absolute", bottom: -28, right: 24 }}>
+        <WebSocketStatusTag />
+      </View>
     </View>
   )
 }

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Torch",
-    "slug": "timer-app",
+    "slug": "torch-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -15,7 +15,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.timerapp"
+      "bundleIdentifier": "com.anonymous.torchapp"
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +23,7 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": ["android.permission.FOREGROUND_SERVICE"],
-      "package": "com.anonymous.timerapp"
+      "package": "com.anonymous.torchapp"
     },
     "web": {
       "bundler": "metro",

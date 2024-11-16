@@ -10,7 +10,7 @@ type State = {
 }
 
 type Actions = {
-  setUser: (user: ProfileResp) => void
+  setUser: (user?: ProfileResp) => void
   updateUser: (user: Partial<ProfileResp>) => void
   updateUserTime: (time_spent: number) => void
   resetElapsedTime: () => void
@@ -21,7 +21,7 @@ const userStore = create<State & Actions>()(
     (set, get) => ({
       user: undefined,
       elapsedTime: 0,
-      setUser: (user: ProfileResp) => set(() => ({ user })),
+      setUser: (user?: ProfileResp) => set(() => ({ elapsedTime: 0, user })),
       updateUser: (user: Partial<ProfileResp>) =>
         set(state => {
           if (!state.user) return state

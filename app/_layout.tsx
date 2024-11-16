@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import Colors from "@/constants/Colors"
 import { DarkTheme } from "@/constants/Themes"
 import ConnectionTagProvider from "@/devTools/ConnectionTagProvider"
+import DevInfoTagProvider from "@/devTools/DevInfoTagProvider"
 import NotificationProvider from "@/notifications/NotificationProvider"
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native"
@@ -15,6 +16,7 @@ import { useColorScheme } from "react-native"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { NotifierWrapper } from "react-native-notifier"
 import GlobalLoadingScreen from "@/components/GlobalLoadingScreen/GlobalLoadingScreen"
+import AuthProvider from "@/components/providers/AuthProvider"
 import { ClerkProvider } from "@/components/providers/ClerkProvider"
 import QueryProvider from "@/components/providers/QueryProvider"
 import { StorageProvider } from "@/components/providers/StorageProvider"
@@ -65,21 +67,28 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme()
+
   return (
     <ClerkProvider>
       <QueryProvider>
-        <SyncProvider>
-          <ThemeProvider
-            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-          >
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <ConnectionTagProvider>
+        <AuthProvider>
+          <SyncProvider>
+            <ThemeProvider
+              value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+            >
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                {/* <DevInfoTagProvider> */}
+                {/* <ConnectionTagProvider> */}
                 <BottomSheetModalProvider>
                   <NotifierWrapper>
                     <NotificationProvider />
                     <StorageProvider />
                     <GlobalLoadingScreen>
-                      <Stack>
+                      <Stack initialRouteName="(start)/index">
+                        <Stack.Screen
+                          name="(start)/index"
+                          options={{ headerShown: false }}
+                        />
                         <Stack.Screen
                           name="(tabs)"
                           options={{ headerShown: false }}
@@ -146,10 +155,12 @@ function RootLayoutNav() {
                     </GlobalLoadingScreen>
                   </NotifierWrapper>
                 </BottomSheetModalProvider>
-              </ConnectionTagProvider>
-            </GestureHandlerRootView>
-          </ThemeProvider>
-        </SyncProvider>
+                {/* </ConnectionTagProvider> */}
+                {/* </DevInfoTagProvider> */}
+              </GestureHandlerRootView>
+            </ThemeProvider>
+          </SyncProvider>
+        </AuthProvider>
       </QueryProvider>
     </ClerkProvider>
   )
