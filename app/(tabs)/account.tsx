@@ -62,15 +62,15 @@ export default function AccountScreen() {
   }
 
   const handleEditProfile = () => {
-    router.push("/(modals)/edit-profile")
+    router.push("/(modals)/(privateAuth)/edit-profile")
   }
 
   const handlePasswordChange = () => {
-    router.push("/(modals)/change-password")
+    router.push("/(modals)/(privateAuth)/change-password")
   }
 
   const handleDeleteAccount = () => {
-    router.push("/(modals)/delete-account")
+    router.push("/(modals)/(privateAuth)/delete-account")
   }
 
   const country = useMemo(
