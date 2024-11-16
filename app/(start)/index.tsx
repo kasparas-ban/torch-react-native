@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useLayoutEffect } from "react"
 import Colors from "@/constants/Colors"
 import { Image } from "expo-image"
 import { router } from "expo-router"
@@ -21,7 +21,7 @@ const OFFSET = 60
 const INITIAL_DELAY = 1000
 
 export default function StartScreen() {
-  const { styles } = useThemeStyles(componentStyles)
+  const { styles, isDark } = useThemeStyles(componentStyles)
   const yPos1 = useSharedValue(OFFSET)
   const yPos2 = useSharedValue(OFFSET)
   const yPos3 = useSharedValue(OFFSET)
@@ -30,7 +30,7 @@ export default function StartScreen() {
 
   const animValue = useSharedValue(0)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     animValue.value = withDelay(
       0 * DELAY + INITIAL_DELAY,
       withTiming(1, { easing: Easing.out(Easing.cubic) })
@@ -101,27 +101,29 @@ export default function StartScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Animated.View
-        style={[
-          {
-            position: "absolute",
-            top: -120,
-            height: "100%",
-            width: "100%",
-          },
-          bloomAnimStyle,
-        ]}
-      >
-        <Image
-          source={require("@/assets/images/bloom_bg.png")}
-          style={{
-            height: "100%",
-            width: "100%",
-            marginHorizontal: "auto",
-            maxWidth: 500,
-          }}
-        />
-      </Animated.View>
+      {isDark && (
+        <Animated.View
+          style={[
+            {
+              position: "absolute",
+              top: -120,
+              height: "100%",
+              width: "100%",
+            },
+            bloomAnimStyle,
+          ]}
+        >
+          <Image
+            source={require("@/assets/images/bloom_bg.png")}
+            style={{
+              height: "100%",
+              width: "100%",
+              marginHorizontal: "auto",
+              maxWidth: 500,
+            }}
+          />
+        </Animated.View>
+      )}
       <Animated.View
         style={[
           { height: "100%", width: "100%", position: "absolute" },
@@ -153,35 +155,38 @@ export default function StartScreen() {
               width: "100%",
             }}
           >
-            <AnimatedButton
-              style={[styles.loginBtn, itemAnimStyles2]}
-              scale={0.97}
-              onPress={() => router.push("/(modals)/(publicAuth)/sign-in")}
-            >
-              <Text style={styles.loginTextBtn}>Login</Text>
-            </AnimatedButton>
+            <Animated.View style={itemAnimStyles2}>
+              <AnimatedButton
+                style={styles.loginBtn}
+                scale={0.97}
+                onPress={() => router.push("/(modals)/(publicAuth)/sign-in")}
+              >
+                <Text style={styles.loginTextBtn}>Login</Text>
+              </AnimatedButton>
+            </Animated.View>
 
-            <AnimatedButton
-              style={[styles.registerBtn, itemAnimStyles3]}
-              scale={0.97}
-              onPress={() => router.push("/(modals)/(publicAuth)/sign-up")}
-            >
-              <Text style={styles.registerTextBtn}>Register</Text>
-            </AnimatedButton>
+            <Animated.View style={itemAnimStyles3}>
+              <AnimatedButton
+                style={styles.registerBtn}
+                scale={0.97}
+                onPress={() => router.push("/(modals)/(publicAuth)/sign-up")}
+              >
+                <Text style={styles.registerTextBtn}>Register</Text>
+              </AnimatedButton>
+            </Animated.View>
           </View>
 
           <View style={{ alignItems: "center", gap: 4 }}>
             <Animated.Text style={[styles.orText, itemAnimStyles4]}>
               or
             </Animated.Text>
-            <AnimatedButton
-              scale={0.97}
-              style={[{ paddingVertical: 6 }, itemAnimStyles5]}
-            >
-              <Text style={styles.noAccountBtn}>
-                continue without an account
-              </Text>
-            </AnimatedButton>
+            <Animated.View style={itemAnimStyles5}>
+              <AnimatedButton scale={0.97} style={{ paddingVertical: 6 }}>
+                <Text style={styles.noAccountBtn}>
+                  continue without an account
+                </Text>
+              </AnimatedButton>
+            </Animated.View>
           </View>
         </View>
       </View>
