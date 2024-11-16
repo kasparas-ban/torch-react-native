@@ -3,6 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "forceConsistentCasingInFileNames": true,
+    "target": "es6",
+    "module": "esnext",
     "paths": {
       "@/*": ["./*"]
     }

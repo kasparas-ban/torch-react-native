@@ -1,9 +1,11 @@
 import { useLayoutEffect } from "react"
 import Colors from "@/constants/Colors"
 import { Image } from "expo-image"
+import { LinearGradient } from "expo-linear-gradient"
 import { router } from "expo-router"
+import { StatusBar } from "expo-status-bar"
 import LottieView from "lottie-react-native"
-import { Platform, StyleSheet, Text, View } from "react-native"
+import { StyleSheet, Text, View } from "react-native"
 import Animated, {
   Easing,
   interpolate,
@@ -101,6 +103,12 @@ export default function StartScreen() {
 
   return (
     <View style={{ flex: 1 }}>
+      <StatusBar style="light" />
+      {!isDark && (
+        <Animated.View style={bloomAnimStyle}>
+          <LightBackground />
+        </Animated.View>
+      )}
       {isDark && (
         <Animated.View
           style={[
@@ -132,18 +140,43 @@ export default function StartScreen() {
       >
         <BackgroundGradientView />
       </Animated.View>
+
+      {!isDark && (
+        <Animated.View
+          style={[
+            {
+              position: "absolute",
+              height: "100%",
+              width: "100%",
+              zIndex: -100,
+            },
+            bloomAnimStyle,
+          ]}
+        >
+          <Image
+            source={require("@/assets/images/lg_bg_gradient.png")}
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              left: 0,
+              bottom: 0,
+              opacity: 0.4,
+            }}
+          />
+        </Animated.View>
+      )}
+
       <View style={styles.pageWrapper}>
         <View style={styles.containerWrapper}>
-          {Platform.OS !== "web" && (
-            <LottieView
-              source={require("@/assets/lottie/onboarding.json")}
-              style={{ width: 380, height: 380 }}
-              loop={false}
-              autoPlay
-            />
-          )}
+          <LottieView
+            source={require("@/assets/lottie/onboarding.json")}
+            style={{ width: 380, height: 380 }}
+            loop={false}
+            autoPlay
+          />
           <Animated.Text style={[styles.loginLabel, itemAnimStyles1]}>
-            Login to save your data online and make it available on all your
+            Login to save your data online and sync all changes with all your
             devices
           </Animated.Text>
           <View
@@ -194,6 +227,35 @@ export default function StartScreen() {
   )
 }
 
+function LightBackground() {
+  return (
+    <View
+      style={{
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <LinearGradient
+        colors={["rgba(0,0,0,0.4)", "transparent"]}
+        style={{ height: 60, zIndex: -100 }}
+      />
+      <Image
+        source={require("@/assets/images/header_background.png")}
+        style={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+          left: 0,
+          height: 600,
+          maxWidth: 500,
+          marginHorizontal: "auto",
+        }}
+      />
+    </View>
+  )
+}
+
 function BackgroundGradientView() {
   return (
     <View
@@ -238,7 +300,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
     },
     loginLabel: {
       fontSize: 14,
-      maxWidth: 250,
+      maxWidth: 270,
       textAlign: "center",
       lineHeight: 20,
       color: isDark ? Colors.gray[200] : Colors.gray[700],
