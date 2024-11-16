@@ -106,7 +106,7 @@ export default function SignUpModal() {
       })
       await signUp?.prepareEmailAddressVerification({ strategy: "email_code" })
       setUserData(userData)
-      router.push("/(modals)/sign-up-confirm")
+      router.push("/(modals)/(publicAuth)/sign-up-confirm")
     } catch (e: any) {
       const errorData = e.errors
         ? { title: "Registration failed", description: e.errors[0].message }
@@ -399,7 +399,7 @@ export default function SignUpModal() {
             }}
           >
             <Text style={styles.text}>Already have an account?</Text>
-            <Link href="/(modals)/sign-in">Sign In</Link>
+            <Link href="/(modals)/(publicAuth)/sign-in">Sign In</Link>
           </View>
 
           <Button

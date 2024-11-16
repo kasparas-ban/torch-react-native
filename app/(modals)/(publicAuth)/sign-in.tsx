@@ -200,7 +200,7 @@ function SignInForm() {
         )}
       />
 
-      <Link href="/(modals)/password-reset" style={styles.link}>
+      <Link href="/(modals)/(publicAuth)/password-reset" style={styles.link}>
         Forgot password?
       </Link>
 
@@ -215,7 +215,7 @@ function SignInForm() {
           }}
         >
           <Text style={styles.text}>No account?</Text>
-          <Link href="/(modals)/sign-up">Sign Up</Link>
+          <Link href="/(modals)/(publicAuth)/sign-up">Sign Up</Link>
         </View>
 
         <Button

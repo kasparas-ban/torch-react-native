@@ -27,16 +27,16 @@ export default function TabLayout() {
             <BottomTabBarItems tabBarProps={props} />
           </BottomTabBarWrapper>
         )}
-        sceneContainerStyle={{
-          backgroundColor: "transparent",
-          width: "100%",
-          ...(Platform.OS === "web"
-            ? {
-                maxWidth: Platform.OS === "web" ? 850 : "auto",
-                marginHorizontal: "auto",
-              }
-            : {}),
-        }}
+        // sceneContainerStyle={{
+        //   backgroundColor: "transparent",
+        //   width: "100%",
+        //   ...(Platform.OS === "web"
+        //     ? {
+        //         maxWidth: Platform.OS === "web" ? 850 : "auto",
+        //         marginHorizontal: "auto",
+        //       }
+        //     : {}),
+        // }}
       >
         <Tabs.Screen
           name="goals"

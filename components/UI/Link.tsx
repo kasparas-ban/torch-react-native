@@ -7,15 +7,15 @@ import { AnimatedProps } from "react-native-reanimated"
 
 import { AnimatedButton } from "../AnimatedButton"
 
-type Props<T extends string | object> = AnimatedProps<LinkProps<T>> &
+type Props = AnimatedProps<LinkProps> &
   Omit<PressableProps, "children"> & {
     children: ReactNode
-    href: Href<T>
+    href: Href
     scale?: number
     textProps?: TextProps
   }
 
-export default function Link<T extends string | object>(props: Props<T>) {
+export default function Link(props: Props) {
   const { textProps, scale, children, ...pressableProps } = props
 
   return (

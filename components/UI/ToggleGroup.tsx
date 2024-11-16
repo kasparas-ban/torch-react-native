@@ -13,7 +13,7 @@ import { AnimatedButton } from "../AnimatedButton"
 
 type ListItemProps<T> = {
   item: SelectOptionExtended<T>
-  styles: NamedStyles<any>
+  styles: StyleProp<any>
   onPress: (item: SelectOptionExtended<T>) => void
   isSelected: boolean
   iconParam?: ReactNode

@@ -352,10 +352,9 @@ function NavBarButton({
   children: ReactNode
 }) {
   return isPrivate ? (
-    <Link href="/(modals)/sign-in" asChild>
+    <Link href="/(modals)/(publicAuth)/sign-in" asChild>
       <Pressable
         role="button"
-        testID={options.tabBarTestID}
         accessibilityLabel={options.tabBarAccessibilityLabel}
         accessibilityState={isFocused ? { selected: true } : {}}
         style={{
@@ -371,7 +370,6 @@ function NavBarButton({
   ) : (
     <Pressable
       role="button"
-      testID={options.tabBarTestID}
       accessibilityLabel={options.tabBarAccessibilityLabel}
       accessibilityState={isFocused ? { selected: true } : {}}
       onPress={onPress}

@@ -1,7 +1,7 @@
 import MinusIcon from "@/assets/icons/minus.svg"
 import PlusIcon from "@/assets/icons/plus.svg"
 import Colors from "@/constants/Colors"
-import { StyleSheet, Text, View, ViewStyle } from "react-native"
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native"
 import { z } from "zod"
 import { SelectOption } from "@/types/generalTypes"
 import useThemeStyles, {
@@ -66,7 +66,7 @@ export default function InputSelectPanel<T extends InputType>({
             style={[{ flexDirection: "row", gap: 2, alignItems: "center" }]}
           >
             <ButtonIcon
-              styles={styles}
+              styles={styles.icon}
               isDark={isDark}
               isSelected={!!getInput(input.value)}
             />
@@ -83,20 +83,20 @@ function ButtonIcon({
   isDark,
   isSelected,
 }: {
-  styles: NamedStyles<{ icon: unknown }>
+  styles: StyleProp<ViewStyle>
   isDark: boolean
   isSelected: boolean
 }) {
   return isSelected ? (
     <MinusIcon
       color={isDark ? Colors.gray[300] : Colors.gray[700]}
-      style={styles.icon}
+      style={styles}
       strokeWidth={2}
     />
   ) : (
     <PlusIcon
       color={isDark ? Colors.gray[300] : Colors.gray[700]}
-      style={styles.icon}
+      style={styles}
       strokeWidth={2}
     />
   )
