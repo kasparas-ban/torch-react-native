@@ -21,9 +21,11 @@ export type StyleType<T> = ({
   isDark,
   isFocused,
   platform,
-}: ThemeStylesProps) => NamedStyles<T>
+}: ThemeStylesProps) => T
 
-const useThemeStyles = <T>(createStylesheet: StyleType<T>) => {
+const useThemeStyles = <T extends NamedStyles<T> | NamedStyles<any>>(
+  createStylesheet: StyleType<T>
+) => {
   const colorScheme = useColorScheme()
   const isDark = colorScheme === "dark"
 
