@@ -18,6 +18,8 @@ import Animated, {
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { AnimatedButton } from "@/components/AnimatedButton"
 
+import "./webStyles.css"
+
 const DELAY = 100
 const OFFSET = 60
 const INITIAL_DELAY = 1000
