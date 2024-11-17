@@ -1,3 +1,4 @@
+import useItemsSync from "@/providers/SyncProvider/useItemsSync"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
@@ -12,7 +13,6 @@ import {
 } from "@/api/endpoints/itemAPITypes"
 import { formatItemResponse } from "@/api/utils/responseFormatters"
 import { removeElsFromArray } from "@/utils/utils"
-import useItemsSync from "@/components/providers/SyncProvider/useItemsSync"
 
 import { getAllAssociatedItems } from "./helpers"
 

@@ -1,8 +1,8 @@
+import useUserSync from "@/providers/SyncProvider/useUserSync"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { create } from "zustand"
 import { createJSONStorage, persist } from "zustand/middleware"
 import { ProfileResp } from "@/types/userTypes"
-import useUserSync from "@/components/providers/SyncProvider/useUserSync"
 
 type State = {
   user?: ProfileResp

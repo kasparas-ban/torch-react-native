@@ -1,5 +1,6 @@
 import { useMemo } from "react"
 import Colors from "@/constants/Colors"
+import { queryClient } from "@/providers/QueryProvider"
 import dayjs from "dayjs"
 import { Image, ImageStyle } from "expo-image"
 import { useRouter } from "expo-router"
@@ -17,7 +18,6 @@ import {
 import { AnimatedButton } from "@/components/AnimatedButton"
 import useGlobalLoading from "@/components/GlobalLoadingScreen/useGlobalLoading"
 import { notify } from "@/components/notifications/Notifications"
-import { queryClient } from "@/components/providers/QueryProvider"
 
 import RightIcon from "../../assets/icons/chevronRight.svg"
 import DeleteIcon from "../../assets/icons/delete.svg"

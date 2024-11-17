@@ -1,3 +1,4 @@
+import { Fragment } from "react"
 import Colors from "@/constants/Colors"
 import { StyleSheet, Text, View } from "react-native"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
@@ -17,7 +18,7 @@ export default function StepIndicator({
   return (
     <View style={styles.wrapper}>
       {stepsArray.map((num, idx) => (
-        <>
+        <Fragment key={num}>
           <View
             key={idx}
             style={[
@@ -38,7 +39,7 @@ export default function StepIndicator({
           {idx < stepsArray.length - 1 && (
             <View key={`line_${idx}`} style={styles.stepSeparator} />
           )}
-        </>
+        </Fragment>
       ))}
     </View>
   )
