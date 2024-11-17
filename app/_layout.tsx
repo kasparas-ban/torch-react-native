@@ -11,6 +11,7 @@ import { ClerkProvider } from "@/providers/ClerkProvider"
 import QueryProvider from "@/providers/QueryProvider"
 import { StorageProvider } from "@/providers/StorageProvider"
 import SyncProvider from "@/providers/SyncProvider/SyncProvider"
+import appStateStore from "@/stores/appStore"
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native"
 import { useFonts } from "expo-font"
@@ -29,7 +30,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(start)",
+  initialRouteName: appStateStore().isFirstOpen ? "(start)/start" : "(tabs)",
 }
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -84,9 +85,14 @@ function RootLayoutNav() {
                     <NotificationProvider />
                     <StorageProvider />
                     <GlobalLoadingScreen>
-                      <Stack initialRouteName="(start)/index">
+                      <Stack>
                         <Stack.Screen
                           name="(start)/index"
+                          options={{ headerShown: false }}
+                          redirect
+                        />
+                        <Stack.Screen
+                          name="(start)/start"
                           options={{ headerShown: false }}
                         />
                         <Stack.Screen
