@@ -12,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.torchapp"
@@ -22,7 +24,9 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["android.permission.FOREGROUND_SERVICE"],
+      "permissions": [
+        "android.permission.FOREGROUND_SERVICE"
+      ],
       "package": "com.anonymous.torchapp"
     },
     "web": {
@@ -30,7 +34,11 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router", "expo-font", "expo-asset"],
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-asset"
+    ],
     "experiments": {
       "typedRoutes": true
     },
@@ -39,8 +47,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "16a414e8-6cad-466e-9212-6f3e6a850519"
+        "projectId": "2b9e2a7f-c8da-49cf-b9fd-71192a333c9d"
       }
-    }
+    },
+    "owner": "kaspis245"
   }
 }
