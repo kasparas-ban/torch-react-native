@@ -21,22 +21,22 @@ export default function TabLayout() {
           tabBarBackground: () => <BlurView />,
           headerTransparent: true,
           header: props => <Header {...props} />,
+          sceneStyle: {
+            backgroundColor: "transparent",
+            width: "100%",
+            ...(Platform.OS === "web"
+              ? {
+                  maxWidth: Platform.OS === "web" ? 850 : "auto",
+                  marginHorizontal: "auto",
+                }
+              : {}),
+          },
         }}
         tabBar={props => (
           <BottomTabBarWrapper>
             <BottomTabBarItems tabBarProps={props} />
           </BottomTabBarWrapper>
         )}
-        // sceneContainerStyle={{
-        //   backgroundColor: "transparent",
-        //   width: "100%",
-        //   ...(Platform.OS === "web"
-        //     ? {
-        //         maxWidth: Platform.OS === "web" ? 850 : "auto",
-        //         marginHorizontal: "auto",
-        //       }
-        //     : {}),
-        // }}
       >
         <Tabs.Screen
           name="goals"
