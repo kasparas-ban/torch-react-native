@@ -26,3 +26,15 @@
 # Build
 
 Build APK with `eas build -p android --profile preview --local`
+
+# Clear cache
+
+```bash
+rm -rf node_modules
+npm cache clean --force
+npm install
+watchman watch-del-all
+del %localappdata%Temphaste-map-*
+del %localappdata%Tempmetro-cache
+npx expo start --clear
+```

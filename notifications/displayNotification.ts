@@ -1,5 +1,4 @@
 import Colors from "@/constants/Colors"
-import notifee from "@notifee/react-native"
 import { TimerState } from "@/types/itemTypes"
 import { formatFullTime } from "@/utils/utils"
 
@@ -11,39 +10,38 @@ type DisplayNotificationProps = {
 }
 
 export const displayNotification = async (props: DisplayNotificationProps) => {
-  const { channelId, timerState, time, isBreak } = props
-  const isTimerStopped = timerState === "paused" || timerState === "idle"
-
-  await notifee.displayNotification({
-    id: channelId,
-    title: getNotificationTitle(timerState, time, isBreak),
-    android: {
-      channelId,
-      color: getBackgroundColor(isBreak, isTimerStopped),
-      ongoing: true,
-      asForegroundService: true,
-      colorized: true,
-      pressAction: {
-        id: "default",
-        launchActivity: "default",
-      },
-      actions: [
-        timerState === "running"
-          ? {
-              title: `<p style="color: ${getTextColor(isBreak, isTimerStopped)};">Pause</p>`,
-              pressAction: { id: "pause" },
-            }
-          : {
-              title: `<p style="color: ${getTextColor(isBreak, isTimerStopped)};">Resume</p>`,
-              pressAction: { id: "resume" },
-            },
-        {
-          title: `<p style="color: ${getTextColor(isBreak, isTimerStopped)};">Stop</p>`,
-          pressAction: { id: "stop" },
-        },
-      ],
-    },
-  })
+  // const { channelId, timerState, time, isBreak } = props
+  // const isTimerStopped = timerState === "paused" || timerState === "idle"
+  // await notifee.displayNotification({
+  //   id: channelId,
+  //   title: getNotificationTitle(timerState, time, isBreak),
+  //   android: {
+  //     channelId,
+  //     color: getBackgroundColor(isBreak, isTimerStopped),
+  //     ongoing: true,
+  //     asForegroundService: true,
+  //     colorized: true,
+  //     pressAction: {
+  //       id: "default",
+  //       launchActivity: "default",
+  //     },
+  //     actions: [
+  //       timerState === "running"
+  //         ? {
+  //             title: `<p style="color: ${getTextColor(isBreak, isTimerStopped)};">Pause</p>`,
+  //             pressAction: { id: "pause" },
+  //           }
+  //         : {
+  //             title: `<p style="color: ${getTextColor(isBreak, isTimerStopped)};">Resume</p>`,
+  //             pressAction: { id: "resume" },
+  //           },
+  //       {
+  //         title: `<p style="color: ${getTextColor(isBreak, isTimerStopped)};">Stop</p>`,
+  //         pressAction: { id: "stop" },
+  //       },
+  //     ],
+  //   },
+  // })
 }
 
 const getBackgroundColor = (isBreak: boolean, isStopped: boolean) => {
