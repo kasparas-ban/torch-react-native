@@ -1,6 +1,5 @@
 import { Theme } from "@react-navigation/native"
 
-import { fonts } from "../node_modules/@react-navigation/native/src/theming/fonts"
 import Colors from "./Colors"
 
 export const DarkTheme: Theme = {
@@ -13,5 +12,4 @@ export const DarkTheme: Theme = {
     border: "rgb(39, 39, 41)",
     notification: "rgb(255, 69, 58)",
   },
-  fonts,
 }

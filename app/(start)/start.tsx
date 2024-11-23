@@ -204,7 +204,7 @@ export default function StartScreen() {
                 scale={0.97}
                 onPress={() => router.push("/(modals)/(publicAuth)/sign-in")}
               >
-                <Text style={styles.loginTextBtn}>Login</Text>
+                <Text style={styles.loginBtnLabel}>Login</Text>
               </AnimatedButton>
             </Animated.View>
 
@@ -214,7 +214,7 @@ export default function StartScreen() {
                 scale={0.97}
                 onPress={() => router.push("/(modals)/(publicAuth)/sign-up")}
               >
-                <Text style={styles.registerTextBtn}>Register</Text>
+                <Text style={styles.registerBtnLabel}>Register</Text>
               </AnimatedButton>
             </Animated.View>
           </View>
@@ -323,15 +323,6 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       color: isDark ? Colors.gray[200] : Colors.gray[700],
     },
     loginBtn: {
-      backgroundColor: Colors.rose[500],
-      borderRadius: 12,
-      height: 48,
-      width: "100%",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    registerBtn: {
       backgroundColor: Colors.slate[100],
       borderColor: Colors.gray[300],
       borderWidth: 1,
@@ -342,12 +333,21 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       justifyContent: "center",
       alignItems: "center",
     },
-    loginTextBtn: {
+    registerBtnLabel: {
       fontSize: 16,
       fontWeight: "600",
       color: "white",
     },
-    registerTextBtn: {
+    registerBtn: {
+      backgroundColor: Colors.rose[500],
+      borderRadius: 12,
+      height: 48,
+      width: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    loginBtnLabel: {
       fontSize: 16,
       fontWeight: "600",
       color: Colors.rose[600],

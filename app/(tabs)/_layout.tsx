@@ -21,7 +21,13 @@ export default function TabLayout() {
           tabBarBackground: () => <BlurView />,
           headerTransparent: true,
           header: props => <Header {...props} />,
-          sceneStyle: {
+        }}
+        tabBar={props => (
+          <BottomTabBarWrapper>
+            <BottomTabBarItems tabBarProps={props} />
+          </BottomTabBarWrapper>
+        )}
+        sceneContainerStyle={{
             backgroundColor: "transparent",
             width: "100%",
             ...(Platform.OS === "web"
@@ -30,13 +36,7 @@ export default function TabLayout() {
                   marginHorizontal: "auto",
                 }
               : {}),
-          },
         }}
-        tabBar={props => (
-          <BottomTabBarWrapper>
-            <BottomTabBarItems tabBarProps={props} />
-          </BottomTabBarWrapper>
-        )}
       >
         <Tabs.Screen
           name="goals"
