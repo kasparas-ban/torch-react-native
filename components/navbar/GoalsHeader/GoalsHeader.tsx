@@ -224,25 +224,18 @@ function ItemTypeSelector() {
         </View>
       </View>
 
-      <Modal visible={isOpen} animationType="fade">
+      <Modal
+        transparent={true}
+        visible={isOpen}
+        animationType="fade"
+        onRequestClose={() => setIsOpen(false)}
+      >
         <Pressable
           onPress={() => setIsOpen(false)}
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-          }}
+          style={StyleSheet.absoluteFill}
         >
           <BlurView
-            style={{
-              position: "absolute",
-              left: 0,
-              right: 0,
-              top: 0,
-              bottom: 0,
-            }}
+            style={StyleSheet.absoluteFill}
             intensity={4}
             experimentalBlurMethod="dimezisBlurView"
           />
