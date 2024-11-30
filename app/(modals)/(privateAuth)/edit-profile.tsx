@@ -122,7 +122,7 @@ export default function EditProfileScreen() {
               flexDirection: "row",
               width: "100%",
               marginBottom: 12,
-              marginTop: 40,
+              marginTop: 50,
               zIndex: 1,
             }}
           >

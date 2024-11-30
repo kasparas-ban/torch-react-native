@@ -119,7 +119,7 @@ export default function FocusItemSelect() {
 
         <BottomModal
           modalRef={bottomSheetModalRef}
-          snapPoints={["90%"]}
+          snapPoints={["30%", "90%"]}
           onChange={idx => idx === -1}
         >
           <ScrollView

@@ -38,7 +38,7 @@ export function useScrollViewHeader() {
   const headerScale = useSharedValue(1)
   const headerGradientOpacity = useSharedValue(0)
   const scrollHandler = useAnimatedScrollHandler(event => {
-    const fraction = 1 - (event.contentOffset.y - 30) / 30
+    const fraction = 1 - (event.contentOffset.y - 10) / 20
     headerScale.value = clamp(fraction, 0.7, 1)
     headerGradientOpacity.value = clamp(1 - fraction, 0, 1)
   })

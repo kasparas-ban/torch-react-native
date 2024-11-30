@@ -13,6 +13,7 @@ export type BottomModalType = {
   modalRef: React.RefObject<BottomSheetModalMethods>
   snapPoints: (string | number)[]
   enableDynamicSizing?: boolean
+  enableOverDrag?: boolean
   onChange?: (index: number) => void
   children: ReactNode
   isVirtualized?: boolean
@@ -22,6 +23,7 @@ export function BottomModal({
   modalRef,
   snapPoints,
   enableDynamicSizing,
+  enableOverDrag,
   onChange,
   children,
   isVirtualized,
@@ -35,6 +37,7 @@ export function BottomModal({
       snapPoints={snapPoints}
       onChange={onChange}
       enableDynamicSizing={enableDynamicSizing}
+      enableOverDrag={enableOverDrag || false}
       backdropComponent={props => (
         <BottomSheetBackdrop
           {...props}
