@@ -20,6 +20,7 @@ import {
   useScrollViewHeader,
 } from "@/components/ScrollViewHeader"
 import SelectCountry from "@/components/SelectCountry"
+import SelectGender from "@/components/SelectGender/SelectGender"
 import Button from "@/components/UI/Button"
 import DateInput from "@/components/UI/DateInput"
 import PictureInput from "@/components/UI/PictureInput"
@@ -213,21 +214,7 @@ export default function EditProfileScreen() {
               control={form.control}
               rules={{ required: true }}
               render={({ field: { onChange, value } }) => (
-                <Select
-                  placeholder="Select"
-                  label="Gender"
-                  title="Select gender"
-                  onChange={onChange}
-                  value={value}
-                  options={[
-                    { label: "Male", value: "MALE" },
-                    { label: "Female", value: "FEMALE" },
-                    { label: "Other", value: "OTHER" },
-                  ]}
-                  wrapperProps={{
-                    style: { marginBottom: 12 },
-                  }}
-                />
+                <SelectGender onChange={onChange} value={value} />
               )}
             />
 
