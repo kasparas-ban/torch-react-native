@@ -23,6 +23,7 @@ import {
   useScrollViewHeader,
 } from "@/components/ScrollViewHeader"
 import SelectCountry from "@/components/SelectCountry"
+import SelectGender from "@/components/SelectGender/SelectGender"
 import Button from "@/components/UI/Button"
 import DateInput from "@/components/UI/DateInput"
 import Link from "@/components/UI/Link"
@@ -287,21 +288,7 @@ export default function SignUpModal() {
               name="gender"
               control={form.control}
               render={({ field: { onChange, value } }) => (
-                <Select
-                  placeholder="Select"
-                  label="Gender"
-                  title="Select gender"
-                  onChange={onChange}
-                  value={value ?? undefined}
-                  options={[
-                    { label: "Male", value: "MALE" },
-                    { label: "Female", value: "FEMALE" },
-                    { label: "Other", value: "OTHER" },
-                  ]}
-                  wrapperProps={{
-                    style: { marginBottom: 12 },
-                  }}
-                />
+                <SelectGender onChange={onChange} value={value} />
               )}
             />
 
