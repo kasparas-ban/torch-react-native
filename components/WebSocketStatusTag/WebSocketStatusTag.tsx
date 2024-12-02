@@ -8,15 +8,24 @@ export default function WebSocketStatusTag() {
   const { ws } = useWs()
 
   return (
-    <View>
+    <View
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6,
+      }}
+    >
+      <Text style={styles.text}>{ws ? "Data sync" : "Disconnected"}</Text>
       <View
         style={{
-          display: "flex",
-          flexDirection: "row",
+          height: 10,
+          width: 10,
+          borderRadius: 100,
+          marginTop: 1,
+          ...(ws ? styles.activeBubbleBg : styles.inactiveBubbleBg),
         }}
-      >
-        <Text style={styles.text}>Connected</Text>
-      </View>
+      />
     </View>
   )
 }
@@ -25,7 +34,14 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
   StyleSheet.create({
     text: {
       fontSize: 12,
-      color: isDark ? Colors.green[300] : Colors.green[600],
+      color: isDark ? Colors.gray[400] : Colors.gray[500],
       letterSpacing: 1,
+    },
+    activeBubbleBg: {
+      backgroundColor: isDark ? Colors.green[400] : Colors.green[300],
+    },
+    inactiveBubbleBg: {
+      backgroundColor: isDark ? Colors.red[500] : Colors.red[400],
+      opacity: 0.9,
     },
   })

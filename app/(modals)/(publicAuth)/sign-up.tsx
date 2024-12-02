@@ -27,7 +27,6 @@ import SelectGender from "@/components/SelectGender/SelectGender"
 import Button from "@/components/UI/Button"
 import DateInput from "@/components/UI/DateInput"
 import Link from "@/components/UI/Link"
-import Select from "@/components/UI/Select"
 import TextInput from "@/components/UI/TextInput"
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient)
@@ -65,7 +64,6 @@ export default function SignUpModal() {
   const { signUp } = useSignUp()
   const { setUserData } = useSignUpData()
   const [isLoading, setIsLoading] = useState(false)
-  const { mutateAsync } = useRegisterUser()
 
   const { scrollHandler, headerTitleStyle, headerGradientStyle } =
     useScrollViewHeader()
@@ -131,13 +129,13 @@ export default function SignUpModal() {
         onScroll={scrollHandler}
         showsVerticalScrollIndicator={false}
       >
-        <View style={{ marginTop: 40, marginLeft: 28, position: "absolute" }}>
+        <View style={{ marginTop: 40, marginLeft: 48, position: "absolute" }}>
           <View
             style={{
               flexDirection: "row",
               width: "100%",
               marginBottom: 12,
-              marginTop: 40,
+              marginTop: 48,
               zIndex: 1,
             }}
           >
@@ -357,7 +355,7 @@ export default function SignUpModal() {
             position: "absolute",
             bottom: 28,
             width: "100%",
-            paddingHorizontal: 24,
+            paddingHorizontal: 48,
           }}
         >
           <LinearGradient
@@ -413,6 +411,7 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       flex: 1,
       justifyContent: "flex-start",
       alignItems: "center",
+      paddingHorizontal: 24,
       maxWidth: 400,
       width: "100%",
     },
