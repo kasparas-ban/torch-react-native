@@ -5,6 +5,8 @@ import { StyleSheet, Text, View } from "react-native"
 import { HOST } from "@/api/utils/apiConfig"
 import { AnimatedButton } from "@/components/AnimatedButton"
 
+import useDev from "./useDev"
+
 export default function DevInfoTagProvider({
   children,
 }: {
@@ -13,6 +15,7 @@ export default function DevInfoTagProvider({
   //   if (!__DEV__) return children
   const [showInfo, setShowInfo] = useState(true)
   const { ws } = useWs()
+  const { isOnline } = useDev()
 
   return (
     <>
@@ -22,6 +25,7 @@ export default function DevInfoTagProvider({
         <View style={[tagStyles.infoContainer, { bottom: 140 }]}>
           <Text>{`Host: ${HOST}`}</Text>
           <Text>{`WS: ${ws ? "Active" : "-"}`}</Text>
+          <Text>{`Online: ${isOnline ? "True" : "False"}`}</Text>
         </View>
       )}
 
