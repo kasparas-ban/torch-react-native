@@ -9,8 +9,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const { setUser } = useUserInfo()
 
   useEffect(() => {
-    // console.log("inside auth provider", !!user)
-
     const subscription = AppState.addEventListener("change", async state => {
       if (state === "active") {
         const token = await getToken()
@@ -21,7 +19,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           setUser()
         }
         setUser(userInfo)
-        console.log("App has come to the foreground!")
       }
     })
 
