@@ -80,7 +80,10 @@ const initNewWs = (
   updateItem: (item: Partial<ItemResponse>) => void,
   deleteItem: (item_id: string) => void
 ) => {
-  const ws = new WebSocket(`ws://${BE_HOST}/sync`, [token, wsId])
+  const ws = new WebSocket(`${__DEV__ ? "ws" : "wss"}://${BE_HOST}/sync`, [
+    token,
+    wsId,
+  ])
 
   ws.onopen = () => {
     console.log("WebSocket connection established:", Platform.OS, wsId)
