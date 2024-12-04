@@ -1,8 +1,9 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import AlertIcon from "@/assets/icons/exclamationCircle.svg"
 import Colors from "@/constants/Colors"
 import useDev from "@/devTools/useDev"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "expo-router"
 import { ErrorBoundary, FallbackProps } from "react-error-boundary"
 import { Controller, useForm } from "react-hook-form"
 import {
@@ -15,7 +16,6 @@ import {
 import { z } from "zod"
 import { useSignIn } from "@/lib/clerk"
 import InternalError, { isInternalError } from "@/lib/InternalError"
-import { useClerkSignIn } from "@/lib/useCustomAuth"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import { notify } from "@/components/notifications/Notifications"
 import PasswordInput from "@/components/PasswordInput"
@@ -100,9 +100,11 @@ function SignInLoading() {
 }
 
 function SignInForm() {
-  const { signIn, isLoaded, isLoading } = useClerkSignIn()
+  const [isLoading, setIsLoading] = useState(false)
+  const { signIn, isLoaded, setActive } = useSignIn()
   const { styles } = useThemeStyles(componentStyles)
   const { isOnline } = useDev()
+  const router = useRouter()
 
   if (!signIn) {
     throw new InternalError({
@@ -118,12 +120,22 @@ function SignInForm() {
 
   const onSignInPress = async (data: SignInFormType) => {
     Keyboard.dismiss()
+    setIsLoading(true)
 
     try {
-      await signIn({
-        email: data.email,
+      const signInAttempt = await signIn.create({
+        identifier: data.email,
         password: data.password,
       })
+
+      if (signInAttempt.status === "complete") {
+        await setActive({ session: signInAttempt.createdSessionId })
+        router.replace("/")
+      } else {
+        // See https://clerk.com/docs/custom-flows/error-handling
+        // for more info on error handling
+        console.error(JSON.stringify(signInAttempt, null, 2))
+      }
     } catch (err) {
       const error = isInternalError(err) ? err : undefined
       notify({
@@ -131,6 +143,8 @@ function SignInForm() {
         description: error?.description || undefined,
         type: "ERROR",
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 

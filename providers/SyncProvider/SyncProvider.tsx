@@ -6,7 +6,7 @@ import useWs from "@/stores/websocketStore"
 import { Platform } from "react-native"
 import { ItemResponse } from "@/types/itemTypes"
 import { ProfileResp } from "@/types/userTypes"
-import { useCustomAuth } from "@/lib/useCustomAuth"
+import { useAuth } from "@/lib/clerk"
 import { FormattedUpdateItemType } from "@/api/endpoints/itemAPITypes"
 import { BE_HOST } from "@/api/utils/apiConfig"
 import { getRandomId } from "@/utils/randomId"
@@ -25,9 +25,45 @@ export default function SyncProvider({ children }: { children: ReactNode }) {
   const { updateUser } = useUserInfo()
 
   const { isOnline } = useDev()
-  const { setWs } = useWs()
-  const { getToken, isSignedIn } = useCustomAuth()
+  const { ws, setWs } = useWs()
+  const { getToken, isSignedIn } = useAuth()
 
+  const connectWs = async () => {
+    const token = await getToken()
+    if (!token) throw Error("no auth token")
+
+    initNewWs(
+      token,
+      (ws?: WebSocket, id?: string) => setWs(ws, id),
+      (data: Partial<ProfileResp>) => updateUser(data, true),
+      (item: ItemResponse) => addItem(item, true),
+      (data: Partial<ItemResponse>) =>
+        updateItem(data as FormattedUpdateItemType, true),
+      (item_id: string) =>
+        deleteItem(
+          {
+            item_id,
+            deleteAssociated: false,
+          },
+          true
+        )
+    )
+  }
+
+  // Enable periodic checks for WS connections
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (!ws && isOnline && isSignedIn) {
+        connectWs().catch(e => console.error(e))
+      }
+    }, 5000)
+
+    return () => {
+      clearInterval(intervalId)
+    }
+  }, [!ws && isOnline && isSignedIn])
+
+  // WS setup on app launch
   useEffect(() => {
     if (!isOnline || !isSignedIn) {
       setLastSyncItems(items)
@@ -40,28 +76,6 @@ export default function SyncProvider({ children }: { children: ReactNode }) {
     }
 
     // Establish websocket connection
-    const connectWs = async () => {
-      const token = await getToken()
-      if (!token) throw Error("no auth token")
-
-      initNewWs(
-        token,
-        (ws?: WebSocket, id?: string) => setWs(ws, id),
-        (data: Partial<ProfileResp>) => updateUser(data, true),
-        (item: ItemResponse) => addItem(item, true),
-        (data: Partial<ItemResponse>) =>
-          updateItem(data as FormattedUpdateItemType, true),
-        (item_id: string) =>
-          deleteItem(
-            {
-              item_id,
-              deleteAssociated: false,
-            },
-            true
-          )
-      )
-    }
-
     connectWs().catch(e => console.error(e))
 
     return () => {

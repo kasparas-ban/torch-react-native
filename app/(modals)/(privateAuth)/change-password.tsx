@@ -7,8 +7,7 @@ import { router } from "expo-router"
 import { Controller, useForm } from "react-hook-form"
 import { StyleSheet, Text, View } from "react-native"
 import { z } from "zod"
-import { useUser } from "@/lib/clerk"
-import { useCustomAuth } from "@/lib/useCustomAuth"
+import { useAuth, useUser } from "@/lib/clerk"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import useKeyboard from "@/utils/useKeyboard"
 import { notify } from "@/components/notifications/Notifications"
@@ -48,7 +47,7 @@ export default function ChangePasswordScreen() {
 
   const { user } = useUser()
   const queryClient = useQueryClient()
-  const { signOut } = useCustomAuth()
+  const { signOut } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<PasswordFormType>({

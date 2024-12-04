@@ -5,8 +5,7 @@ import dayjs from "dayjs"
 import { Image, ImageStyle } from "expo-image"
 import { useRouter } from "expo-router"
 import { StyleSheet, Text, View } from "react-native"
-import { useUser } from "@/lib/clerk"
-import { useCustomAuth } from "@/lib/useCustomAuth"
+import { useAuth, useUser } from "@/lib/clerk"
 import useUserInfo from "@/api/hooks/user/useUser"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
 import {
@@ -28,7 +27,7 @@ import UserIcon from "../../assets/icons/userCircle.svg"
 export default function AccountScreen() {
   const { styles, isDark } = useThemeStyles(componentStyles)
   const { showGlobalLoading, hideGlobalLoading } = useGlobalLoading()
-  const { signOut } = useCustomAuth()
+  const { signOut } = useAuth()
 
   const router = useRouter()
   const { user } = useUser()

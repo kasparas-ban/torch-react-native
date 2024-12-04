@@ -3,7 +3,7 @@ import useDev from "@/devTools/useDev"
 import useItems from "@/stores/itemStore"
 import useUserInfo from "@/stores/userStore"
 import useWs from "@/stores/websocketStore"
-import { useCustomAuth } from "@/lib/useCustomAuth"
+import { useAuth } from "@/lib/clerk"
 import { getAllItems } from "@/api/endpoints/itemsAPI"
 import { getUserInfo } from "@/api/endpoints/userAPI"
 
@@ -17,7 +17,7 @@ import {
 export default function useGlobalSync() {
   const { isOnline } = useDev()
   const { ws } = useWs()
-  const { getToken, signOut, isSignedIn, sessionId } = useCustomAuth()
+  const { getToken, signOut } = useAuth()
 
   const {
     items: localItems,

@@ -12,7 +12,7 @@ import { LinearGradient } from "expo-linear-gradient"
 import { Link } from "expo-router"
 import { Pressable, Text, useColorScheme, View } from "react-native"
 import Animated from "react-native-reanimated"
-import { useCustomAuth } from "@/lib/useCustomAuth"
+import { useAuth } from "@/lib/clerk"
 
 import AccountIcon from "../../assets/icons/navigationIcons/account.svg"
 import GoalsIcon from "../../assets/icons/navigationIcons/goals.svg"
@@ -190,7 +190,7 @@ export function BottomTabBarItems({
   const { state, descriptors, navigation } = tabBarProps
   const colorScheme = useColorScheme()
   const isDark = colorScheme === "dark"
-  const { isSignedIn } = useCustomAuth()
+  const { isSignedIn } = useAuth()
 
   return (
     <>

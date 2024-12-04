@@ -1,7 +1,7 @@
 import { GetToken } from "@clerk/types/dist"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { FormattedItems, ItemResponse, ItemType } from "@/types/itemTypes"
-import { useCustomAuth } from "@/lib/useCustomAuth"
+import { useAuth } from "@/lib/clerk"
 import { UpsertItem } from "@/api/endpoints/itemAPITypes"
 import { HOST } from "@/api/utils/apiConfig"
 import { CustomError, PostFetchErrorMsg } from "@/api/utils/errorMsgs"
@@ -10,7 +10,7 @@ import { getRandomId } from "@/utils/randomId"
 import { UpdateTaskType } from "@/components/itemModal/itemForms/schemas"
 
 export const useUpsertItem = (type: ItemType) => {
-  const { getToken } = useCustomAuth()
+  const { getToken } = useAuth()
   const queryClient = useQueryClient()
 
   const { data, mutate, isPending, isError, isSuccess, mutateAsync, reset } =
