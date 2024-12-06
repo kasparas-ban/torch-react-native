@@ -7,7 +7,7 @@ const mmkvStorage = new MMKV({ id: "app-state-store" })
 
 export default function appStateStore() {
   return {
-    isFirstOpen: !!mmkvStorage.getBoolean("isFirstOpen"),
+    isFirstOpen: mmkvStorage.getBoolean("isFirstOpen") ?? true,
     setIsFirstOpen: (val: boolean) => mmkvStorage.set("isFirstOpen", val),
   }
 }

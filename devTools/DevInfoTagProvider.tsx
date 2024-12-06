@@ -1,6 +1,7 @@
 import { ReactNode, useState } from "react"
 import Colors from "@/constants/Colors"
 import useWs from "@/stores/websocketStore"
+import { useNetInfo } from "@react-native-community/netinfo"
 import { StyleSheet, Text, View } from "react-native"
 import { HOST } from "@/api/utils/apiConfig"
 import { AnimatedButton } from "@/components/AnimatedButton"
@@ -14,18 +15,28 @@ export default function DevInfoTagProvider({
 }) {
   //   if (!__DEV__) return children
   const [showInfo, setShowInfo] = useState(true)
-  const { ws } = useWs()
+  const { ws, setWs } = useWs()
   const { isOnline } = useDev()
+  const { isConnected } = useNetInfo()
 
   return (
     <>
       {children}
 
       {showInfo && (
+        <View style={[tagStyles.infoContainer, { bottom: 235 }]}>
+          <AnimatedButton onPress={() => setWs(undefined)}>
+            <Text>Disconnect WS</Text>
+          </AnimatedButton>
+        </View>
+      )}
+
+      {showInfo && (
         <View style={[tagStyles.infoContainer, { bottom: 140 }]}>
           <Text>{`Host: ${HOST}`}</Text>
           <Text>{`WS: ${ws ? "Active" : "-"}`}</Text>
           <Text>{`Online: ${isOnline ? "True" : "False"}`}</Text>
+          <Text>{`Is connected: ${isConnected ? "True" : "False"}`}</Text>
         </View>
       )}
 

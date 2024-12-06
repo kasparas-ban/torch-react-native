@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import AlertIcon from "@/assets/icons/exclamationCircle.svg"
 import Colors from "@/constants/Colors"
 import useDev from "@/devTools/useDev"
+import appStateStore from "@/stores/appStore"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "expo-router"
 import { ErrorBoundary, FallbackProps } from "react-error-boundary"
@@ -105,6 +106,7 @@ function SignInForm() {
   const { styles } = useThemeStyles(componentStyles)
   const { isOnline } = useDev()
   const router = useRouter()
+  const { setIsFirstOpen } = appStateStore()
 
   if (!signIn) {
     throw new InternalError({
@@ -130,6 +132,7 @@ function SignInForm() {
 
       if (signInAttempt.status === "complete") {
         await setActive({ session: signInAttempt.createdSessionId })
+        setIsFirstOpen(false)
         router.replace("/")
       } else {
         // See https://clerk.com/docs/custom-flows/error-handling

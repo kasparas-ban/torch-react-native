@@ -8,33 +8,33 @@ import InternalError from "./InternalError"
 
 let isSignInConfirmed = false
 
-export function useCustomAuth() {
-  const isUserSignedIn = useIsUserSignedIn()
+// export function useCustomAuth() {
+//   const isUserSignedIn = useIsUserSignedIn()
 
-  const defaultAuth = useAuth()
-  const signedOutAuth = {
-    isLoaded: defaultAuth.isLoaded,
-    isSignedIn: false,
-    userId: undefined,
-    sessionId: undefined,
-    actor: undefined,
-    orgId: undefined,
-    orgRole: undefined,
-    orgSlug: undefined,
-    has: undefined,
-    signOut: async (_?: { sessionId?: string; redirectUrl?: string }) => {},
-    getToken: async () => {},
-  }
+//   const defaultAuth = useAuth()
+//   const signedOutAuth = {
+//     isLoaded: defaultAuth.isLoaded,
+//     isSignedIn: false,
+//     userId: undefined,
+//     sessionId: undefined,
+//     actor: undefined,
+//     orgId: undefined,
+//     orgRole: undefined,
+//     orgSlug: undefined,
+//     has: undefined,
+//     signOut: async (_?: { sessionId?: string; redirectUrl?: string }) => {},
+//     getToken: async () => {},
+//   }
 
-  return isUserSignedIn ? defaultAuth : signedOutAuth
-}
+//   return isUserSignedIn ? defaultAuth : signedOutAuth
+// }
 
-function useIsUserSignedIn() {
-  const { data: user } = useUserInfo()
-  const { isSignedIn } = useAuth()
+// function useIsUserSignedIn() {
+//   const { data: user } = useUserInfo()
+//   const { isSignedIn } = useAuth()
 
-  return user ? isSignedIn : false
-}
+//   return user ? isSignedIn : false
+// }
 
 export function useClerkSignIn() {
   const { user: clerkUser } = useUser()

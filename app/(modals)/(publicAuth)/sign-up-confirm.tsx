@@ -1,5 +1,6 @@
 import { useState } from "react"
 import Colors from "@/constants/Colors"
+import appStateStore from "@/stores/appStore"
 import { router } from "expo-router"
 import { StyleSheet, Text, View } from "react-native"
 import { useSignUp } from "@/lib/clerk"
@@ -14,6 +15,7 @@ import Button from "@/components/UI/Button"
 export default function SignUpConfirmModal() {
   const { styles } = useThemeStyles(componentStyles)
   const { userData, setUserData } = useSignUpData()
+  const { setIsFirstOpen } = appStateStore()
 
   const { isLoaded, signUp, setActive } = useSignUp()
 
@@ -55,6 +57,7 @@ export default function SignUpConfirmModal() {
         title: `Welcome to the app, ${userData.username}!`,
       })
       setUserData(undefined)
+      setIsFirstOpen(false)
     } catch (e: any) {
       const errorData = e.data as CustomErrorData
       notify({
