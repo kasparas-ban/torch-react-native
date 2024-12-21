@@ -23,7 +23,6 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["android.permission.FOREGROUND_SERVICE"],
       "package": "com.anonymous.torchapp"
     },
     "web": {

@@ -1,5 +1,5 @@
 import Colors from "@/constants/Colors"
-import notifee from "@notifee/react-native"
+import notifee, { AndroidForegroundServiceType } from "@notifee/react-native"
 import { TimerState } from "@/types/itemTypes"
 import { formatFullTime } from "@/utils/utils"
 
@@ -22,6 +22,9 @@ export const displayNotification = async (props: DisplayNotificationProps) => {
       ongoing: true,
       asForegroundService: true,
       colorized: true,
+      foregroundServiceTypes: [
+        AndroidForegroundServiceType.FOREGROUND_SERVICE_TYPE_SPECIAL_USE,
+      ],
       pressAction: {
         id: "default",
         launchActivity: "default",
