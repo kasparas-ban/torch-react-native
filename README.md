@@ -38,3 +38,9 @@ del %localappdata%Temphaste-map-*
 del %localappdata%Tempmetro-cache
 npx expo start --clear
 ```
+
+# Decompile APK
+
+```bash
+apktool d build-1734809939620.apk
+```
