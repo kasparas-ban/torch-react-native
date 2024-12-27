@@ -265,6 +265,15 @@ function ItemInfoTags({ item }: { item: FormattedItem }) {
     ? dayjs(item.target_date).diff(new Date(), "days")
     : undefined
 
+  const isEmpty =
+    item.status === "ACTIVE" ||
+    !item.priority ||
+    !item.duration ||
+    deadlineIn === undefined ||
+    isNaN(deadlineIn)
+
+  if (isEmpty) return null
+
   return (
     <View style={styles.wrapper}>
       {item.status === "ARCHIVED" && (

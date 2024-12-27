@@ -147,7 +147,7 @@ export default function GoalsHeader() {
 
       <ListFilterSection showFilters={isFiltersOpen} />
 
-      <View style={{ position: "absolute", bottom: -28, right: 24 }}>
+      <View style={{ position: "absolute", bottom: 44, right: 34 }}>
         <WebSocketStatusTag />
       </View>
     </View>
