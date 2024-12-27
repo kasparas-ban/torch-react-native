@@ -135,7 +135,7 @@ export default function SignUpModal() {
               flexDirection: "row",
               width: "100%",
               marginBottom: 12,
-              marginTop: 48,
+              marginTop: 42,
               zIndex: 1,
             }}
           >

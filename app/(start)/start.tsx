@@ -194,6 +194,7 @@ export default function StartScreen() {
               gap: 12,
               paddingTop: 20,
               paddingBottom: 12,
+              paddingHorizontal: 24,
               maxWidth: 420,
               width: "100%",
             }}

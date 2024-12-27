@@ -117,13 +117,13 @@ export default function EditProfileScreen() {
   return (
     <View style={{ flex: 1 }}>
       <AnimatedScrollView style={{ flex: 1 }} onScroll={scrollHandler}>
-        <View style={{ marginTop: 40, marginLeft: 28, position: "absolute" }}>
+        <View style={{ marginTop: 40, marginLeft: 30, position: "absolute" }}>
           <View
             style={{
               flexDirection: "row",
               width: "100%",
               marginBottom: 12,
-              marginTop: 50,
+              marginTop: 44,
               zIndex: 1,
             }}
           >
@@ -331,7 +331,9 @@ const componentStyles = ({ isDark }: ThemeStylesProps) =>
       justifyContent: "flex-start",
       alignItems: "center",
       maxWidth: 400,
+      paddingHorizontal: 24,
       width: "100%",
+      // backgroundColor: "red",
     },
     title: {
       color: isDark ? Colors.gray[300] : Colors.gray[400],
