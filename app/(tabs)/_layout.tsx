@@ -1,4 +1,3 @@
-import React from "react"
 import { BlurView } from "expo-blur"
 import { ImageBackground } from "expo-image"
 import { Tabs } from "expo-router"
@@ -28,14 +27,14 @@ export default function TabLayout() {
           </BottomTabBarWrapper>
         )}
         sceneContainerStyle={{
-            backgroundColor: "transparent",
-            width: "100%",
-            ...(Platform.OS === "web"
-              ? {
-                  maxWidth: Platform.OS === "web" ? 850 : "auto",
-                  marginHorizontal: "auto",
-                }
-              : {}),
+          backgroundColor: "transparent",
+          width: "100%",
+          ...(Platform.OS === "web"
+            ? {
+                maxWidth: Platform.OS === "web" ? 850 : "auto",
+                marginHorizontal: "auto",
+              }
+            : {}),
         }}
       >
         <Tabs.Screen

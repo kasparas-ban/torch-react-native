@@ -34,7 +34,7 @@
     "expo": "~52.0.21",
     "expo-asset": "~10.0.10",
     "expo-auth-session": "^5.5.2",
-    "expo-blur": "~13.0.2",
+    "expo-blur": "~14.0.1",
     "expo-crypto": "^13.0.2",
     "expo-font": "~13.0.1",
     "expo-image": "~2.0.2",

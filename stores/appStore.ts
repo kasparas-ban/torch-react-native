@@ -1,3 +1,4 @@
+import { Platform } from "react-native"
 import { MMKV } from "react-native-mmkv"
 
 const mmkvStorage = new MMKV({ id: "app-state-store" })
@@ -7,7 +8,10 @@ const mmkvStorage = new MMKV({ id: "app-state-store" })
 
 export default function appStateStore() {
   return {
-    isFirstOpen: mmkvStorage.getBoolean("isFirstOpen") ?? true,
+    isFirstOpen:
+      Platform.OS === "web"
+        ? false
+        : (mmkvStorage.getBoolean("isFirstOpen") ?? true),
     setIsFirstOpen: (val: boolean) => mmkvStorage.set("isFirstOpen", val),
   }
 }

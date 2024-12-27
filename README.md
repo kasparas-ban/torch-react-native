@@ -44,3 +44,5 @@ npx expo start --clear
 ```bash
 apktool d build-1734809939620.apk
 ```
+
+./gradlew assembleRelease
