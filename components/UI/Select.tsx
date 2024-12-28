@@ -173,7 +173,7 @@ export default function Select<T>(props: SelectProps<T>) {
               options={options}
               selected={selected?.value}
               onChange={val => onChange(val)}
-              isVirtualized={false}
+              isVirtualized={true}
             />
           </View>
         )}
