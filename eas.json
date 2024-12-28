@@ -18,29 +18,11 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk"
-      },
-      "env": {
-        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_bGVuaWVudC1vY3RvcHVzLTI1LmNsZXJrLmFjY291bnRzLmRldiQ",
-        "EXPO_PUBLIC_BE_PROTOCOL": "https",
-        "EXPO_PUBLIC_WS_PROTOCOL": "wss",
-        "EXPO_PUBLIC_BE_HOSTNAME": "api.torch-app.com",
-        "EXPO_PUBLIC_BE_HOSTNAME_ANDROID": "api.torch-app.com",
-        "EXPO_PUBLIC_BE_HOSTNAME_IOS": "api.torch-app.com",
-        "EXPO_PUBLIC_BE_HOSTNAME_WEB": "api.torch-app.com"
       }
     },
     "production": {
       "android": {
         "buildType": "apk"
-      },
-      "env": {
-        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_bGVuaWVudC1vY3RvcHVzLTI1LmNsZXJrLmFjY291bnRzLmRldiQ",
-        "EXPO_PUBLIC_BE_PROTOCOL": "https",
-        "EXPO_PUBLIC_WS_PROTOCOL": "wss",
-        "EXPO_PUBLIC_BE_HOSTNAME": "api.torch-app.com",
-        "EXPO_PUBLIC_BE_HOSTNAME_ANDROID": "api.torch-app.com",
-        "EXPO_PUBLIC_BE_HOSTNAME_IOS": "api.torch-app.com",
-        "EXPO_PUBLIC_BE_HOSTNAME_WEB": "api.torch-app.com"
       }
     }
   },
