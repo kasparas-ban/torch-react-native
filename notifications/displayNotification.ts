@@ -13,8 +13,9 @@ type DisplayNotificationProps = {
 export const displayNotification = async (props: DisplayNotificationProps) => {
   const { channelId, timerState, time, isBreak } = props
   const isTimerStopped = timerState === "paused" || timerState === "idle"
+
   await notifee.displayNotification({
-    id: channelId,
+    id: "default",
     title: getNotificationTitle(timerState, time, isBreak),
     android: {
       channelId,

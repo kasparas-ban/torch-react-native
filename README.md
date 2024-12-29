@@ -1,5 +1,12 @@
 # TODO
 
+## High priority
+
+- [ ] App crashes on API 35
+- [x] Notification vibrations don't work
+
+## Medium priority
+
 - [x] Change password flow
 - [x] Forgot password flow
 - [ ] Change email flow

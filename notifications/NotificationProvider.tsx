@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import notifee, { EventType } from "@notifee/react-native"
+import notifee, { AndroidImportance, EventType } from "@notifee/react-native"
 import { TimerState } from "@/types/itemTypes"
 import useTimerStore, {
   useTimerStoreBase,
@@ -8,7 +8,7 @@ import useTimerStore, {
 import { displayNotification } from "./displayNotification"
 
 let prevState: TimerState = "idle"
-let pervTime = 0
+let prevTime = 0
 
 export default function NotificationProvider() {
   const [timerChanId, setTimerChanId] = useState<string | null>(null)
@@ -35,7 +35,7 @@ export default function NotificationProvider() {
     if (
       timerState === "idle" &&
       prevState === "running" &&
-      pervTime === 0 &&
+      prevTime === 0 &&
       !!vibrateChanId
     ) {
       displayNotification({
@@ -78,7 +78,6 @@ export default function NotificationProvider() {
         setTimeout(async () => {
           await notifee.stopForegroundService()
         }, 300)
-        console.log("STOPPING THE TIMER")
         return
       }
 
@@ -109,9 +108,11 @@ export default function NotificationProvider() {
     notifee.registerForegroundService(async notification => {
       return new Promise(() => {
         useTimerStoreBase.subscribe(state => {
+          const isTimerStateChanged = prevState !== state.timerState
           prevState = state.timerState
-          pervTime = state.time
+          prevTime = state.time
 
+          if (isTimerStateChanged) return
           if (!timerChanId) return
 
           const { timerState, time } = state
@@ -135,13 +136,15 @@ const initChannels = async () => {
   // Create a channel (required for Android)
   const timerChan = await notifee.createChannel({
     id: "default",
-    name: "Default Channel",
+    name: "Timer countdown",
     vibration: false,
   })
   const vibrateChan = await notifee.createChannel({
     id: "vibrate",
-    name: "Task finished channel",
+    name: "Vibrate on timer finish",
     vibration: true,
+    importance: AndroidImportance.HIGH,
+    vibrationPattern: [200, 200, 200, 200],
   })
   return { timerChan, vibrateChan }
 }
