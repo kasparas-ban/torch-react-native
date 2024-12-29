@@ -2,8 +2,12 @@
 
 ## High priority
 
-- [ ] App crashes on API 35
+- [-] App crashes on API 35
 - [x] Notification vibrations don't work
+
+## Medium high priority
+
+- [ ] Migrate to new architecture
 
 ## Medium priority
 
