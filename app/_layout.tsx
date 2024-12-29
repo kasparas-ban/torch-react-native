@@ -19,7 +19,7 @@ import { Stack } from "expo-router"
 import * as SplashScreen from "expo-splash-screen"
 import { StatusBar } from "expo-status-bar"
 import * as SystemUI from "expo-system-ui"
-import { useColorScheme } from "react-native"
+import { useColorScheme, View } from "react-native"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { NotifierWrapper } from "react-native-notifier"
 import GlobalLoadingScreen from "@/components/GlobalLoadingScreen/GlobalLoadingScreen"
@@ -36,6 +36,11 @@ export const unstable_settings = {
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
+
+SplashScreen.setOptions({
+  duration: 1000,
+  fade: true,
+})
 
 export default function RootLayout() {
   const colorScheme = useColorScheme()
