@@ -73,68 +73,72 @@ export default function DurationInput(props: InputProps) {
         </AnimatedButton>
       )}
 
-      <TimerPickerModal
-        visible={showPicker}
-        setIsVisible={setShowPicker}
-        onConfirm={pickedDuration => {
-          onChange(pickedDuration.hours * 60 * 60 + pickedDuration.minutes * 60)
-          setShowPicker(false)
-        }}
-        modalTitle="Task duration"
-        minuteLabel="min"
-        hourLabel="h"
-        hideSeconds
-        onCancel={() => setShowPicker(false)}
-        closeOnOverlayPress
-        LinearGradient={LinearGradient}
-        topPickerGradientOverlayProps={{
-          colors: [isDark ? Colors.gray[700] : "white", "transparent"],
-        }}
-        bottomPickerGradientOverlayProps={{
-          colors: ["transparent", isDark ? Colors.gray[700] : "white"],
-        }}
-        initialValue={{
-          hours: value ? Math.floor(value / 3600) : 0,
-          minutes: value ? Math.floor((value % 3600) / 60) : 0,
-        }}
-        styles={{
-          contentContainer: {
-            backgroundColor: isDark ? Colors.gray[700] : "white",
-            ...(isDark && { borderWidth: 1, borderColor: Colors.gray[500] }),
-          },
-          pickerContainer: {
-            backgroundColor: isDark ? Colors.gray[700] : "white",
-          },
-          pickerItem: {
-            fontSize: 34,
-            fontWeight: "700",
-            color: isDark ? Colors.gray[300] : Colors.gray[700],
-          },
-          modalTitle: {
-            color: isDark ? Colors.gray[300] : Colors.gray[800],
-          },
-          cancelButton: {
-            borderWidth: 0,
-            color: isDark ? Colors.gray[300] : Colors.gray[800],
-          },
-          confirmButton: {
-            borderWidth: 0,
-            backgroundColor: Colors.rose[500],
-            color: "white",
-          },
-          pickerLabel: {
-            fontSize: 24,
-            right: -40,
-            color: isDark ? Colors.gray[400] : Colors.gray[700],
-          },
-          pickerLabelContainer: {
-            width: 48,
-          },
-          pickerItemContainer: {
-            width: 80,
-          },
-        }}
-      />
+      <View>
+        <TimerPickerModal
+          visible={showPicker}
+          setIsVisible={setShowPicker}
+          onConfirm={pickedDuration => {
+            onChange(
+              pickedDuration.hours * 60 * 60 + pickedDuration.minutes * 60
+            )
+            setShowPicker(false)
+          }}
+          modalTitle="Task duration"
+          minuteLabel="min"
+          hourLabel="h"
+          hideSeconds
+          onCancel={() => setShowPicker(false)}
+          closeOnOverlayPress
+          LinearGradient={LinearGradient}
+          topPickerGradientOverlayProps={{
+            colors: [isDark ? Colors.gray[700] : "white", "transparent"],
+          }}
+          bottomPickerGradientOverlayProps={{
+            colors: ["transparent", isDark ? Colors.gray[700] : "white"],
+          }}
+          initialValue={{
+            hours: value ? Math.floor(value / 3600) : 0,
+            minutes: value ? Math.floor((value % 3600) / 60) : 0,
+          }}
+          styles={{
+            contentContainer: {
+              backgroundColor: isDark ? Colors.gray[700] : "white",
+              ...(isDark && { borderWidth: 1, borderColor: Colors.gray[500] }),
+            },
+            pickerContainer: {
+              backgroundColor: isDark ? Colors.gray[700] : "white",
+            },
+            pickerItem: {
+              fontSize: 34,
+              fontWeight: "700",
+              color: isDark ? Colors.gray[300] : Colors.gray[700],
+            },
+            modalTitle: {
+              color: isDark ? Colors.gray[300] : Colors.gray[800],
+            },
+            cancelButton: {
+              borderWidth: 0,
+              color: isDark ? Colors.gray[300] : Colors.gray[800],
+            },
+            confirmButton: {
+              borderWidth: 0,
+              backgroundColor: Colors.rose[500],
+              color: "white",
+            },
+            pickerLabel: {
+              fontSize: 24,
+              right: -40,
+              color: isDark ? Colors.gray[400] : Colors.gray[700],
+            },
+            pickerLabelContainer: {
+              width: 48,
+            },
+            pickerItemContainer: {
+              width: 80,
+            },
+          }}
+        />
+      </View>
     </View>
   )
 }

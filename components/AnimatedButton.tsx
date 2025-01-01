@@ -1,4 +1,4 @@
-import React, { forwardRef, Ref } from "react"
+import { forwardRef, Ref } from "react"
 import {
   GestureResponderEvent,
   Pressable,
@@ -16,7 +16,6 @@ import Animated, {
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
 const DEFAULT_SCALE = 0.92
-const DEFAULT_OPACITY = 0.7
 
 type Props = AnimatedProps<PressableProps> &
   PressableProps & {
@@ -26,22 +25,15 @@ type Props = AnimatedProps<PressableProps> &
 
 function AnimatedButtonBase(props: Props, ref: Ref<View>) {
   const scale = useSharedValue(1)
-  const opacity = useSharedValue(1)
 
   const handlePressIn = () => {
     scale.value = withTiming(props.scale || DEFAULT_SCALE, {
-      duration: 100,
-    })
-    opacity.value = withTiming(props.opacity || DEFAULT_OPACITY, {
       duration: 100,
     })
   }
 
   const handlePressOut = () => {
     scale.value = withTiming(1, {
-      duration: 100,
-    })
-    opacity.value = withTiming(1, {
       duration: 100,
     })
   }
@@ -61,7 +53,6 @@ function AnimatedButtonBase(props: Props, ref: Ref<View>) {
   const animatedStyles = useAnimatedStyle(() => {
     return {
       transform: [{ scale: scale.value }],
-      opacity: opacity.value,
     }
   })
 
