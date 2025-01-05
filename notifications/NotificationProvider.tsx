@@ -8,7 +8,6 @@ import useTimerStore, {
 import { displayNotification } from "./displayNotification"
 
 let prevState: TimerState = "idle"
-let prevTime = 0
 
 export default function NotificationProvider() {
   const [timerChanId, setTimerChanId] = useState<string | null>(null)
@@ -23,7 +22,7 @@ export default function NotificationProvider() {
   } = useTimerStore()
 
   useEffect(() => {
-    if (timerState === "running" && timerChanId) {
+    if (timerState === "running" && !!timerChanId) {
       displayNotification({
         channelId: timerChanId,
         timerState,
@@ -32,12 +31,7 @@ export default function NotificationProvider() {
       })
     }
 
-    if (
-      timerState === "idle" &&
-      prevState === "running" &&
-      prevTime === 0 &&
-      !!vibrateChanId
-    ) {
+    if (timerState === "idle" && prevState === "running" && !!vibrateChanId) {
       displayNotification({
         channelId: vibrateChanId,
         timerState,
@@ -108,11 +102,15 @@ export default function NotificationProvider() {
     notifee.registerForegroundService(async notification => {
       return new Promise(() => {
         useTimerStoreBase.subscribe(state => {
-          const isTimerStateChanged = prevState !== state.timerState
-          prevState = state.timerState
-          prevTime = state.time
+          if (state.timerState === "idle") return
 
-          if (isTimerStateChanged) return
+          if (prevState !== state.timerState) {
+            prevState = state.timerState
+            return
+          }
+
+          prevState = state.timerState
+
           if (!timerChanId) return
 
           const { timerState, time } = state
