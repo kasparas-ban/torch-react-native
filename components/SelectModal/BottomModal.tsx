@@ -33,7 +33,7 @@ export function BottomModal({
   return (
     <BottomSheetModal
       ref={modalRef}
-      index={0}
+      index={1}
       snapPoints={snapPoints}
       onChange={onChange}
       enableDynamicSizing={enableDynamicSizing}

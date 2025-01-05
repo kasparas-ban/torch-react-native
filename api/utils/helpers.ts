@@ -130,11 +130,16 @@ export const getItemsByType = ({
           return [...prev.filter(gr => gr.value !== "other"), otherGroup]
         }
 
-        if (prev.find(group => group.value === parent?.item_id)) {
-          return prev.map(group => ({
-            ...group,
-            options: [...group.options, curr],
-          }))
+        const itemGroup = prev.find(group => group.value === parent?.item_id)
+        if (itemGroup) {
+          return prev.map(group =>
+            itemGroup.value === group.value
+              ? {
+                  ...group,
+                  options: [...group.options, curr],
+                }
+              : group
+          )
         } else {
           return [
             ...prev,

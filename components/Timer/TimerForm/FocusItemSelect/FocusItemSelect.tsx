@@ -119,8 +119,9 @@ export default function FocusItemSelect() {
 
         <BottomModal
           modalRef={bottomSheetModalRef}
-          snapPoints={["30%", "90%"]}
+          snapPoints={[1]}
           onChange={idx => idx === -1}
+          enableDynamicSizing
         >
           <ScrollView
             style={{
@@ -186,7 +187,7 @@ function GroupedItems({
   isDark: boolean
 }) {
   return (
-    <View style={{ gap: 4 }}>
+    <View style={{ paddingTop: 4, gap: 12 }}>
       {items.map(item => (
         <View key={item.value}>
           <Text
@@ -195,6 +196,7 @@ function GroupedItems({
               color: isDark ? Colors.gray[400] : Colors.gray[500],
               marginBottom: 6,
               marginLeft: 12,
+              paddingBottom: 4,
             }}
           >
             {item.label}
