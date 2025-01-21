@@ -115,6 +115,10 @@ function RootLayoutNav() {
                             options={{ headerShown: false }}
                           />
                           <Stack.Screen
+                            name="(modals)/(about)"
+                            options={{ headerShown: false }}
+                          />
+                          <Stack.Screen
                             name="(modals)/timer-settings"
                             options={{
                               presentation: "modal",

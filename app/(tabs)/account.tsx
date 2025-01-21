@@ -1,10 +1,18 @@
 import { useMemo } from "react"
+import RightIcon from "@/assets/icons/chevronRight.svg"
+import DeleteIcon from "@/assets/icons/delete.svg"
+import InfoIcon from "@/assets/icons/info.svg"
+import LockIcon from "@/assets/icons/lock.svg"
+import LogoutIcon from "@/assets/icons/logout.svg"
+import PolicyIcon from "@/assets/icons/privacyPolicy.svg"
+import TermsOfServiceIcon from "@/assets/icons/termsOfService.svg"
+import UserIcon from "@/assets/icons/userCircle.svg"
 import Colors from "@/constants/Colors"
 import { queryClient } from "@/providers/QueryProvider"
 import dayjs from "dayjs"
 import { Image, ImageStyle } from "expo-image"
 import { useRouter } from "expo-router"
-import { StyleSheet, Text, View } from "react-native"
+import { ScrollView, StyleSheet, Text, View } from "react-native"
 import { useAuth, useUser } from "@/lib/clerk"
 import useUserInfo from "@/api/hooks/user/useUser"
 import useThemeStyles, { ThemeStylesProps } from "@/utils/themeStyles"
@@ -17,12 +25,6 @@ import {
 import { AnimatedButton } from "@/components/AnimatedButton"
 import useGlobalLoading from "@/components/GlobalLoadingScreen/useGlobalLoading"
 import { notify } from "@/components/notifications/Notifications"
-
-import RightIcon from "../../assets/icons/chevronRight.svg"
-import DeleteIcon from "../../assets/icons/delete.svg"
-import LockIcon from "../../assets/icons/lock.svg"
-import LogoutIcon from "../../assets/icons/logout.svg"
-import UserIcon from "../../assets/icons/userCircle.svg"
 
 export default function AccountScreen() {
   const { styles, isDark } = useThemeStyles(componentStyles)
@@ -72,6 +74,14 @@ export default function AccountScreen() {
     router.push("/(modals)/(privateAuth)/delete-account")
   }
 
+  const handlePrivacyPolicy = () => {
+    router.push("/(modals)/(about)/privacy-policy")
+  }
+
+  const handleVersion = () => {
+    router.push("/(modals)/(about)/version")
+  }
+
   const country = useMemo(
     () =>
       userInfo?.country_code ? getCountry(userInfo?.country_code) : undefined,
@@ -80,176 +90,261 @@ export default function AccountScreen() {
 
   return (
     <View style={styles.wrapper}>
-      <View style={styles.summaryBox}>
-        <Image
-          style={styles.profilePicture as ImageStyle}
-          source={
-            user?.hasImage ? user?.imageUrl : { blurhash: defaultProfileImage }
-          }
-          contentFit="cover"
-          transition={800}
-        />
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.summaryBox}>
+          <Image
+            style={styles.profilePicture as ImageStyle}
+            source={
+              user?.hasImage
+                ? user?.imageUrl
+                : { blurhash: defaultProfileImage }
+            }
+            contentFit="cover"
+            transition={800}
+          />
 
-        <View>
-          <Text style={styles.username}>{userInfo?.username}</Text>
-          <View style={styles.progress}>
-            <Text style={styles.number}>
-              {userFocusTime?.hours !== undefined ? userFocusTime?.hours : "-"}
-            </Text>
-            <Text style={[styles.numberLabel, { marginRight: 8 }]}>h</Text>
-            <Text style={styles.number}>
-              {userFocusTime?.minutes !== undefined
-                ? userFocusTime?.minutes
+          <View>
+            <Text style={styles.username}>{userInfo?.username}</Text>
+            <View style={styles.progress}>
+              <Text style={styles.number}>
+                {userFocusTime?.hours !== undefined
+                  ? userFocusTime?.hours
+                  : "-"}
+              </Text>
+              <Text style={[styles.numberLabel, { marginRight: 8 }]}>h</Text>
+              <Text style={styles.number}>
+                {userFocusTime?.minutes !== undefined
+                  ? userFocusTime?.minutes
+                  : "-"}
+              </Text>
+              <Text style={styles.numberLabel}>min</Text>
+            </View>
+            <View style={styles.membershipContainer}>
+              <Text style={styles.membershipLabel}>Free member</Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={{ marginTop: 16, marginBottom: 16 }}>
+          <Text style={styles.sectionTitle}>Account details</Text>
+        </View>
+
+        <View style={{ gap: 12 }}>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.detailLabel}>Username</Text>
+            <Text style={styles.detailData}>{userInfo?.username || "-"}</Text>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.detailLabel}>Email</Text>
+            <Text style={styles.detailData}>{userInfo?.email || "-"}</Text>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.detailLabel}>Age</Text>
+            <Text style={styles.detailData}>
+              {userInfo?.birthday
+                ? dayjs().diff(userInfo.birthday, "year")
                 : "-"}
             </Text>
-            <Text style={styles.numberLabel}>min</Text>
           </View>
-          <View style={styles.membershipContainer}>
-            <Text style={styles.membershipLabel}>Free member</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.detailLabel}>Gender</Text>
+            <Text style={styles.detailData}>
+              {userInfo?.gender ? capitalize(userInfo.gender) : "-"}
+            </Text>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.detailLabel}>Joined since</Text>
+            <Text style={styles.detailData}>
+              {userInfo?.created_at
+                ? dayjs(userInfo.created_at).format("MMMM D, YYYY")
+                : "-"}
+            </Text>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.detailLabel}>Location</Text>
+            <Text style={styles.detailData}>
+              {userInfo?.city ? userInfo?.city : ""}
+              {country
+                ? `${userInfo?.city ? ", " : ""}${country.name} ${country.flag}`
+                : ""}
+              {!userInfo?.city && !country && "-"}
+            </Text>
           </View>
         </View>
-      </View>
 
-      <View style={{ marginTop: 16, marginBottom: 16 }}>
-        <Text style={styles.sectionTitle}>Account details</Text>
-      </View>
+        <View style={{ marginTop: 16, marginBottom: 16 }}>
+          <Text style={styles.sectionTitle}>Settings</Text>
+        </View>
 
-      <View style={{ gap: 12 }}>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.detailLabel}>Username</Text>
-          <Text style={styles.detailData}>{userInfo?.username || "-"}</Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.detailLabel}>Email</Text>
-          <Text style={styles.detailData}>{userInfo?.email || "-"}</Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.detailLabel}>Age</Text>
-          <Text style={styles.detailData}>
-            {userInfo?.birthday ? dayjs().diff(userInfo.birthday, "year") : "-"}
-          </Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.detailLabel}>Gender</Text>
-          <Text style={styles.detailData}>
-            {userInfo?.gender ? capitalize(userInfo.gender) : "-"}
-          </Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.detailLabel}>Joined since</Text>
-          <Text style={styles.detailData}>
-            {userInfo?.created_at
-              ? dayjs(userInfo.created_at).format("MMMM D, YYYY")
-              : "-"}
-          </Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.detailLabel}>Location</Text>
-          <Text style={styles.detailData}>
-            {userInfo?.city ? userInfo?.city : ""}
-            {country
-              ? `${userInfo?.city ? ", " : ""}${country.name} ${country.flag}`
-              : ""}
-            {!userInfo?.city && !country && "-"}
-          </Text>
-        </View>
-      </View>
+        <View>
+          <AnimatedButton scale={0.99} onPress={handleLogout}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingVertical: 12,
+              }}
+            >
+              <LogoutIcon
+                color={isDark ? Colors.gray[200] : Colors.gray[700]}
+                style={styles.settingsIcon}
+              />
+              <Text style={styles.settingsLabel}>Logout</Text>
+              <RightIcon
+                color={isDark ? Colors.gray[200] : Colors.gray[700]}
+                style={styles.arrowIcon}
+                strokeWidth={2.5}
+              />
+            </View>
+          </AnimatedButton>
 
-      <View style={{ marginTop: 16, marginBottom: 16 }}>
-        <Text style={styles.sectionTitle}>Settings</Text>
-      </View>
+          <View style={styles.separator} />
 
-      <View>
-        <AnimatedButton scale={0.99} onPress={handleLogout}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              paddingVertical: 12,
-            }}
+          <AnimatedButton scale={0.99} onPress={handleEditProfile}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingVertical: 12,
+              }}
+            >
+              <UserIcon
+                color={isDark ? Colors.gray[200] : Colors.gray[700]}
+                style={styles.settingsIcon}
+              />
+              <Text style={styles.settingsLabel}>Edit account info</Text>
+              <RightIcon
+                color={isDark ? Colors.gray[200] : Colors.gray[700]}
+                style={styles.arrowIcon}
+                strokeWidth={2.5}
+              />
+            </View>
+          </AnimatedButton>
+
+          <View style={styles.separator} />
+
+          <AnimatedButton scale={0.99} onPress={handlePasswordChange}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingVertical: 12,
+              }}
+            >
+              <LockIcon
+                color={isDark ? Colors.gray[200] : Colors.gray[700]}
+                style={styles.settingsIcon}
+              />
+              <Text style={styles.settingsLabel}>Change password</Text>
+              <RightIcon
+                color={isDark ? Colors.gray[200] : Colors.gray[700]}
+                style={styles.arrowIcon}
+                strokeWidth={2.5}
+              />
+            </View>
+          </AnimatedButton>
+
+          <View style={styles.separator} />
+
+          <AnimatedButton scale={0.99} onPress={handleDeleteAccount}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingVertical: 12,
+              }}
+            >
+              <DeleteIcon
+                color={isDark ? Colors.gray[200] : Colors.gray[700]}
+                style={styles.settingsIcon}
+              />
+              <Text style={styles.settingsLabel}>Delete account</Text>
+              <RightIcon
+                color={isDark ? Colors.gray[200] : Colors.gray[700]}
+                style={styles.arrowIcon}
+                strokeWidth={2.5}
+              />
+            </View>
+          </AnimatedButton>
+        </View>
+
+        <View style={{ marginTop: 16, marginBottom: 16 }}>
+          <Text style={styles.sectionTitle}>About</Text>
+        </View>
+
+        <View>
+          <AnimatedButton scale={0.99} onPress={handlePrivacyPolicy}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingVertical: 12,
+              }}
+            >
+              <PolicyIcon
+                color={isDark ? Colors.gray[200] : Colors.gray[700]}
+                style={styles.settingsIcon}
+              />
+              <Text style={styles.settingsLabel}>Privacy policy</Text>
+              <RightIcon
+                color={isDark ? Colors.gray[200] : Colors.gray[700]}
+                style={styles.arrowIcon}
+                strokeWidth={2.5}
+              />
+            </View>
+          </AnimatedButton>
+
+          <View style={styles.separator} />
+
+          {/* <AnimatedButton scale={0.99} onPress={handleTermsOfService}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingVertical: 12,
+              }}
+            >
+              <TermsOfServiceIcon
+                color={isDark ? Colors.gray[200] : Colors.gray[700]}
+                style={styles.settingsIcon}
+              />
+              <Text style={styles.settingsLabel}>Terms of service</Text>
+              <RightIcon
+                color={isDark ? Colors.gray[200] : Colors.gray[700]}
+                style={styles.arrowIcon}
+                strokeWidth={2.5}
+              />
+            </View>
+          </AnimatedButton>
+
+          <View style={styles.separator} /> */}
+
+          <AnimatedButton
+            scale={0.99}
+            onPress={handleVersion}
+            style={{ marginBottom: 150 }}
           >
-            <LogoutIcon
-              color={isDark ? Colors.gray[200] : Colors.gray[700]}
-              style={styles.settingsIcon}
-            />
-            <Text style={styles.settingsLabel}>Logout</Text>
-            <RightIcon
-              color={isDark ? Colors.gray[200] : Colors.gray[700]}
-              style={styles.arrowIcon}
-              strokeWidth={2.5}
-            />
-          </View>
-        </AnimatedButton>
-
-        <View style={styles.separator} />
-
-        <AnimatedButton scale={0.99} onPress={handleEditProfile}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              paddingVertical: 12,
-            }}
-          >
-            <UserIcon
-              color={isDark ? Colors.gray[200] : Colors.gray[700]}
-              style={styles.settingsIcon}
-            />
-            <Text style={styles.settingsLabel}>Edit account info</Text>
-            <RightIcon
-              color={isDark ? Colors.gray[200] : Colors.gray[700]}
-              style={styles.arrowIcon}
-              strokeWidth={2.5}
-            />
-          </View>
-        </AnimatedButton>
-
-        <View style={styles.separator} />
-
-        <AnimatedButton scale={0.99} onPress={handlePasswordChange}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              paddingVertical: 12,
-            }}
-          >
-            <LockIcon
-              color={isDark ? Colors.gray[200] : Colors.gray[700]}
-              style={styles.settingsIcon}
-            />
-            <Text style={styles.settingsLabel}>Change password</Text>
-            <RightIcon
-              color={isDark ? Colors.gray[200] : Colors.gray[700]}
-              style={styles.arrowIcon}
-              strokeWidth={2.5}
-            />
-          </View>
-        </AnimatedButton>
-
-        <View style={styles.separator} />
-
-        <AnimatedButton scale={0.99} onPress={handleDeleteAccount}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              paddingVertical: 12,
-            }}
-          >
-            <DeleteIcon
-              color={isDark ? Colors.gray[200] : Colors.gray[700]}
-              style={styles.settingsIcon}
-            />
-            <Text style={styles.settingsLabel}>Delete account</Text>
-            <RightIcon
-              color={isDark ? Colors.gray[200] : Colors.gray[700]}
-              style={styles.arrowIcon}
-              strokeWidth={2.5}
-            />
-          </View>
-        </AnimatedButton>
-      </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingVertical: 12,
+              }}
+            >
+              <InfoIcon
+                color={isDark ? Colors.gray[200] : Colors.gray[700]}
+                style={styles.settingsIcon}
+              />
+              <Text style={styles.settingsLabel}>Version</Text>
+              <RightIcon
+                color={isDark ? Colors.gray[200] : Colors.gray[700]}
+                style={styles.arrowIcon}
+                strokeWidth={2.5}
+              />
+            </View>
+          </AnimatedButton>
+        </View>
+      </ScrollView>
     </View>
   )
 }
@@ -257,6 +352,10 @@ export default function AccountScreen() {
 const componentStyles = ({ isDark }: ThemeStylesProps) =>
   StyleSheet.create({
     wrapper: {
+      flex: 1,
+    },
+    scrollView: {
+      flex: 1,
       marginTop: 120,
       paddingHorizontal: 24,
     },
